@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Lock, Save, Plus, Trash2, RotateCcw, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '2865';
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 const THEMES = ['blue', 'pink', 'green', 'yellow'];
 
 export default function AdminModal({ open, onClose }) {
@@ -29,6 +29,10 @@ export default function AdminModal({ open, onClose }) {
 
   const tryLogin = (e) => {
     e.preventDefault();
+    if (!ADMIN_PASSWORD) {
+      setError(t('admin.passwordNotConfigured'));
+      return;
+    }
     if (password === ADMIN_PASSWORD) {
       setAuth(true);
       setError('');
@@ -114,9 +118,15 @@ export default function AdminModal({ open, onClose }) {
                       {error}
                     </p>
                   )}
+                  {!ADMIN_PASSWORD && (
+                    <p role="alert" className="text-sm font-semibold text-amber-700 text-center">
+                      {t('admin.passwordNotConfigured')}
+                    </p>
+                  )}
                   <button
                     type="submit"
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 transition-colors"
+                    disabled={!ADMIN_PASSWORD}
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {t('admin.login')}
                   </button>
