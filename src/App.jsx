@@ -10,6 +10,7 @@ import GuestCreateModal from './components/GuestCreateModal.jsx';
 import HelpModal from './components/HelpModal.jsx';
 import HiddenAdminTrigger from './components/HiddenAdminTrigger.jsx';
 import Footer from './components/Footer.jsx';
+import SchoolConnectionMap from './components/SchoolConnectionMap.jsx';
 import { useBoxData } from './store/BoxDataContext.jsx';
 import { buildShareUrl } from './lib/share.js';
 
@@ -133,6 +134,11 @@ export default function App() {
           )}
         </section>
       </main>
+
+      {/* ── World School Connection Map ─────────────────────────────────── */}
+      <div className="w-full border-t border-slate-200/60 mt-4 pt-14">
+        <SchoolConnectionMap />
+      </div>
 
       <Footer />
       <BoxModal exchange={activeExchange} onClose={() => setActiveExchange(null)} />

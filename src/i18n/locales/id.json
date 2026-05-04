@@ -89,5 +89,13 @@
   },
   "footer": {
     "credit": "Created by. Guru Chisoo, Sang Pemimpi Musikal Edukasi"
+  },
+  "map": {
+    "sectionBadge": "Peta Koneksi Sekolah Dunia",
+    "title": "Hubungkan Sekolah Kita di Peta Dunia",
+    "subtitle": "Cari dua sekolah untuk menggambar koneksi pertukaran lintas benua",
+    "schoolA": "Sekolah Pengirim (A)",
+    "schoolB": "Sekolah Penerima (B)",
+    "searchPlaceholder": "Cari berdasarkan nama sekolah..."
   }
 }

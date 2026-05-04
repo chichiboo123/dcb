@@ -89,5 +89,13 @@
   },
   "footer": {
     "credit": "Created by. 교육뮤지컬 꿈꾸는 치수쌤"
+  },
+  "map": {
+    "sectionBadge": "전 세계 학교 연결 지도",
+    "title": "우리 학교를 세계 지도에서 연결해요",
+    "subtitle": "두 학교를 검색하면 지구 위에 우리의 교류를 표시해드려요",
+    "schoolA": "보내는 학교 (A)",
+    "schoolB": "받는 학교 (B)",
+    "searchPlaceholder": "학교명으로 검색..."
   }
 }

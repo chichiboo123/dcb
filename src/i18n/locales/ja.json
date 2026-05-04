@@ -89,5 +89,13 @@
   },
   "footer": {
     "credit": "Created by. 教育ミュージカル 夢見るチスー先生"
+  },
+  "map": {
+    "sectionBadge": "世界の学校つながりマップ",
+    "title": "世界地図で学校をつなごう",
+    "subtitle": "2つの学校を検索すると、地球上に交流の線が描かれます",
+    "schoolA": "送る学校（A）",
+    "schoolB": "受け取る学校（B）",
+    "searchPlaceholder": "学校名で検索..."
   }
 }
