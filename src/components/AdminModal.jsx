@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Lock, Save, Plus, Trash2, RotateCcw, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 
-const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '2865';
 const THEMES = ['blue', 'pink', 'green', 'yellow'];
 
 export default function AdminModal({ open, onClose }) {
