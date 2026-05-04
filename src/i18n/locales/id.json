@@ -2,9 +2,28 @@
   "app": {
     "title": "Papan Kotak Budaya Digital",
     "subtitle": "Kotak budaya penuh hati, dikirim ke seluruh dunia",
+    "hostSubtitle": "Kotak budaya yang disiapkan oleh tuan rumah",
     "tapToOpen": "Sentuh kotak untuk membukanya",
     "loading": "Memuat konten...",
-    "exchangeArrow": "→"
+    "exchangeArrow": "→",
+    "guestEmpty": "Buat kotak budaya milikmu sendiri dan bagikan ke teman",
+    "guestEmptyHint": "Tekan “Buat Kotak Budaya” untuk mengisi konten",
+    "hostEmpty": "Tuan rumah belum mempublikasikan kotak budaya apa pun",
+    "hostEmptyHint": "Buka mode admin untuk mempublikasikan kotak budaya"
+  },
+  "mode": {
+    "guest": "Tamu",
+    "host": "Tuan Rumah"
+  },
+  "guest": {
+    "createCultureBox": "Buat Kotak Budaya",
+    "editCultureBox": "Edit Kotak Budaya",
+    "shareLink": "Bagikan tautan",
+    "linkCopied": "Tautan berhasil disalin",
+    "copyManually": "Salin tautan ini untuk dibagikan",
+    "createTitle": "Buat Kotak Budayamu",
+    "createHint": "Setelah disimpan, gunakan “Bagikan tautan” untuk mengirimnya.",
+    "saveAndPreview": "Simpan & pratinjau"
   },
   "box": {
     "open": "Buka Kotak",

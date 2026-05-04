@@ -6,37 +6,51 @@ import { Package, ArrowRight, Sparkles } from 'lucide-react';
 const THEMES = {
   blue: {
     body: 'from-sky-200 via-sky-300 to-sky-400',
+    side: 'from-sky-400 to-sky-500',
+    bottom: 'from-sky-500 to-sky-600',
     lid: 'from-sky-100 via-sky-200 to-sky-300',
+    lidSide: 'from-sky-300 to-sky-400',
     ribbon: 'from-pink-300 to-pink-400',
     accent: 'text-sky-700',
     chip: 'bg-sky-50 text-sky-700 border-sky-200',
-    glow: 'shadow-[0_20px_40px_-15px_rgba(56,189,248,0.55)]',
+    glow: 'shadow-[0_30px_50px_-20px_rgba(56,189,248,0.6)]',
   },
   pink: {
     body: 'from-pink-200 via-pink-300 to-pink-400',
+    side: 'from-pink-400 to-pink-500',
+    bottom: 'from-pink-500 to-pink-600',
     lid: 'from-pink-100 via-pink-200 to-pink-300',
+    lidSide: 'from-pink-300 to-pink-400',
     ribbon: 'from-amber-300 to-amber-400',
     accent: 'text-pink-700',
     chip: 'bg-pink-50 text-pink-700 border-pink-200',
-    glow: 'shadow-[0_20px_40px_-15px_rgba(244,114,182,0.55)]',
+    glow: 'shadow-[0_30px_50px_-20px_rgba(244,114,182,0.6)]',
   },
   green: {
     body: 'from-emerald-200 via-emerald-300 to-emerald-400',
+    side: 'from-emerald-400 to-emerald-500',
+    bottom: 'from-emerald-500 to-emerald-600',
     lid: 'from-emerald-100 via-emerald-200 to-emerald-300',
+    lidSide: 'from-emerald-300 to-emerald-400',
     ribbon: 'from-pink-300 to-pink-400',
     accent: 'text-emerald-700',
     chip: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    glow: 'shadow-[0_20px_40px_-15px_rgba(52,211,153,0.55)]',
+    glow: 'shadow-[0_30px_50px_-20px_rgba(52,211,153,0.6)]',
   },
   yellow: {
     body: 'from-amber-200 via-amber-300 to-amber-400',
+    side: 'from-amber-400 to-amber-500',
+    bottom: 'from-amber-500 to-amber-600',
     lid: 'from-amber-100 via-amber-200 to-amber-300',
+    lidSide: 'from-amber-300 to-amber-400',
     ribbon: 'from-sky-300 to-sky-400',
     accent: 'text-amber-700',
     chip: 'bg-amber-50 text-amber-800 border-amber-200',
-    glow: 'shadow-[0_20px_40px_-15px_rgba(251,191,36,0.55)]',
+    glow: 'shadow-[0_30px_50px_-20px_rgba(251,191,36,0.6)]',
   },
 };
+
+const DEPTH = 36; // px depth of the 3D box
 
 export default function BoxCard({ exchange, index = 0, onOpen }) {
   const { t } = useTranslation();
@@ -57,7 +71,7 @@ export default function BoxCard({ exchange, index = 0, onOpen }) {
         to: exchange.to.country,
       })}
       className="group relative outline-none focus-visible:ring-4 focus-visible:ring-sky-300/50 rounded-3xl"
-      style={{ perspective: 1200 }}
+      style={{ perspective: 1400 }}
     >
       {/* Header chip — countries */}
       <div className="flex items-center justify-center gap-2 mb-3">
@@ -76,12 +90,12 @@ export default function BoxCard({ exchange, index = 0, onOpen }) {
         </span>
       </div>
 
-      {/* 3D box stage */}
+      {/* 3D box stage — always shown with isometric tilt */}
       <motion.div
         animate={{
-          rotateX: hover ? -8 : 0,
-          rotateY: hover ? 6 : 0,
-          y: hover ? -6 : 0,
+          rotateX: hover ? -22 : -16,
+          rotateY: hover ? 22 : 16,
+          y: hover ? -8 : 0,
         }}
         transition={{ type: 'spring', stiffness: 200, damping: 18 }}
         style={{ transformStyle: 'preserve-3d' }}
@@ -90,13 +104,52 @@ export default function BoxCard({ exchange, index = 0, onOpen }) {
         {/* Floor shadow */}
         <motion.div
           aria-hidden="true"
-          animate={{ scaleX: hover ? 1.1 : 1, opacity: hover ? 0.45 : 0.3 }}
-          className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-[78%] h-5 rounded-[50%] bg-slate-900/30 blur-md"
+          animate={{ scaleX: hover ? 1.15 : 1.05, opacity: hover ? 0.5 : 0.35 }}
+          className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-[85%] h-6 rounded-[50%] bg-slate-900/40 blur-md"
+          style={{ transform: 'translateZ(-1px)' }}
         />
 
-        {/* Box body */}
+        {/* Right side face */}
+        <div
+          aria-hidden="true"
+          className={`absolute top-0 right-0 h-full bg-gradient-to-b ${theme.side}`}
+          style={{
+            width: `${DEPTH}px`,
+            transform: `rotateY(90deg) translateZ(${260 - DEPTH / 2}px) translateX(${DEPTH / 2}px)`,
+            transformOrigin: 'left center',
+            borderTopRightRadius: '12px',
+            borderBottomRightRadius: '12px',
+          }}
+        />
+
+        {/* Left side face */}
+        <div
+          aria-hidden="true"
+          className={`absolute top-0 left-0 h-full bg-gradient-to-b ${theme.side}`}
+          style={{
+            width: `${DEPTH}px`,
+            transform: `rotateY(-90deg) translateZ(${DEPTH / 2}px) translateX(-${DEPTH / 2}px)`,
+            transformOrigin: 'right center',
+            borderTopLeftRadius: '12px',
+            borderBottomLeftRadius: '12px',
+          }}
+        />
+
+        {/* Bottom face */}
+        <div
+          aria-hidden="true"
+          className={`absolute bottom-0 left-0 right-0 bg-gradient-to-r ${theme.bottom}`}
+          style={{
+            height: `${DEPTH}px`,
+            transform: `rotateX(-90deg) translateZ(-${DEPTH / 2}px) translateY(${DEPTH / 2}px)`,
+            transformOrigin: 'center top',
+          }}
+        />
+
+        {/* Box body (front face) */}
         <div
           className={`absolute inset-0 rounded-2xl bg-gradient-to-b ${theme.body} shadow-xl overflow-hidden`}
+          style={{ transform: `translateZ(${DEPTH / 2}px)` }}
         >
           {/* glossy highlight */}
           <div
@@ -123,16 +176,54 @@ export default function BoxCard({ exchange, index = 0, onOpen }) {
           />
         </div>
 
-        {/* Lid */}
+        {/* Lid — has its own depth */}
         <motion.div
           animate={{
-            rotateX: hover ? -18 : 0,
-            y: hover ? -4 : 0,
+            rotateX: hover ? -55 : 0,
+            y: hover ? -2 : 0,
           }}
           transition={{ type: 'spring', stiffness: 200, damping: 18 }}
-          style={{ transformOrigin: '50% 100%', transformStyle: 'preserve-3d' }}
+          style={{
+            transformOrigin: '50% 100%',
+            transformStyle: 'preserve-3d',
+            transform: `translateZ(${DEPTH / 2}px)`,
+          }}
           className={`absolute left-0 right-0 top-0 h-[35%] rounded-2xl bg-gradient-to-b ${theme.lid} shadow-lg`}
         >
+          {/* lid right-side */}
+          <div
+            aria-hidden="true"
+            className={`absolute top-0 right-0 h-full bg-gradient-to-b ${theme.lidSide}`}
+            style={{
+              width: `${DEPTH}px`,
+              transform: `rotateY(90deg) translateZ(${260 - DEPTH / 2}px) translateX(${DEPTH / 2}px)`,
+              transformOrigin: 'left center',
+              borderTopRightRadius: '12px',
+            }}
+          />
+          {/* lid left-side */}
+          <div
+            aria-hidden="true"
+            className={`absolute top-0 left-0 h-full bg-gradient-to-b ${theme.lidSide}`}
+            style={{
+              width: `${DEPTH}px`,
+              transform: `rotateY(-90deg) translateZ(${DEPTH / 2}px) translateX(-${DEPTH / 2}px)`,
+              transformOrigin: 'right center',
+              borderTopLeftRadius: '12px',
+            }}
+          />
+          {/* lid top */}
+          <div
+            aria-hidden="true"
+            className={`absolute top-0 left-0 right-0 bg-gradient-to-r ${theme.lidSide}`}
+            style={{
+              height: `${DEPTH}px`,
+              transform: `rotateX(90deg) translateZ(${DEPTH / 2}px) translateY(-${DEPTH / 2}px)`,
+              transformOrigin: 'center bottom',
+              borderTopLeftRadius: '12px',
+              borderTopRightRadius: '12px',
+            }}
+          />
           <div
             aria-hidden="true"
             className="absolute inset-0 rounded-2xl opacity-50"
@@ -157,13 +248,14 @@ export default function BoxCard({ exchange, index = 0, onOpen }) {
           aria-hidden="true"
           animate={{ opacity: hover ? 1 : 0, scale: hover ? 1 : 0.6 }}
           className="absolute -top-2 -right-2"
+          style={{ transform: `translateZ(${DEPTH}px)` }}
         >
           <Sparkles size={22} className="text-amber-400 drop-shadow" />
         </motion.div>
       </motion.div>
 
       {/* CTA */}
-      <div className="mt-5 flex items-center justify-center gap-1.5 text-sm font-bold text-slate-500 group-hover:text-slate-800 transition-colors">
+      <div className="mt-8 flex items-center justify-center gap-1.5 text-sm font-bold text-slate-500 group-hover:text-slate-800 transition-colors">
         <span>{t('box.open')}</span>
         <motion.span
           animate={{ x: hover ? 3 : 0 }}

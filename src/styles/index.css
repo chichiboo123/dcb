@@ -4,25 +4,55 @@
 
 html, body, #root {
   height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+ * The page background is painted on a fixed layer behind everything,
+ * so mobile browsers (whose URL bar resize/overscroll otherwise reveal
+ * banding) always see a single continuous gradient.
+ */
+html {
+  background-color: #F8FAFC;
 }
 
 body {
   font-family: 'Pretendard GOV', Pretendard, system-ui, sans-serif;
+  color: #0F172A;
+  -webkit-font-smoothing: antialiased;
+  background: transparent;
+  min-height: 100%;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: -10vh -10vw;
+  z-index: -1;
+  pointer-events: none;
   background:
     radial-gradient(circle at 12% 8%, #FEF3C7 0%, transparent 38%),
     radial-gradient(circle at 88% 12%, #BFDBFE 0%, transparent 42%),
     radial-gradient(circle at 78% 92%, #FBCFE8 0%, transparent 38%),
     radial-gradient(circle at 8% 88%, #BBF7D0 0%, transparent 42%),
     #F8FAFC;
-  color: #0F172A;
-  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100%;
+  background: transparent;
+}
+
+.app-shell {
+  min-height: 100dvh;
+  background: transparent;
 }
 
 *:focus-visible {
   outline: none;
 }
 
-/* Smooth iframe fullscreen */
 :fullscreen {
   background: white;
 }

@@ -1,13 +1,14 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, useCallback } from 'react';
+import { decodeShareData, readShareTokenFromUrl } from '../lib/share.js';
+import { getMode, makeEmptyExchange } from '../lib/mode.js';
 
-const STORAGE_KEY = 'dcb.boxData.v2';
+const HOST_STORAGE_KEY = 'dcb.boxData.v2';
 
 /**
- * Data model: a list of "exchanges" (boxes).
- * Each exchange = one shipment between two schools.
- * Easy to extend to N countries — just add to the array.
+ * Host mode default data — admin-curated boxes shown via /host.
+ * Admin edits in admin mode are persisted to localStorage on top of this.
  */
-const defaultData = {
+const hostDefaultData = {
   exchanges: [
     {
       id: 'kr-id',
@@ -60,52 +61,75 @@ const defaultData = {
 
 const BoxDataContext = createContext(null);
 
-export function BoxDataProvider({ children }) {
-  const [data, setData] = useState(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed?.exchanges?.length) return parsed;
-      }
-    } catch {}
-    return defaultData;
-  });
+function loadHostData() {
+  try {
+    const raw = localStorage.getItem(HOST_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed?.exchanges?.length) return parsed;
+    }
+  } catch {
+    /* empty */
+  }
+  return hostDefaultData;
+}
 
+function loadGuestInitialData() {
+  const token = readShareTokenFromUrl();
+  if (token) {
+    const decoded = decodeShareData(token);
+    if (decoded?.exchanges?.length) return decoded;
+  }
+  return { exchanges: [] };
+}
+
+export function BoxDataProvider({ children }) {
+  const mode = useMemo(() => getMode(), []);
+  const sharedFromUrl = useMemo(
+    () => (mode === 'guest' ? readShareTokenFromUrl() != null : false),
+    [mode]
+  );
+
+  const [data, setData] = useState(() =>
+    mode === 'host' ? loadHostData() : loadGuestInitialData()
+  );
+
+  // Only persist host data to localStorage. Guest data is volatile (URL-shared).
   useEffect(() => {
+    if (mode !== 'host') return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch {}
-  }, [data]);
+      localStorage.setItem(HOST_STORAGE_KEY, JSON.stringify(data));
+    } catch {
+      /* empty */
+    }
+  }, [data, mode]);
 
   const updateExchange = useCallback((id, patch) => {
     setData((prev) => ({
       ...prev,
       exchanges: prev.exchanges.map((ex) =>
-        ex.id === id ? { ...ex, ...patch, from: { ...ex.from, ...(patch.from || {}) }, to: { ...ex.to, ...(patch.to || {}) } } : ex
+        ex.id === id
+          ? {
+              ...ex,
+              ...patch,
+              from: { ...ex.from, ...(patch.from || {}) },
+              to: { ...ex.to, ...(patch.to || {}) },
+            }
+          : ex
       ),
     }));
   }, []);
 
-  const addExchange = useCallback(() => {
-    setData((prev) => ({
-      ...prev,
-      exchanges: [
-        ...prev.exchanges,
-        {
-          id: `ex-${Date.now()}`,
-          theme: ['blue', 'pink', 'green', 'yellow'][prev.exchanges.length % 4],
-          trackingNo: `DCB-NEW-${Date.now().toString().slice(-4)}`,
-          date: new Date().toISOString().slice(0, 10),
-          weight: '2.0 kg',
-          contents: '',
-          message: '',
-          embedUrl: '',
-          from: { school: 'School A', country: 'Country A', flag: '🏳️', address: '' },
-          to: { school: 'School B', country: 'Country B', flag: '🏳️', address: '' },
-        },
-      ],
-    }));
+  const addExchange = useCallback((seed) => {
+    const isPlainObject =
+      seed && typeof seed === 'object' && !seed.nativeEvent && !seed.target;
+    setData((prev) => {
+      const theme = ['blue', 'pink', 'green', 'yellow'][prev.exchanges.length % 4];
+      const next = isPlainObject
+        ? { ...makeEmptyExchange(theme), ...seed }
+        : makeEmptyExchange(theme);
+      return { ...prev, exchanges: [...prev.exchanges, next] };
+    });
   }, []);
 
   const removeExchange = useCallback((id) => {
@@ -115,11 +139,26 @@ export function BoxDataProvider({ children }) {
     }));
   }, []);
 
-  const reset = useCallback(() => setData(defaultData), []);
+  const replaceAll = useCallback((nextData) => {
+    if (nextData?.exchanges) setData({ exchanges: nextData.exchanges });
+  }, []);
+
+  const reset = useCallback(() => {
+    setData(mode === 'host' ? hostDefaultData : { exchanges: [] });
+  }, [mode]);
 
   return (
     <BoxDataContext.Provider
-      value={{ data, updateExchange, addExchange, removeExchange, reset }}
+      value={{
+        mode,
+        sharedFromUrl,
+        data,
+        updateExchange,
+        addExchange,
+        removeExchange,
+        replaceAll,
+        reset,
+      }}
     >
       {children}
     </BoxDataContext.Provider>

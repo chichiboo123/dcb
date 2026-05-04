@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Digital Culture Box</title>
+    <script>
+      // Single-Page-App fallback for GitHub Pages.
+      // Encode the original path/query into a sessionStorage entry that
+      // index.html restores via History API on load. This lets URLs like
+      // `/host` resolve correctly without a server-side rewrite.
+      (function () {
+        var l = window.location;
+        sessionStorage.setItem(
+          'dcb.spaRedirect',
+          l.pathname + l.search + l.hash
+        );
+        l.replace(l.protocol + '//' + l.host + '/');
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>

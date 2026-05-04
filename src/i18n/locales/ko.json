@@ -2,9 +2,28 @@
   "app": {
     "title": "디지털 컬쳐박스 보드",
     "subtitle": "마음을 담은 문화 상자, 세계 친구들에게",
+    "hostSubtitle": "관리자가 세팅한 컬쳐박스",
     "tapToOpen": "상자를 클릭해서 열어보세요",
     "loading": "콘텐츠를 불러오는 중...",
-    "exchangeArrow": "→"
+    "exchangeArrow": "→",
+    "guestEmpty": "나만의 컬쳐박스를 만들어 친구에게 공유해보세요",
+    "guestEmptyHint": "‘컬쳐박스 생성하기’를 눌러 내용을 채워보세요",
+    "hostEmpty": "관리자가 아직 컬쳐박스를 등록하지 않았어요",
+    "hostEmptyHint": "관리자 모드에서 컬쳐박스를 등록해 주세요"
+  },
+  "mode": {
+    "guest": "게스트",
+    "host": "호스트"
+  },
+  "guest": {
+    "createCultureBox": "컬쳐박스 생성하기",
+    "editCultureBox": "컬쳐박스 수정하기",
+    "shareLink": "링크 공유",
+    "linkCopied": "링크가 복사되었습니다",
+    "copyManually": "아래 링크를 복사해서 공유해 주세요",
+    "createTitle": "컬쳐박스 만들기",
+    "createHint": "내용을 저장하면 ‘링크 공유’로 친구에게 보낼 수 있어요",
+    "saveAndPreview": "저장하고 미리보기"
   },
   "box": {
     "open": "박스 열기",

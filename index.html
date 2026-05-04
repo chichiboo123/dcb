@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/box.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#F8FAFC" />
+    <meta name="color-scheme" content="light" />
     <title>Digital Culture Box · 디지털 컬쳐박스</title>
     <meta name="description" content="국제 교류 학교를 잇는 인터랙티브 디지털 문화 박스" />
 
@@ -20,6 +22,18 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Restore the original SPA path captured by 404.html (GitHub Pages fallback).
+      (function () {
+        try {
+          var saved = sessionStorage.getItem('dcb.spaRedirect');
+          if (saved && saved !== '/' && saved !== window.location.pathname) {
+            sessionStorage.removeItem('dcb.spaRedirect');
+            history.replaceState(null, '', saved);
+          }
+        } catch (e) {}
+      })();
+    </script>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
