@@ -132,8 +132,15 @@ export default function App() {
 
       <Footer />
       <BoxModal exchange={activeExchange} onClose={() => setActiveExchange(null)} />
-      <AdminModal open={adminOpen} onClose={() => setAdminOpen(false)} />
-      <HiddenAdminTrigger isHost={isHost} onClick={() => { if (isHost) setAdminOpen(true); else window.location.href = '/host'; }} />
+      <AdminModal
+        open={adminOpen}
+        onClose={() => setAdminOpen(false)}
+        authOnly={!isHost}
+        onAuthSuccess={() => {
+          if (!isHost) window.location.href = '/host';
+        }}
+      />
+      <HiddenAdminTrigger isHost={isHost} onClick={() => { setAdminOpen(true); }} />
       {!isHost && <GuestCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />}
     </div>
   );

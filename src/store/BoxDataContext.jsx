@@ -128,7 +128,7 @@ export function BoxDataProvider({ children }) {
     const isPlainObject =
       seed && typeof seed === 'object' && !seed.nativeEvent && !seed.target;
     setData((prev) => {
-      const theme = ['blue', 'pink', 'green', 'yellow'][prev.exchanges.length % 4];
+      const theme = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'][prev.exchanges.length % 6];
       const next = isPlainObject
         ? { ...makeEmptyExchange(theme), ...seed }
         : makeEmptyExchange(theme);

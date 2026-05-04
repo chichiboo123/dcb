@@ -5,9 +5,9 @@ import { X, Lock, Save, Plus, Trash2, RotateCcw, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
-const THEMES = ['blue', 'pink', 'green', 'yellow'];
+const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
-export default function AdminModal({ open, onClose }) {
+export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = false }) {
   const { t } = useTranslation();
   const { data, updateExchange, addExchange, removeExchange, reset } = useBoxData();
 
@@ -36,6 +36,7 @@ export default function AdminModal({ open, onClose }) {
     if (password === ADMIN_PASSWORD) {
       setAuth(true);
       setError('');
+      if (onAuthSuccess) onAuthSuccess();
     } else {
       setError(t('admin.wrongPassword'));
     }
@@ -131,7 +132,7 @@ export default function AdminModal({ open, onClose }) {
                     {t('admin.login')}
                   </button>
                 </form>
-              ) : (
+              ) : authOnly ? null : (
                 <div className="space-y-4">
                   {draft.map((ex) => (
                     <div
@@ -153,6 +154,8 @@ export default function AdminModal({ open, onClose }) {
                                 pink: 'bg-pink-400',
                                 green: 'bg-emerald-400',
                                 yellow: 'bg-amber-400',
+                                purple: 'bg-violet-400',
+                                orange: 'bg-orange-400',
                               }[th];
                               return (
                                 <button

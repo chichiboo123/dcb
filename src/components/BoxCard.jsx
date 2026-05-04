@@ -49,6 +49,24 @@ const THEMES = {
     chip: 'bg-amber-50 text-amber-800 border-amber-200',
     glow: 'shadow-[0_30px_50px_-20px_rgba(245,158,11,0.5)]',
   },
+  purple: {
+    bodyGrad: ['#C4B5FD', '#8B5CF6', '#7C3AED'],
+    sideGrad: ['#7C3AED', '#6D28D9'],
+    bottomGrad: ['#6D28D9', '#5B21B6'],
+    lidGrad: ['#EDE9FE', '#DDD6FE', '#C4B5FD'],
+    lidSideGrad: ['#A78BFA', '#8B5CF6'],
+    ribbonGrad: ['#F9A8D4', '#EC4899'],
+    accent: 'text-violet-700', chip: 'bg-violet-50 text-violet-700 border-violet-200', glow: 'shadow-[0_30px_50px_-20px_rgba(139,92,246,0.5)]',
+  },
+  orange: {
+    bodyGrad: ['#FDBA74', '#FB923C', '#F97316'],
+    sideGrad: ['#F97316', '#EA580C'],
+    bottomGrad: ['#EA580C', '#C2410C'],
+    lidGrad: ['#FFEDD5', '#FED7AA', '#FDBA74'],
+    lidSideGrad: ['#FDBA74', '#FB923C'],
+    ribbonGrad: ['#7DD3FC', '#38BDF8'],
+    accent: 'text-orange-700', chip: 'bg-orange-50 text-orange-700 border-orange-200', glow: 'shadow-[0_30px_50px_-20px_rgba(249,115,22,0.5)]',
+  },
 };
 
 // Helpers to build CSS linear-gradient strings from color arrays

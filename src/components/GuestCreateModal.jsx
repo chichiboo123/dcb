@@ -6,7 +6,7 @@ import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
 import { COUNTRIES, codeToFlag, findCountry } from '../lib/countries.js';
 
-const THEMES = ['blue', 'pink', 'green', 'yellow'];
+const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
 export default function GuestCreateModal({ open, onClose }) {
   const { t } = useTranslation();
@@ -116,6 +116,8 @@ export default function GuestCreateModal({ open, onClose }) {
                             pink: 'bg-pink-400',
                             green: 'bg-emerald-400',
                             yellow: 'bg-amber-400',
+                            purple: 'bg-violet-400',
+                            orange: 'bg-orange-400',
                           }[th];
                           return (
                             <button
@@ -167,6 +169,20 @@ export default function GuestCreateModal({ open, onClose }) {
                         <div className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500">
                           {role === 'from' ? t('invoice.from') : t('invoice.to')}
                         </div>
+
+                        <div className="flex flex-wrap gap-1">
+                          {['KR','JP','ID','US'].map((cc) => (
+                            <button
+                              key={cc}
+                              type="button"
+                              onClick={() => updateCountryBySearch(ex.id, role, cc)}
+                              className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-sky-50 hover:border-sky-200"
+                            >
+                              {cc}
+                            </button>
+                          ))}
+                        </div>
+
                         <div className="flex gap-2">
                           <input
                             value={ex[role].flag}
@@ -194,7 +210,7 @@ export default function GuestCreateModal({ open, onClose }) {
                             <datalist id={`country-list-${role}`}>
                               {COUNTRIES.map((c) => (
                                 <option key={c.code} value={`${c.code} - ${c.name}`}>
-                                  {c.name}
+                                  {c.code} · {c.name}
                                 </option>
                               ))}
                             </datalist>
