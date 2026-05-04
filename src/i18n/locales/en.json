@@ -89,5 +89,13 @@
   },
   "footer": {
     "credit": "Created by. Edu-Musical Dreaming Teacher Chisoo"
+  },
+  "map": {
+    "sectionBadge": "World School Connection Map",
+    "title": "Connect Our Schools on the World Map",
+    "subtitle": "Search two schools to draw your exchange connection across the globe",
+    "schoolA": "Sending School (A)",
+    "schoolB": "Receiving School (B)",
+    "searchPlaceholder": "Search by school name..."
   }
 }

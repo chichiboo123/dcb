@@ -56,3 +56,50 @@ body::before {
 :fullscreen {
   background: white;
 }
+
+/* ── Google Places Autocomplete dropdown ─────────────────────────────── */
+.pac-container {
+  border-radius: 12px !important;
+  border: 1px solid rgba(148, 163, 184, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(74, 144, 226, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  background: #ffffff !important;
+  font-family: 'Pretendard GOV', Pretendard, system-ui, sans-serif !important;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.pac-item {
+  padding: 9px 14px !important;
+  font-size: 13px !important;
+  color: #334155 !important;
+  border-top: 1px solid #F1F5F9 !important;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.pac-item:first-child {
+  border-top: none !important;
+}
+
+.pac-item:hover,
+.pac-item-selected {
+  background: #F0F9FF !important;
+}
+
+.pac-item-query {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #0F172A !important;
+}
+
+.pac-matched {
+  color: #0EA5E9 !important;
+}
+
+.pac-icon {
+  display: none !important;
+}
+
+.pac-logo::after {
+  display: none !important;
+}
