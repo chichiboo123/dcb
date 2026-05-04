@@ -43,12 +43,12 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (isHost) document.title = `Host · ${t('app.title')}`;
-    else document.title = t('app.title');
-  }, [isHost, t]);
+    document.title = t('app.title');
+  }, [t]);
 
   return (
     <div className="app-shell flex flex-col">
+      {/* Header */}
       <header className="sticky top-0 z-20 backdrop-blur bg-white/70 border-b border-slate-200/70">
         <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-3">
           <button
@@ -75,6 +75,7 @@ export default function App() {
           </button>
 
           <div className="flex items-center gap-2">
+            {/* Mode badge */}
             <span
               className={`hidden sm:inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold border ${
                 isHost
@@ -89,6 +90,7 @@ export default function App() {
         </div>
       </header>
 
+      {/* Main */}
       <main className="flex-1">
         <section className="mx-auto max-w-6xl px-4 pt-10 sm:pt-14 pb-20">
           <div className="text-center mb-8 sm:mb-12">
@@ -96,10 +98,15 @@ export default function App() {
               {t('app.title')}
             </h1>
             <p className="mt-2 text-sm sm:text-base text-slate-500">
-              {hasBoxes ? t('app.tapToOpen') : isHost ? t('app.hostEmpty') : t('app.guestEmpty')}
+              {hasBoxes
+                ? t('app.tapToOpen')
+                : isHost
+                ? t('app.hostEmpty')
+                : t('app.guestEmpty')}
             </p>
           </div>
 
+          {/* Guest action buttons */}
           {!isHost && (
             <div className="mb-10 flex flex-wrap items-center justify-center gap-3 relative">
               <button
@@ -134,15 +141,11 @@ export default function App() {
             </div>
           )}
 
+          {/* Boxes or empty state */}
           {hasBoxes ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-10 sm:gap-12 justify-items-center">
+            <div className="grid sm:grid-cols-2 gap-10 sm:gap-12 justify-items-center">
               {data.exchanges.map((ex, i) => (
-                <BoxCard
-                  key={ex.id}
-                  exchange={ex}
-                  index={i}
-                  onOpen={setActiveExchange}
-                />
+                <BoxCard key={ex.id} exchange={ex} index={i} onOpen={setActiveExchange} />
               ))}
             </div>
           ) : (
@@ -168,13 +171,27 @@ export default function App() {
 
       <Footer />
 
+      {/* Modals */}
       <BoxModal exchange={activeExchange} onClose={() => setActiveExchange(null)} />
-      {isHost && (
-        <>
-          <AdminModal open={adminOpen} onClose={() => setAdminOpen(false)} />
-          <HiddenAdminTrigger onClick={() => setAdminOpen(true)} />
-        </>
-      )}
+
+      {/* AdminModal is accessible from BOTH modes via the hidden trigger.
+          On guest mode the trigger navigates to /host so the admin stays in host context. */}
+      <AdminModal open={adminOpen} onClose={() => setAdminOpen(false)} />
+
+      {/* Hidden gear icon — always visible, very subtle */}
+      <HiddenAdminTrigger
+        isHost={isHost}
+        onClick={() => {
+          if (isHost) {
+            setAdminOpen(true);
+          } else {
+            // Navigate to host page for admin access
+            window.location.href = '/host';
+          }
+        }}
+      />
+
+      {/* Guest create/edit modal */}
       {!isHost && (
         <GuestCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
       )}
