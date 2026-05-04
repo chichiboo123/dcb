@@ -13,7 +13,8 @@
   },
   "mode": {
     "guest": "Guest",
-    "host": "Host"
+    "host": "Host",
+    "goGuest": "Back to Guest"
   },
   "guest": {
     "createCultureBox": "Create Culture Box",
@@ -23,7 +24,9 @@
     "copyManually": "Copy this link to share",
     "createTitle": "Create your Culture Box",
     "createHint": "Save your contents, then use “Share link” to send it.",
-    "saveAndPreview": "Save & preview"
+    "saveAndPreview": "Save & preview",
+    "linkTooLong": "The share link is too long due to large data. Reduce content and try again.",
+    "countrySearch": "Search country (e.g., KR, Korea)"
   },
   "box": {
     "open": "Open Box",
@@ -47,7 +50,8 @@
     "fullscreen": "Fullscreen",
     "exitFullscreen": "Exit fullscreen",
     "newWindow": "Open in new window",
-    "close": "Close"
+    "close": "Close",
+    "invalidEmbedUrl": "Register an embed URL in admin mode."
   },
   "admin": {
     "title": "Admin",
@@ -70,7 +74,8 @@
     "weight": "Weight",
     "contents": "Contents",
     "message": "Message",
-    "theme": "Theme color"
+    "theme": "Theme color",
+    "passwordNotConfigured": "Admin password is not configured. Set VITE_ADMIN_PASSWORD in .env."
   },
   "footer": {
     "credit": "Created by. Edu-Musical Dreaming Teacher Chisoo"

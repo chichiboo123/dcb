@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { X, Save, Plus, Trash2, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
+import { COUNTRIES, codeToFlag, findCountry } from '../lib/countries.js';
 
-const THEMES = ['blue', 'pink', 'green', 'yellow'];
+const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
 export default function GuestCreateModal({ open, onClose }) {
   const { t } = useTranslation();
@@ -30,6 +31,17 @@ export default function GuestCreateModal({ open, onClose }) {
     setDraft((prev) =>
       prev.map((ex) => (ex.id === id ? { ...ex, [key]: { ...ex[key], ...patch } } : ex))
     );
+
+
+  const updateCountryBySearch = (id, role, query) => {
+    const found = findCountry(query);
+    if (!found) return;
+    updateDraftNested(id, role, {
+      country: found.name,
+      countryCode: found.code,
+      flag: codeToFlag(found.code),
+    });
+  };
 
   const addDraft = () => {
     const theme = THEMES[draft.length % THEMES.length];
@@ -104,6 +116,8 @@ export default function GuestCreateModal({ open, onClose }) {
                             pink: 'bg-pink-400',
                             green: 'bg-emerald-400',
                             yellow: 'bg-amber-400',
+                            purple: 'bg-violet-400',
+                            orange: 'bg-orange-400',
                           }[th];
                           return (
                             <button
@@ -155,6 +169,20 @@ export default function GuestCreateModal({ open, onClose }) {
                         <div className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500">
                           {role === 'from' ? t('invoice.from') : t('invoice.to')}
                         </div>
+
+                        <div className="flex flex-wrap gap-1">
+                          {['KR','JP','ID','US'].map((cc) => (
+                            <button
+                              key={cc}
+                              type="button"
+                              onClick={() => updateCountryBySearch(ex.id, role, cc)}
+                              className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-sky-50 hover:border-sky-200"
+                            >
+                              {cc}
+                            </button>
+                          ))}
+                        </div>
+
                         <div className="flex gap-2">
                           <input
                             value={ex[role].flag}
@@ -164,14 +192,29 @@ export default function GuestCreateModal({ open, onClose }) {
                             aria-label={t('admin.flag')}
                             className="w-14 rounded-lg border border-slate-200 px-2 py-1.5 text-center text-lg"
                           />
-                          <input
-                            value={ex[role].country}
-                            onChange={(e) =>
-                              updateDraftNested(ex.id, role, { country: e.target.value })
-                            }
-                            placeholder={t('admin.country')}
-                            className="flex-1 rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                          />
+                          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <input
+                              list={`country-list-${role}`}
+                              onBlur={(e) => updateCountryBySearch(ex.id, role, e.target.value)}
+                              placeholder={t('guest.countrySearch')}
+                              className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                            />
+                            <input
+                              value={ex[role].country}
+                              onChange={(e) =>
+                                updateDraftNested(ex.id, role, { country: e.target.value, countryCode: '' })
+                              }
+                              placeholder={t('admin.country')}
+                              className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                            />
+                            <datalist id={`country-list-${role}`}>
+                              {COUNTRIES.map((c) => (
+                                <option key={c.code} value={`${c.code} - ${c.name}`}>
+                                  {c.code} · {c.name}
+                                </option>
+                              ))}
+                            </datalist>
+                          </div>
                         </div>
                         <input
                           value={ex[role].school}
