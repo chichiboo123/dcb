@@ -46,16 +46,16 @@ export default function BoxModal({ exchange, onClose }) {
             className="relative w-full max-w-6xl max-h-[92vh] overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200 flex flex-col"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-5 py-3.5 bg-gradient-to-r from-sky-50 via-pink-50 to-amber-50 border-b border-slate-200">
-              <div className="flex items-center gap-2 text-sm sm:text-base font-extrabold text-slate-800">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 border border-slate-200 shadow-sm">
+            <div className="flex items-start sm:items-center justify-between gap-2 px-3 sm:px-5 py-3.5 bg-gradient-to-r from-sky-50 via-pink-50 to-amber-50 border-b border-slate-200">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-base font-extrabold text-slate-800 min-w-0">
+                <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 sm:px-3 py-1 border border-slate-200 shadow-sm max-w-full">
                   <span aria-hidden="true">{exchange.from.flag}</span>
-                  <span>{exchange.from.country}</span>
+                  <span className="truncate">{exchange.from.country}</span>
                 </span>
-                <ArrowRight size={16} className="text-slate-400" aria-hidden="true" />
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 border border-slate-200 shadow-sm">
+                <ArrowRight size={14} className="text-slate-400" aria-hidden="true" />
+                <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 sm:px-3 py-1 border border-slate-200 shadow-sm max-w-full">
                   <span aria-hidden="true">{exchange.to.flag}</span>
-                  <span>{exchange.to.country}</span>
+                  <span className="truncate">{exchange.to.country}</span>
                 </span>
               </div>
               <button
