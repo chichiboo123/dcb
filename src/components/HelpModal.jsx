@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Package, Users, Share2, MousePointerClick, ShieldCheck } from 'lucide-react';
+import { X } from 'lucide-react';
 
 const DEVELOPER_URL = 'https://litt.ly/chichiboo';
 
@@ -15,6 +15,13 @@ export default function HelpModal({ open, onClose }) {
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
   }, [open, onClose]);
+
+  const steps = [
+    t('help.step1'),
+    t('help.step2'),
+    t('help.step3'),
+    t('help.step4'),
+  ];
 
   return (
     <AnimatePresence>
@@ -52,52 +59,18 @@ export default function HelpModal({ open, onClose }) {
               </button>
             </div>
 
-            {/* Body */}
-            <div className="px-6 py-5 space-y-5 text-sm text-slate-700">
-
-              {/* Guest mode */}
-              <section>
-                <div className="flex items-center gap-1.5 mb-2.5">
-                  <Users size={14} className="text-sky-500" />
-                  <span className="font-bold text-sky-700 text-xs uppercase tracking-wide">{t('help.guestTitle')}</span>
-                </div>
-                <ol className="space-y-2">
-                  <li className="flex gap-2.5">
-                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-[11px] font-bold">1</span>
-                    <span>{t('help.guestStep1')}</span>
+            {/* Steps */}
+            <div className="px-6 py-5">
+              <ol className="space-y-3 text-sm text-slate-700">
+                {steps.map((text, i) => (
+                  <li key={i} className="flex gap-3">
+                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-[11px] font-bold">
+                      {i + 1}
+                    </span>
+                    <span className="leading-snug">{text}</span>
                   </li>
-                  <li className="flex gap-2.5">
-                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-[11px] font-bold">2</span>
-                    <span>{t('help.guestStep2')}</span>
-                  </li>
-                  <li className="flex gap-2.5">
-                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center text-[11px] font-bold">3</span>
-                    <span>{t('help.guestStep3')}</span>
-                  </li>
-                </ol>
-              </section>
-
-              {/* Host mode */}
-              <section>
-                <div className="flex items-center gap-1.5 mb-2.5">
-                  <ShieldCheck size={14} className="text-amber-500" />
-                  <span className="font-bold text-amber-700 text-xs uppercase tracking-wide">{t('help.hostTitle')}</span>
-                </div>
-                <ol className="space-y-2">
-                  <li className="flex gap-2.5">
-                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[11px] font-bold">1</span>
-                    <span>{t('help.hostStep1')}</span>
-                  </li>
-                  <li className="flex gap-2.5">
-                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[11px] font-bold">2</span>
-                    <span>{t('help.hostStep2')}</span>
-                  </li>
-                  <li className="flex gap-2.5">
-                    <span className="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-[11px] font-bold">3</span>
-                    <span>{t('help.hostStep3')}</span>
-                  </li>
-                </ol>
-              </section>
+                ))}
+              </ol>
             </div>
 
             {/* Developer footer */}

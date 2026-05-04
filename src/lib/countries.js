@@ -1,7 +1,12 @@
 import countryTsvRaw from '../data/countries.tsv?raw';
 
 const COUNTRY_CODES = [
-  'AF','AL','DZ','AD','AO','AR','AM','AU','AT','AZ','BH','BD','BY','BE','BZ','BJ','BO','BA','BW','BR','BN','BG','KH','CM','CA','CL','CN','CO','CR','HR','CU','CY','CZ','DK','DO','EC','EG','SV','EE','ET','FI','FR','GE','DE','GH','GR','GT','HN','HK','HU','IS','IN','ID','IR','IQ','IE','IL','IT','JM','JP','JO','KZ','KE','KW','KG','LA','LV','LB','LY','LT','LU','MO','MK','MG','MY','MV','MT','MX','MD','MN','ME','MA','MM','NP','NL','NZ','NI','NG','NO','OM','PK','PA','PY','PE','PH','PL','PT','QA','RO','RU','SA','RS','SG','SK','SI','ZA','KR','ES','LK','SE','CH','TW','TJ','TZ','TH','TN','TR','UG','UA','AE','GB','US','UY','UZ','VE','VN','YE','ZM','ZW',
+  'KR','KP','AF','BD','BT','MM','BN','TW','CN','GU','HK','IN','ID','IO','JP','LA','MO','MY','MV','MP','MN','NP','PK','PH','SG','LK','VN','TH','KH',
+  'BH','CY','IR','IQ','IL','JO','KW','LB','OM','PS','QA','SA','SY','TR','AE','YE',
+  'AL','AM','AZ','AD','AT','HR','BA','BG','BE','BY','DK','CZ','SK','FI','FR','EE','GE','DE','GI','GR','HU','GL','IS','IE','IT','KZ','KG','IM','LI','LV','LU','LT','MK','MT','MD','MC','NL','NO','PL','PT','RO','SM','ES','YU','SE','CH','GB','RU','VA','JE','TJ','TM','UA','UZ','SI','AX','SJ',
+  'CA','US','PM','AI','AN','AR','AG','AW','VG','BS','BB','BM','BO','BR','BZ','KY','CL','CO','CR','CU','DO','DM','EC','SV','FK','GF','GT','GD','GP','GY','HT','HN','JM','MQ','MS','MX','NI','PA','PY','PE','PR','KN','LC','SR','VC','TT','TC','UY','VE','VI',
+  'DZ','AO','BJ','BW','BI','KM','SS','CM','CV','CF','TD','CG','CI','DJ','EG','GQ','ET','ER','BF','GA','GM','GH','GN','GW','KE','LS','LR','LY','MG','MW','ML','MR','MU','MA','MZ','YT','NE','NG','NA','RE','ZA','RW','EH','ST','SN','SC','SL','SO','SD','SZ','SH','TG','TN','UG','TZ','CD','ZM','ZW',
+  'AU','FJ','NZ','NC','TF','PF','HM','FM','NR','PW','PG','SB','GS','CX','CC','NF','TO','WS','AS','TV','CK','KI','MH','NU','PN','TK','VU','WF','FO',
 ];
 
 export const COUNTRIES = [...new Set(COUNTRY_CODES)];

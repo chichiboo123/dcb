@@ -80,14 +80,10 @@
   },
   "help": {
     "title": "Cara Penggunaan",
-    "guestTitle": "Mode Tamu",
-    "guestStep1": "Klik 'Buat Kotak Budaya' → Isi detail → Simpan",
-    "guestStep2": "Ketuk 'Bagikan Tautan' untuk mengirim ke teman",
-    "guestStep3": "Klik kotak → Lihat konten embed & invoice",
-    "hostTitle": "Mode Tuan Rumah (/host)",
-    "hostStep1": "Masuk dengan kata sandi admin",
-    "hostStep2": "Tambah, edit, atau hapus kotak, lalu simpan",
-    "hostStep3": "Perubahan langsung terlihat oleh tamu",
+    "step1": "Klik [Buat Kotak Budaya] → Masukkan info sekolah pengirim & penerima",
+    "step2": "Tempel URL embed (Padlet, Canva, dll.) → Klik [Simpan & Pratinjau]",
+    "step3": "Klik kotak → Lihat konten embed dan invoice pengiriman",
+    "step4": "Klik [Bagikan Tautan] → URL otomatis tersalin → Kirim ke teman atau guru",
     "developerLabel": "Pengembang",
     "developerName": "Guru Chisoo, Sang Pemimpi Musikal Edukasi"
   },

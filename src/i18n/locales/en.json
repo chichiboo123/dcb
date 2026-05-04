@@ -80,14 +80,10 @@
   },
   "help": {
     "title": "How to Use",
-    "guestTitle": "Guest Mode",
-    "guestStep1": "Click 'Create Culture Box' → Fill in details → Save",
-    "guestStep2": "Tap 'Share Link' to send the box to friends",
-    "guestStep3": "Click a box → View embedded content & invoice",
-    "hostTitle": "Host Mode (/host)",
-    "hostStep1": "Log in with the admin password",
-    "hostStep2": "Add, edit, or delete boxes, then save",
-    "hostStep3": "Changes appear instantly for guests",
+    "step1": "Click [Create Culture Box] → Enter sender & recipient school info",
+    "step2": "Paste an embed URL (Padlet, Canva, etc.) → Click [Save & Preview]",
+    "step3": "Click a box → View embedded content and the shipping invoice",
+    "step4": "Click [Share Link] → URL is copied → Send it to friends or teachers",
     "developerLabel": "Developer",
     "developerName": "Edu-Musical Dreaming Teacher Chisoo"
   },
