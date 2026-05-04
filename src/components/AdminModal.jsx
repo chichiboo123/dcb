@@ -7,7 +7,7 @@ import { useBoxData } from '../store/BoxDataContext.jsx';
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || '2865';
 const THEMES = ['blue', 'pink', 'green', 'yellow'];
 
-export default function AdminModal({ open, onClose, requireAuth = true, title }) {
+export default function AdminModal({ open, onClose }) {
   const { t } = useTranslation();
   const { data, updateExchange, addExchange, removeExchange, reset } = useBoxData();
 
@@ -23,12 +23,11 @@ export default function AdminModal({ open, onClose, requireAuth = true, title })
       setError('');
       setPassword('');
     } else {
-      setAuth(!requireAuth);
+      setAuth(false);
     }
-  }, [open, data.exchanges, requireAuth]);
+  }, [open, data.exchanges]);
 
   const tryLogin = (e) => {
-    if (!requireAuth) return;
     e.preventDefault();
     if (password === ADMIN_PASSWORD) {
       setAuth(true);
@@ -52,10 +51,6 @@ export default function AdminModal({ open, onClose, requireAuth = true, title })
     setToast(t('admin.saved'));
     setTimeout(() => setToast(''), 1600);
   };
-
-  useEffect(() => {
-    if (!requireAuth) setAuth(true);
-  }, [requireAuth]);
 
   return (
     <AnimatePresence>
@@ -83,7 +78,7 @@ export default function AdminModal({ open, onClose, requireAuth = true, title })
             {/* Header */}
             <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50 border-b border-slate-200">
               <h2 className="text-base font-extrabold text-slate-800">
-                {title || t('admin.title')}
+                {t('admin.title')}
               </h2>
               <button
                 onClick={onClose}
@@ -96,7 +91,7 @@ export default function AdminModal({ open, onClose, requireAuth = true, title })
 
             {/* Body */}
             <div className="flex-1 overflow-y-auto p-5">
-              {requireAuth && !auth ? (
+              {!auth ? (
                 <form onSubmit={tryLogin} className="max-w-sm mx-auto py-6 space-y-4">
                   <div className="text-center">
                     <Lock size={40} className="mx-auto text-slate-400" aria-hidden="true" />
@@ -149,11 +144,7 @@ export default function AdminModal({ open, onClose, requireAuth = true, title })
                                 green: 'bg-emerald-400',
                                 yellow: 'bg-amber-400',
                               }[th];
-                              useEffect(() => {
-    if (!requireAuth) setAuth(true);
-  }, [requireAuth]);
-
-  return (
+                              return (
                                 <button
                                   key={th}
                                   type="button"
