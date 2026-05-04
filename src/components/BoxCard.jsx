@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Package, ArrowRight, Sparkles } from 'lucide-react';
+import { codeToFlag, getFlagImageUrl } from '../lib/countries.js';
 
 const THEMES = {
   blue: {
@@ -48,6 +49,24 @@ const THEMES = {
     chip: 'bg-amber-50 text-amber-800 border-amber-200',
     glow: 'shadow-[0_30px_50px_-20px_rgba(245,158,11,0.5)]',
   },
+  purple: {
+    bodyGrad: ['#C4B5FD', '#8B5CF6', '#7C3AED'],
+    sideGrad: ['#7C3AED', '#6D28D9'],
+    bottomGrad: ['#6D28D9', '#5B21B6'],
+    lidGrad: ['#EDE9FE', '#DDD6FE', '#C4B5FD'],
+    lidSideGrad: ['#A78BFA', '#8B5CF6'],
+    ribbonGrad: ['#F9A8D4', '#EC4899'],
+    accent: 'text-violet-700', chip: 'bg-violet-50 text-violet-700 border-violet-200', glow: 'shadow-[0_30px_50px_-20px_rgba(139,92,246,0.5)]',
+  },
+  orange: {
+    bodyGrad: ['#FDBA74', '#FB923C', '#F97316'],
+    sideGrad: ['#F97316', '#EA580C'],
+    bottomGrad: ['#EA580C', '#C2410C'],
+    lidGrad: ['#FFEDD5', '#FED7AA', '#FDBA74'],
+    lidSideGrad: ['#FDBA74', '#FB923C'],
+    ribbonGrad: ['#7DD3FC', '#38BDF8'],
+    accent: 'text-orange-700', chip: 'bg-orange-50 text-orange-700 border-orange-200', glow: 'shadow-[0_30px_50px_-20px_rgba(249,115,22,0.5)]',
+  },
 };
 
 // Helpers to build CSS linear-gradient strings from color arrays
@@ -81,12 +100,12 @@ export default function BoxCard({ exchange, index = 0, onOpen }) {
       {/* Country chips */}
       <div className="flex items-center justify-center gap-2 mb-3">
         <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${theme.chip}`}>
-          <span aria-hidden="true">{exchange.from.flag}</span>
+          <span aria-hidden="true">{exchange.from.countryCode ? <img src={getFlagImageUrl(exchange.from.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" onError={(e)=>{e.currentTarget.style.display='none';}} /> : (exchange.from.flag || codeToFlag(exchange.from.countryCode || ''))}</span>
           {exchange.from.country}
         </span>
         <ArrowRight size={14} className="text-slate-400" aria-hidden="true" />
         <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${theme.chip}`}>
-          <span aria-hidden="true">{exchange.to.flag}</span>
+          <span aria-hidden="true">{exchange.to.countryCode ? <img src={getFlagImageUrl(exchange.to.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" onError={(e)=>{e.currentTarget.style.display='none';}} /> : (exchange.to.flag || codeToFlag(exchange.to.countryCode || ''))}</span>
           {exchange.to.country}
         </span>
       </div>

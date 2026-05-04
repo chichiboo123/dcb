@@ -13,7 +13,8 @@
   },
   "mode": {
     "guest": "ゲスト",
-    "host": "ホスト"
+    "host": "ホスト",
+    "goGuest": "ゲストに戻る"
   },
   "guest": {
     "createCultureBox": "カルチャーボックスを作る",
@@ -23,7 +24,10 @@
     "copyManually": "このリンクをコピーして共有してください",
     "createTitle": "カルチャーボックスを作成",
     "createHint": "保存後、「リンクを共有」で友だちに送れます。",
-    "saveAndPreview": "保存してプレビュー"
+    "saveAndPreview": "保存してプレビュー",
+    "linkTooLong": "データ量が多く共有リンクが長すぎます。内容を減らして再試行してください。",
+    "countrySearch": "国を検索（例: KR, Korea）",
+    "countrySearchShort": "国を検索"
   },
   "box": {
     "open": "箱を開ける",
@@ -47,7 +51,8 @@
     "fullscreen": "全画面",
     "exitFullscreen": "全画面を終了",
     "newWindow": "新しいウィンドウで開く",
-    "close": "閉じる"
+    "close": "閉じる",
+    "invalidEmbedUrl": "管理者モードで埋め込みURLを登録してください。"
   },
   "admin": {
     "title": "管理者",
@@ -70,7 +75,8 @@
     "weight": "重さ",
     "contents": "内容物",
     "message": "メッセージ",
-    "theme": "テーマカラー"
+    "theme": "テーマカラー",
+    "passwordNotConfigured": "管理者パスワードが設定されていません。.env の VITE_ADMIN_PASSWORD を設定してください。"
   },
   "footer": {
     "credit": "Created by. 教育ミュージカル 夢見るチスー先生"

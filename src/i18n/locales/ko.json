@@ -13,7 +13,8 @@
   },
   "mode": {
     "guest": "게스트",
-    "host": "호스트"
+    "host": "호스트",
+    "goGuest": "게스트로 돌아가기"
   },
   "guest": {
     "createCultureBox": "컬쳐박스 생성하기",
@@ -23,7 +24,10 @@
     "copyManually": "아래 링크를 복사해서 공유해 주세요",
     "createTitle": "컬쳐박스 만들기",
     "createHint": "내용을 저장하면 ‘링크 공유’로 친구에게 보낼 수 있어요",
-    "saveAndPreview": "저장하고 미리보기"
+    "saveAndPreview": "저장하고 미리보기",
+    "linkTooLong": "데이터가 많아 공유 링크가 너무 깁니다. 내용을 줄여 다시 시도하세요.",
+    "countrySearch": "국가 검색 (예: KR, Korea)",
+    "countrySearchShort": "국가 검색"
   },
   "box": {
     "open": "박스 열기",
@@ -47,7 +51,8 @@
     "fullscreen": "전체보기",
     "exitFullscreen": "전체보기 해제",
     "newWindow": "새 창에서 열기",
-    "close": "닫기"
+    "close": "닫기",
+    "invalidEmbedUrl": "관리자 모드에서 임베드 URL을 등록하세요."
   },
   "admin": {
     "title": "관리자",
@@ -70,7 +75,8 @@
     "weight": "무게",
     "contents": "내용물",
     "message": "메시지",
-    "theme": "테마 색상"
+    "theme": "테마 색상",
+    "passwordNotConfigured": "관리자 비밀번호가 설정되지 않았습니다. .env의 VITE_ADMIN_PASSWORD를 설정하세요."
   },
   "footer": {
     "credit": "Created by. 교육뮤지컬 꿈꾸는 치수쌤"

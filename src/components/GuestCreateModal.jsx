@@ -4,11 +4,12 @@ import { useTranslation } from 'react-i18next';
 import { X, Save, Plus, Trash2, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
+import { COUNTRIES, codeToFlag, findCountry } from '../lib/countries.js';
 
-const THEMES = ['blue', 'pink', 'green', 'yellow'];
+const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
 export default function GuestCreateModal({ open, onClose }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data, replaceAll } = useBoxData();
   const [draft, setDraft] = useState(data.exchanges);
   const [toast, setToast] = useState('');
@@ -30,6 +31,17 @@ export default function GuestCreateModal({ open, onClose }) {
     setDraft((prev) =>
       prev.map((ex) => (ex.id === id ? { ...ex, [key]: { ...ex[key], ...patch } } : ex))
     );
+
+
+  const updateCountryBySearch = (id, role, query) => {
+    const found = findCountry(query, i18n.language);
+    if (!found) return;
+    updateDraftNested(id, role, {
+      country: found.name,
+      countryCode: found.code,
+      flag: codeToFlag(found.code),
+    });
+  };
 
   const addDraft = () => {
     const theme = THEMES[draft.length % THEMES.length];
@@ -104,6 +116,8 @@ export default function GuestCreateModal({ open, onClose }) {
                             pink: 'bg-pink-400',
                             green: 'bg-emerald-400',
                             yellow: 'bg-amber-400',
+                            purple: 'bg-violet-400',
+                            orange: 'bg-orange-400',
                           }[th];
                           return (
                             <button
@@ -155,22 +169,54 @@ export default function GuestCreateModal({ open, onClose }) {
                         <div className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500">
                           {role === 'from' ? t('invoice.from') : t('invoice.to')}
                         </div>
-                        <div className="flex gap-2">
+
+                        <div className="flex flex-wrap gap-1">
+                          {['KR','JP','ID','US'].map((cc) => (
+                            <button
+                              key={cc}
+                              type="button"
+                              onClick={() => updateCountryBySearch(ex.id, role, cc)}
+                              className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-sky-50 hover:border-sky-200"
+                            >
+                              {cc}
+                            </button>
+                          ))}
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-[1.4fr_64px_1fr] gap-2">
+                          <div>
+                            <input
+                              list={`country-list-${role}`}
+                              onBlur={(e) => updateCountryBySearch(ex.id, role, e.target.value)}
+                              placeholder={t('guest.countrySearchShort')}
+                              className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                            />
+                            <datalist id={`country-list-${role}`}>
+                              {COUNTRIES.map((code) => {
+                                const localized = new Intl.DisplayNames([i18n.language.split('-')[0] || 'en'], { type: 'region' }).of(code) || code;
+                                return (
+                                  <option key={code} value={`${code} - ${localized}`}>
+                                    {code} · {localized}
+                                  </option>
+                                );
+                              })}
+                            </datalist>
+                          </div>
                           <input
                             value={ex[role].flag}
                             onChange={(e) =>
                               updateDraftNested(ex.id, role, { flag: e.target.value })
                             }
                             aria-label={t('admin.flag')}
-                            className="w-14 rounded-lg border border-slate-200 px-2 py-1.5 text-center text-lg"
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-center text-lg"
                           />
                           <input
                             value={ex[role].country}
                             onChange={(e) =>
-                              updateDraftNested(ex.id, role, { country: e.target.value })
+                              updateDraftNested(ex.id, role, { country: e.target.value, countryCode: '' })
                             }
                             placeholder={t('admin.country')}
-                            className="flex-1 rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
                           />
                         </div>
                         <input

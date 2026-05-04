@@ -36,7 +36,7 @@ src/
 ├─ store/
 │  └─ BoxDataContext.jsx
 ├─ components/
-│  ├─ CultureBox.jsx       # 3D 박스 + 애니메이션
+│  ├─ BoxCard.jsx          # 3D 박스 + 애니메이션
 │  ├─ Invoice.jsx          # 송장 디자인
 │  ├─ EmbedViewer.jsx      # iframe 뷰어
 │  ├─ AdminModal.jsx       # 관리자 모달
