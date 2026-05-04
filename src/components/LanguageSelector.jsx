@@ -35,7 +35,6 @@ export default function LanguageSelector() {
         className="inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur border border-slate-200 px-3.5 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:bg-white hover:shadow transition-all"
       >
         <Globe size={16} className="text-sky-500" aria-hidden="true" />
-        <span aria-hidden="true">{current.flag}</span>
         <span className="hidden sm:inline">{current.label}</span>
         <ChevronDown
           size={14}
@@ -65,13 +64,12 @@ export default function LanguageSelector() {
                       i18n.changeLanguage(lng.code);
                       setOpen(false);
                     }}
-                    className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium transition-colors ${
+                    className={`w-full flex items-center gap-2 px-3.5 py-2.5 text-sm font-medium transition-colors ${
                       active
                         ? 'bg-sky-50 text-sky-700'
                         : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
-                    <span className="text-base" aria-hidden="true">{lng.flag}</span>
                     <span className="flex-1 text-left">{lng.label}</span>
                     {active && <Check size={16} className="text-sky-500" />}
                   </button>
