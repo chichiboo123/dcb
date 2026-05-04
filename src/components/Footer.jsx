@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-export default function Footer() {
+export default function Footer({ mode }) {
   const { t } = useTranslation();
   return (
     <footer className="w-full py-6 flex justify-center">
@@ -12,6 +12,7 @@ export default function Footer() {
       >
         {t('footer.credit')}
       </a>
+      {mode === 'host' ? <span className="ml-3 text-xs text-slate-400">/host</span> : null}
     </footer>
   );
 }
