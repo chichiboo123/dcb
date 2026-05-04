@@ -93,9 +93,12 @@
   "map": {
     "sectionBadge": "Peta Koneksi Sekolah Dunia",
     "title": "Hubungkan Sekolah Kita di Peta Dunia",
-    "subtitle": "Cari dua sekolah untuk menggambar koneksi pertukaran lintas benua",
-    "schoolA": "Sekolah Pengirim (A)",
-    "schoolB": "Sekolah Penerima (B)",
-    "searchPlaceholder": "Cari berdasarkan nama sekolah..."
+    "subtitle": "Sekolah pengirim dan penerima dari setiap Kotak Budaya ditampilkan terhubung di seluruh dunia",
+    "searchPlaceholder": "Cari berdasarkan nama sekolah...",
+    "modalSearchLabel": "Cari sekolah via Google Maps",
+    "noApiKey": "Kunci API Google Maps belum dikonfigurasi. Tambahkan VITE_GOOGLE_MAPS_API_KEY ke file .env Anda.",
+    "loadError": "Gagal memuat Google Maps. Periksa kunci API Anda.",
+    "noExchanges": "Buat Kotak Budaya dan cari sekolah via Google Maps untuk melihat koneksi di sini",
+    "noCoords": "Cari sekolah via Google Maps di formulir untuk menampilkan lokasi di peta"
   }
 }

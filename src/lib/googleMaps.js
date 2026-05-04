@@ -1,0 +1,48 @@
+// Singleton promise — the <script> tag is injected at most once per page load.
+let loadPromise = null;
+
+export function loadGoogleMapsAPI() {
+  if (loadPromise) return loadPromise;
+  if (window.google?.maps?.places) {
+    loadPromise = Promise.resolve();
+    return loadPromise;
+  }
+  loadPromise = new Promise((resolve, reject) => {
+    const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    if (!key) {
+      loadPromise = null;
+      reject(new Error('VITE_GOOGLE_MAPS_API_KEY is not set in .env'));
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&loading=async`;
+    script.async = true;
+    script.defer = true;
+    script.onload = resolve;
+    script.onerror = () => {
+      loadPromise = null;
+      reject(new Error('Google Maps script failed to load'));
+    };
+    document.head.appendChild(script);
+  });
+  return loadPromise;
+}
+
+export const HAS_MAPS_KEY = Boolean(import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+
+export const SCHOOL_TYPES = ['school', 'university', 'primary_school', 'secondary_school'];
+
+export const PASTEL_MAP_STYLES = [
+  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#BFDBFE' }] },
+  { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#93C5FD' }] },
+  { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: '#F1F5F9' }] },
+  { featureType: 'landscape.natural', elementType: 'geometry', stylers: [{ color: '#E2EFF8' }] },
+  { featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{ color: '#CBD5E1' }, { weight: 0.7 }] },
+  { featureType: 'administrative.country', elementType: 'labels.text.fill', stylers: [{ color: '#94A3B8' }] },
+  { featureType: 'administrative.locality', elementType: 'labels.text.fill', stylers: [{ color: '#64748B' }] },
+  { featureType: 'road', stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+  { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+  { featureType: 'administrative.land_parcel', stylers: [{ visibility: 'off' }] },
+  { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+];

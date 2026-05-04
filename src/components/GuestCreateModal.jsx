@@ -1,13 +1,98 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { X, Save, Plus, Trash2, Check } from 'lucide-react';
+import { X, Save, Plus, Trash2, Check, Search } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
 import { COUNTRIES, codeToFlag, findCountry, getFlagImageUrl, getLocalizedCountryName } from '../lib/countries.js';
+import { loadGoogleMapsAPI, HAS_MAPS_KEY, SCHOOL_TYPES } from '../lib/googleMaps.js';
 
 const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
+// ── School Places Autocomplete ────────────────────────────────────────────────
+// Self-contained: loads Google Maps API, initialises Autocomplete, calls onPlace.
+function SchoolPlaceSearch({ onPlace }) {
+  const { t } = useTranslation();
+  const inputRef = useRef(null);
+  const acRef = useRef(null);
+  // Keep a stable ref to the latest onPlace callback
+  const onPlaceRef = useRef(onPlace);
+  useEffect(() => { onPlaceRef.current = onPlace; });
+
+  useEffect(() => {
+    if (!HAS_MAPS_KEY) return;
+    let cancelled = false;
+
+    loadGoogleMapsAPI()
+      .then(() => {
+        if (cancelled || !inputRef.current || acRef.current) return;
+        const ac = new window.google.maps.places.Autocomplete(inputRef.current, {
+          fields: ['name', 'formatted_address', 'geometry', 'place_id', 'address_components'],
+          types: ['school'],
+          // New Places API: restrict to educational institution types
+          includedPrimaryTypes: SCHOOL_TYPES,
+        });
+        ac.addListener('place_changed', () => {
+          const p = ac.getPlace();
+          if (!p?.geometry?.location) return;
+          onPlaceRef.current({
+            name: p.name || '',
+            address: p.formatted_address || '',
+            lat: p.geometry.location.lat(),
+            lng: p.geometry.location.lng(),
+            placeId: p.place_id || '',
+            components: p.address_components || [],
+          });
+          // Clear the search box after selection
+          if (inputRef.current) inputRef.current.value = '';
+        });
+        acRef.current = ac;
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+      acRef.current = null;
+    };
+  }, []);
+
+  if (!HAS_MAPS_KEY) return null;
+
+  return (
+    <div className="relative">
+      <Search
+        size={13}
+        className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sky-400 pointer-events-none z-10"
+        aria-hidden="true"
+      />
+      <input
+        ref={inputRef}
+        type="text"
+        placeholder={t('map.searchPlaceholder')}
+        className="w-full pl-8 pr-2 py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
+          focus:border-sky-400 focus:bg-white focus:ring-2 focus:ring-sky-100 transition-all"
+        style={{ borderRadius: '10px' }}
+      />
+    </div>
+  );
+}
+
+// ── Country extraction from Places address_components ────────────────────────
+function extractCountryPatch(components, lang) {
+  if (!Array.isArray(components)) return {};
+  const comp = components.find((c) => c.types?.includes('country'));
+  if (!comp) return {};
+  const code = comp.short_name;
+  const found = findCountry(code, lang);
+  if (!found) return { country: comp.long_name };
+  return {
+    country: found.name,
+    countryCode: found.code,
+    flag: codeToFlag(found.code),
+  };
+}
+
+// ── Main modal ────────────────────────────────────────────────────────────────
 export default function GuestCreateModal({ open, onClose }) {
   const { t, i18n } = useTranslation();
   const { data, replaceAll } = useBoxData();
@@ -31,7 +116,6 @@ export default function GuestCreateModal({ open, onClose }) {
     setDraft((prev) =>
       prev.map((ex) => (ex.id === id ? { ...ex, [key]: { ...ex[key], ...patch } } : ex))
     );
-
 
   const updateCountryBySearch = (id, role, query) => {
     const found = findCountry(query, i18n.language);
@@ -102,11 +186,22 @@ export default function GuestCreateModal({ open, onClose }) {
                   key={ex.id}
                   className="rounded-2xl border border-slate-200 p-4 bg-slate-50/60"
                 >
+                  {/* Exchange header: country arrows + theme picker + remove */}
                   <div className="flex items-center justify-between mb-3 gap-2">
                     <div className="text-sm font-bold text-slate-700 truncate">
-                      <span aria-hidden="true">{ex.from.countryCode ? <img src={getFlagImageUrl(ex.from.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" /> : ex.from.flag}</span> {ex.from.country || '—'}{' '}
-                      <span className="text-slate-400">→</span>{' '}
-                      <span aria-hidden="true">{ex.to.countryCode ? <img src={getFlagImageUrl(ex.to.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" /> : ex.to.flag}</span> {ex.to.country || '—'}
+                      <span aria-hidden="true">
+                        {ex.from.countryCode
+                          ? <img src={getFlagImageUrl(ex.from.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" />
+                          : ex.from.flag}
+                      </span>{' '}
+                      {ex.from.country || '—'}
+                      {' '}<span className="text-slate-400">→</span>{' '}
+                      <span aria-hidden="true">
+                        {ex.to.countryCode
+                          ? <img src={getFlagImageUrl(ex.to.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" />
+                          : ex.to.flag}
+                      </span>{' '}
+                      {ex.to.country || '—'}
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <div className="flex items-center gap-1">
@@ -147,6 +242,7 @@ export default function GuestCreateModal({ open, onClose }) {
                     </div>
                   </div>
 
+                  {/* Embed URL */}
                   <div className="mb-3">
                     <label className="block text-xs font-bold text-slate-600 mb-1">
                       {t('admin.embedUrl')}
@@ -160,6 +256,7 @@ export default function GuestCreateModal({ open, onClose }) {
                     />
                   </div>
 
+                  {/* From / To columns */}
                   <div className="grid sm:grid-cols-2 gap-3">
                     {['from', 'to'].map((role) => (
                       <div
@@ -170,8 +267,33 @@ export default function GuestCreateModal({ open, onClose }) {
                           {role === 'from' ? t('invoice.from') : t('invoice.to')}
                         </div>
 
+                        {/* ── Google Maps school autocomplete ── */}
+                        {HAS_MAPS_KEY && (
+                          <div>
+                            <div className="text-[10px] font-bold text-sky-600 mb-1 flex items-center gap-1">
+                              <Search size={10} aria-hidden="true" />
+                              {t('map.modalSearchLabel')}
+                            </div>
+                            <SchoolPlaceSearch
+                              key={`${ex.id}-${role}`}
+                              onPlace={(p) => {
+                                const countryPatch = extractCountryPatch(p.components, i18n.language);
+                                updateDraftNested(ex.id, role, {
+                                  school: p.name,
+                                  address: p.address,
+                                  lat: p.lat,
+                                  lng: p.lng,
+                                  placeId: p.placeId,
+                                  ...countryPatch,
+                                });
+                              }}
+                            />
+                          </div>
+                        )}
+
+                        {/* Quick-select country buttons */}
                         <div className="flex flex-wrap gap-1">
-                          {['KR','JP','ID','US'].map((cc) => (
+                          {['KR', 'JP', 'ID', 'US'].map((cc) => (
                             <button
                               key={cc}
                               type="button"
@@ -183,6 +305,7 @@ export default function GuestCreateModal({ open, onClose }) {
                           ))}
                         </div>
 
+                        {/* Country search + flag + country name */}
                         <div className="grid grid-cols-1 sm:grid-cols-[1.4fr_64px_1fr] gap-2">
                           <div>
                             <input
@@ -217,6 +340,8 @@ export default function GuestCreateModal({ open, onClose }) {
                             className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
                           />
                         </div>
+
+                        {/* School name */}
                         <input
                           value={ex[role].school}
                           onChange={(e) =>
@@ -225,6 +350,8 @@ export default function GuestCreateModal({ open, onClose }) {
                           placeholder={t('admin.school')}
                           className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
                         />
+
+                        {/* Address */}
                         <input
                           value={ex[role].address || ''}
                           onChange={(e) =>
@@ -233,10 +360,19 @@ export default function GuestCreateModal({ open, onClose }) {
                           placeholder={t('admin.address')}
                           className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
                         />
+
+                        {/* Coordinate badge — shown after autocomplete fills lat/lng */}
+                        {typeof ex[role].lat === 'number' && (
+                          <div className="flex items-center gap-1 text-[10px] text-sky-600 font-semibold">
+                            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 inline-block" aria-hidden="true" />
+                            {ex[role].lat.toFixed(4)}, {ex[role].lng.toFixed(4)}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
 
+                  {/* Tracking / date / weight */}
                   <div className="grid sm:grid-cols-3 gap-2 mt-3">
                     <input
                       value={ex.trackingNo}
