@@ -1,50 +1,59 @@
 {
   "app": {
-    "title": "디지털 컬쳐박스",
-    "subtitle": "세계 친구들에게 마음을 담아 보내는 문화 박스",
-    "openBox": "박스 열기",
-    "closeBox": "박스 닫기",
-    "tapToOpen": "박스를 클릭해서 열어보세요!",
-    "loading": "콘텐츠를 불러오는 중..."
+    "title": "디지털 컬쳐박스 보드",
+    "subtitle": "마음을 담은 문화 상자, 세계 친구들에게",
+    "tapToOpen": "상자를 클릭해서 열어보세요",
+    "loading": "콘텐츠를 불러오는 중...",
+    "exchangeArrow": "→"
+  },
+  "box": {
+    "open": "박스 열기",
+    "openLabel": "{{from}} → {{to}} 박스 열기",
+    "boxNumber": "BOX No."
   },
   "invoice": {
-    "title": "국제특급우편 · INTERNATIONAL EXPRESS",
+    "title": "국제특급우편",
     "trackingNo": "운송장 번호",
     "from": "보내는 곳",
     "to": "받는 곳",
-    "school": "학교",
-    "country": "국가",
-    "address": "주소",
     "date": "교류 날짜",
     "weight": "무게",
     "contents": "내용물",
     "message": "마음을 담은 메시지",
-    "fragile": "취급주의",
-    "express": "특급",
-    "withCare": "정성을 담아",
-    "signature": "수령확인"
+    "fragile": "FRAGILE",
+    "express": "EXPRESS",
+    "withCare": "정성을 담아"
+  },
+  "viewer": {
+    "fullscreen": "전체보기",
+    "exitFullscreen": "전체보기 해제",
+    "newWindow": "새 창에서 열기",
+    "close": "닫기"
   },
   "admin": {
-    "title": "관리자 모드",
-    "passwordPrompt": "관리자 비밀번호를 입력해 주세요",
-    "passwordPlaceholder": "비밀번호 4자리",
-    "wrongPassword": "비밀번호가 일치하지 않습니다.",
+    "title": "관리자",
+    "passwordPrompt": "비밀번호 입력",
+    "passwordPlaceholder": "••••",
+    "wrongPassword": "비밀번호가 틀렸습니다",
     "login": "로그인",
     "save": "저장",
     "cancel": "취소",
-    "logout": "로그아웃",
-    "edit": "송장 정보 편집",
-    "embedUrl": "임베드 URL (Padlet / Canva)",
-    "embedHint": "공유 가능한 임베드 링크를 입력하세요.",
-    "saved": "저장되었습니다!",
-    "addCountry": "국가 추가",
-    "removeCountry": "삭제",
-    "countryList": "교류 국가 목록"
+    "saved": "저장됨",
+    "addExchange": "교류 박스 추가",
+    "removeExchange": "삭제",
+    "school": "학교",
+    "country": "국가",
+    "flag": "국기 이모지",
+    "address": "주소",
+    "embedUrl": "임베드 URL",
+    "trackingNo": "운송장 번호",
+    "date": "날짜",
+    "weight": "무게",
+    "contents": "내용물",
+    "message": "메시지",
+    "theme": "테마 색상"
   },
   "footer": {
     "credit": "Created by. 교육뮤지컬 꿈꾸는 치수쌤"
-  },
-  "language": {
-    "select": "언어 선택"
   }
 }

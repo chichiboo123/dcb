@@ -1,50 +1,59 @@
 {
   "app": {
-    "title": "Kotak Budaya Digital",
-    "subtitle": "Kotak budaya yang dikirim dengan tulus kepada teman-teman di seluruh dunia",
-    "openBox": "Buka Kotak",
-    "closeBox": "Tutup Kotak",
-    "tapToOpen": "Sentuh kotak untuk membukanya!",
-    "loading": "Memuat konten..."
+    "title": "Papan Kotak Budaya Digital",
+    "subtitle": "Kotak budaya penuh hati, dikirim ke seluruh dunia",
+    "tapToOpen": "Sentuh kotak untuk membukanya",
+    "loading": "Memuat konten...",
+    "exchangeArrow": "→"
+  },
+  "box": {
+    "open": "Buka Kotak",
+    "openLabel": "Buka kotak {{from}} → {{to}}",
+    "boxNumber": "BOX No."
   },
   "invoice": {
-    "title": "POS KILAT INTERNASIONAL · INTERNATIONAL EXPRESS",
+    "title": "POS KILAT INTERNASIONAL",
     "trackingNo": "Nomor Resi",
     "from": "Pengirim",
     "to": "Penerima",
-    "school": "Sekolah",
-    "country": "Negara",
-    "address": "Alamat",
     "date": "Tanggal Pertukaran",
     "weight": "Berat",
     "contents": "Isi",
     "message": "Pesan",
-    "fragile": "MUDAH PECAH",
-    "express": "KILAT",
-    "withCare": "TANGANI DENGAN HATI-HATI",
-    "signature": "Tanda Terima"
+    "fragile": "FRAGILE",
+    "express": "EXPRESS",
+    "withCare": "TANGANI DENGAN HATI-HATI"
+  },
+  "viewer": {
+    "fullscreen": "Layar penuh",
+    "exitFullscreen": "Keluar layar penuh",
+    "newWindow": "Buka di jendela baru",
+    "close": "Tutup"
   },
   "admin": {
-    "title": "Mode Admin",
-    "passwordPrompt": "Silakan masukkan kata sandi admin",
-    "passwordPlaceholder": "Kata sandi 4 digit",
-    "wrongPassword": "Kata sandi salah.",
+    "title": "Admin",
+    "passwordPrompt": "Masukkan kata sandi",
+    "passwordPlaceholder": "••••",
+    "wrongPassword": "Kata sandi salah",
     "login": "Masuk",
     "save": "Simpan",
     "cancel": "Batal",
-    "logout": "Keluar",
-    "edit": "Edit Resi",
-    "embedUrl": "URL Embed (Padlet / Canva)",
-    "embedHint": "Tempel tautan embed yang dapat dibagikan.",
-    "saved": "Tersimpan!",
-    "addCountry": "Tambah Negara",
-    "removeCountry": "Hapus",
-    "countryList": "Daftar Negara Pertukaran"
+    "saved": "Tersimpan",
+    "addExchange": "Tambah Kotak",
+    "removeExchange": "Hapus",
+    "school": "Sekolah",
+    "country": "Negara",
+    "flag": "Emoji bendera",
+    "address": "Alamat",
+    "embedUrl": "URL Embed",
+    "trackingNo": "Nomor Resi",
+    "date": "Tanggal",
+    "weight": "Berat",
+    "contents": "Isi",
+    "message": "Pesan",
+    "theme": "Warna tema"
   },
   "footer": {
     "credit": "Created by. Guru Chisoo, Sang Pemimpi Musikal Edukasi"
-  },
-  "language": {
-    "select": "Pilih Bahasa"
   }
 }

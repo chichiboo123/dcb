@@ -1,50 +1,59 @@
 {
   "app": {
-    "title": "デジタル・カルチャーボックス",
-    "subtitle": "世界の友だちへ、心を込めて届ける文化の箱",
-    "openBox": "箱を開ける",
-    "closeBox": "箱を閉じる",
-    "tapToOpen": "箱をタップして開けてみよう!",
-    "loading": "コンテンツを読み込み中..."
+    "title": "デジタル・カルチャーボックス・ボード",
+    "subtitle": "心を込めた文化の箱を、世界の友だちへ",
+    "tapToOpen": "箱をタップして開けてみよう",
+    "loading": "コンテンツを読み込み中...",
+    "exchangeArrow": "→"
+  },
+  "box": {
+    "open": "箱を開ける",
+    "openLabel": "{{from}} → {{to}} の箱を開ける",
+    "boxNumber": "BOX No."
   },
   "invoice": {
-    "title": "国際特急郵便 · INTERNATIONAL EXPRESS",
+    "title": "国際特急郵便",
     "trackingNo": "追跡番号",
     "from": "差出人",
     "to": "受取人",
-    "school": "学校",
-    "country": "国",
-    "address": "住所",
     "date": "交流日",
     "weight": "重さ",
     "contents": "内容物",
     "message": "メッセージ",
-    "fragile": "取扱注意",
-    "express": "速達",
-    "withCare": "丁寧に",
-    "signature": "受領印"
+    "fragile": "FRAGILE",
+    "express": "EXPRESS",
+    "withCare": "丁寧に"
+  },
+  "viewer": {
+    "fullscreen": "全画面",
+    "exitFullscreen": "全画面を終了",
+    "newWindow": "新しいウィンドウで開く",
+    "close": "閉じる"
   },
   "admin": {
-    "title": "管理者モード",
-    "passwordPrompt": "管理者パスワードを入力してください",
-    "passwordPlaceholder": "4桁のパスワード",
-    "wrongPassword": "パスワードが正しくありません。",
+    "title": "管理者",
+    "passwordPrompt": "パスワード入力",
+    "passwordPlaceholder": "••••",
+    "wrongPassword": "パスワードが違います",
     "login": "ログイン",
     "save": "保存",
     "cancel": "キャンセル",
-    "logout": "ログアウト",
-    "edit": "送り状の編集",
-    "embedUrl": "埋め込みURL (Padlet / Canva)",
-    "embedHint": "共有可能な埋め込みリンクを入力してください。",
-    "saved": "保存されました!",
-    "addCountry": "国を追加",
-    "removeCountry": "削除",
-    "countryList": "交流国リスト"
+    "saved": "保存しました",
+    "addExchange": "交流ボックスを追加",
+    "removeExchange": "削除",
+    "school": "学校",
+    "country": "国",
+    "flag": "国旗の絵文字",
+    "address": "住所",
+    "embedUrl": "埋め込みURL",
+    "trackingNo": "追跡番号",
+    "date": "日付",
+    "weight": "重さ",
+    "contents": "内容物",
+    "message": "メッセージ",
+    "theme": "テーマカラー"
   },
   "footer": {
     "credit": "Created by. 教育ミュージカル 夢見るチスー先生"
-  },
-  "language": {
-    "select": "言語を選択"
   }
 }

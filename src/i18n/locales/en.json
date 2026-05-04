@@ -1,50 +1,59 @@
 {
   "app": {
-    "title": "Digital Culture Box",
-    "subtitle": "A culture box delivered with heart to friends around the world",
-    "openBox": "Open the Box",
-    "closeBox": "Close the Box",
-    "tapToOpen": "Tap the box to open it!",
-    "loading": "Loading content..."
+    "title": "Digital Culture Box Board",
+    "subtitle": "Culture boxes packed with heart, sent across the world",
+    "tapToOpen": "Tap a box to open it",
+    "loading": "Loading content...",
+    "exchangeArrow": "→"
+  },
+  "box": {
+    "open": "Open Box",
+    "openLabel": "Open box {{from}} → {{to}}",
+    "boxNumber": "BOX No."
   },
   "invoice": {
     "title": "INTERNATIONAL EXPRESS MAIL",
     "trackingNo": "Tracking No.",
     "from": "FROM",
     "to": "TO",
-    "school": "School",
-    "country": "Country",
-    "address": "Address",
     "date": "Exchange Date",
     "weight": "Weight",
     "contents": "Contents",
     "message": "Message",
     "fragile": "FRAGILE",
     "express": "EXPRESS",
-    "withCare": "HANDLE WITH CARE",
-    "signature": "Signature"
+    "withCare": "HANDLE WITH CARE"
+  },
+  "viewer": {
+    "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen",
+    "newWindow": "Open in new window",
+    "close": "Close"
   },
   "admin": {
-    "title": "Admin Mode",
-    "passwordPrompt": "Please enter the admin password",
-    "passwordPlaceholder": "4-digit password",
-    "wrongPassword": "Incorrect password.",
+    "title": "Admin",
+    "passwordPrompt": "Enter password",
+    "passwordPlaceholder": "••••",
+    "wrongPassword": "Wrong password",
     "login": "Login",
     "save": "Save",
     "cancel": "Cancel",
-    "logout": "Logout",
-    "edit": "Edit Invoice",
-    "embedUrl": "Embed URL (Padlet / Canva)",
-    "embedHint": "Paste a shareable embed link.",
-    "saved": "Saved!",
-    "addCountry": "Add Country",
-    "removeCountry": "Remove",
-    "countryList": "Exchange Countries"
+    "saved": "Saved",
+    "addExchange": "Add Exchange Box",
+    "removeExchange": "Remove",
+    "school": "School",
+    "country": "Country",
+    "flag": "Flag emoji",
+    "address": "Address",
+    "embedUrl": "Embed URL",
+    "trackingNo": "Tracking No.",
+    "date": "Date",
+    "weight": "Weight",
+    "contents": "Contents",
+    "message": "Message",
+    "theme": "Theme color"
   },
   "footer": {
     "credit": "Created by. Edu-Musical Dreaming Teacher Chisoo"
-  },
-  "language": {
-    "select": "Select Language"
   }
 }
