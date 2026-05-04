@@ -26,7 +26,8 @@
     "createHint": "Setelah disimpan, gunakan “Bagikan tautan” untuk mengirimnya.",
     "saveAndPreview": "Simpan & pratinjau",
     "linkTooLong": "Tautan terlalu panjang karena data terlalu besar. Kurangi konten lalu coba lagi.",
-    "countrySearch": "Cari negara (contoh: KR, Korea)"
+    "countrySearch": "Cari negara (contoh: KR, Korea)",
+    "countrySearchShort": "Cari negara"
   },
   "box": {
     "open": "Buka Kotak",

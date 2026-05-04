@@ -9,7 +9,7 @@ import { COUNTRIES, codeToFlag, findCountry } from '../lib/countries.js';
 const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
 export default function GuestCreateModal({ open, onClose }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data, replaceAll } = useBoxData();
   const [draft, setDraft] = useState(data.exchanges);
   const [toast, setToast] = useState('');
@@ -34,7 +34,7 @@ export default function GuestCreateModal({ open, onClose }) {
 
 
   const updateCountryBySearch = (id, role, query) => {
-    const found = findCountry(query);
+    const found = findCountry(query, i18n.language);
     if (!found) return;
     updateDraftNested(id, role, {
       country: found.name,
@@ -183,38 +183,41 @@ export default function GuestCreateModal({ open, onClose }) {
                           ))}
                         </div>
 
-                        <div className="flex gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-[1.4fr_64px_1fr] gap-2">
+                          <div>
+                            <input
+                              list={`country-list-${role}`}
+                              onBlur={(e) => updateCountryBySearch(ex.id, role, e.target.value)}
+                              placeholder={t('guest.countrySearchShort')}
+                              className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                            />
+                            <datalist id={`country-list-${role}`}>
+                              {COUNTRIES.map((code) => {
+                                const localized = new Intl.DisplayNames([i18n.language.split('-')[0] || 'en'], { type: 'region' }).of(code) || code;
+                                return (
+                                  <option key={code} value={`${code} - ${localized}`}>
+                                    {code} · {localized}
+                                  </option>
+                                );
+                              })}
+                            </datalist>
+                          </div>
                           <input
                             value={ex[role].flag}
                             onChange={(e) =>
                               updateDraftNested(ex.id, role, { flag: e.target.value })
                             }
                             aria-label={t('admin.flag')}
-                            className="w-14 rounded-lg border border-slate-200 px-2 py-1.5 text-center text-lg"
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-center text-lg"
                           />
-                          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <input
-                              list={`country-list-${role}`}
-                              onBlur={(e) => updateCountryBySearch(ex.id, role, e.target.value)}
-                              placeholder={t('guest.countrySearch')}
-                              className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                            />
-                            <input
-                              value={ex[role].country}
-                              onChange={(e) =>
-                                updateDraftNested(ex.id, role, { country: e.target.value, countryCode: '' })
-                              }
-                              placeholder={t('admin.country')}
-                              className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                            />
-                            <datalist id={`country-list-${role}`}>
-                              {COUNTRIES.map((c) => (
-                                <option key={c.code} value={`${c.code} - ${c.name}`}>
-                                  {c.code} · {c.name}
-                                </option>
-                              ))}
-                            </datalist>
-                          </div>
+                          <input
+                            value={ex[role].country}
+                            onChange={(e) =>
+                              updateDraftNested(ex.id, role, { country: e.target.value, countryCode: '' })
+                            }
+                            placeholder={t('admin.country')}
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                          />
                         </div>
                         <input
                           value={ex[role].school}

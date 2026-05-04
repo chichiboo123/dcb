@@ -26,7 +26,8 @@
     "createHint": "내용을 저장하면 ‘링크 공유’로 친구에게 보낼 수 있어요",
     "saveAndPreview": "저장하고 미리보기",
     "linkTooLong": "데이터가 많아 공유 링크가 너무 깁니다. 내용을 줄여 다시 시도하세요.",
-    "countrySearch": "국가 검색 (예: KR, Korea)"
+    "countrySearch": "국가 검색 (예: KR, Korea)",
+    "countrySearchShort": "국가 검색"
   },
   "box": {
     "open": "박스 열기",

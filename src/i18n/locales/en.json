@@ -26,7 +26,8 @@
     "createHint": "Save your contents, then use “Share link” to send it.",
     "saveAndPreview": "Save & preview",
     "linkTooLong": "The share link is too long due to large data. Reduce content and try again.",
-    "countrySearch": "Search country (e.g., KR, Korea)"
+    "countrySearch": "Search country (e.g., KR, Korea)",
+    "countrySearchShort": "Search country"
   },
   "box": {
     "open": "Open Box",
