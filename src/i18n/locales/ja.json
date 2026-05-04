@@ -93,9 +93,12 @@
   "map": {
     "sectionBadge": "世界の学校つながりマップ",
     "title": "世界地図で学校をつなごう",
-    "subtitle": "2つの学校を検索すると、地球上に交流の線が描かれます",
-    "schoolA": "送る学校（A）",
-    "schoolB": "受け取る学校（B）",
-    "searchPlaceholder": "学校名で検索..."
+    "subtitle": "カルチャーボックスの差出学校と受取学校が地球上でつながって表示されます",
+    "searchPlaceholder": "学校名で検索...",
+    "modalSearchLabel": "Googleマップで学校を検索",
+    "noApiKey": "Google Maps APIキーが設定されていません。.envファイルにVITE_GOOGLE_MAPS_API_KEYを追加してください。",
+    "loadError": "Google Mapsの読み込みに失敗しました。APIキーを確認してください。",
+    "noExchanges": "カルチャーボックスを作成し、Googleマップで学校を検索すると、ここに接続が表示されます",
+    "noCoords": "フォームでGoogleマップを使って学校を検索すると、地図に位置が表示されます"
   }
 }

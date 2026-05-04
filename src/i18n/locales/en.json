@@ -93,9 +93,12 @@
   "map": {
     "sectionBadge": "World School Connection Map",
     "title": "Connect Our Schools on the World Map",
-    "subtitle": "Search two schools to draw your exchange connection across the globe",
-    "schoolA": "Sending School (A)",
-    "schoolB": "Receiving School (B)",
-    "searchPlaceholder": "Search by school name..."
+    "subtitle": "The sending and receiving schools of each Culture Box are shown connected across the globe",
+    "searchPlaceholder": "Search by school name...",
+    "modalSearchLabel": "Search school via Google Maps",
+    "noApiKey": "Google Maps API key is not configured. Add VITE_GOOGLE_MAPS_API_KEY to your .env file.",
+    "loadError": "Failed to load Google Maps. Please check your API key.",
+    "noExchanges": "Create a Culture Box and search schools via Google Maps to see connections here",
+    "noCoords": "Search schools via Google Maps in the Culture Box form to pin locations on the map"
   }
 }

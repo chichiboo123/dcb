@@ -17,7 +17,7 @@ export function makeEmptyExchange(theme = 'blue') {
     contents: '',
     message: '',
     embedUrl: '',
-    from: { school: '', country: '', countryCode: '', flag: '🏳️', address: '' },
-    to: { school: '', country: '', countryCode: '', flag: '🏳️', address: '' },
+    from: { school: '', country: '', countryCode: '', flag: '🏳️', address: '', lat: null, lng: null, placeId: '' },
+    to:   { school: '', country: '', countryCode: '', flag: '🏳️', address: '', lat: null, lng: null, placeId: '' },
   };
 }

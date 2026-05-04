@@ -93,9 +93,12 @@
   "map": {
     "sectionBadge": "전 세계 학교 연결 지도",
     "title": "우리 학교를 세계 지도에서 연결해요",
-    "subtitle": "두 학교를 검색하면 지구 위에 우리의 교류를 표시해드려요",
-    "schoolA": "보내는 학교 (A)",
-    "schoolB": "받는 학교 (B)",
-    "searchPlaceholder": "학교명으로 검색..."
+    "subtitle": "컬쳐박스의 보내는 학교와 받는 학교가 지구 위에 연결되어 표시돼요",
+    "searchPlaceholder": "학교명으로 검색...",
+    "modalSearchLabel": "Google 맵으로 학교 검색",
+    "noApiKey": "Google Maps API 키가 설정되지 않았습니다. .env 파일에 VITE_GOOGLE_MAPS_API_KEY를 추가하세요.",
+    "loadError": "Google Maps를 불러오지 못했습니다. API 키를 확인해 주세요.",
+    "noExchanges": "컬쳐박스를 만들고 학교를 Google 맵으로 검색하면 여기에 연결이 표시돼요",
+    "noCoords": "학교 검색(Google 맵)을 통해 위치를 등록하면 지도에 연결이 표시돼요"
   }
 }
