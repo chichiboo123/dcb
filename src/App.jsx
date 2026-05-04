@@ -32,6 +32,11 @@ export default function App() {
 
   const onShare = async () => {
     const url = buildShareUrl(data);
+    if (url.length > 1800) {
+      setShareToast(t('guest.linkTooLong'));
+      setTimeout(() => setShareToast(''), 2200);
+      return;
+    }
     try {
       await navigator.clipboard.writeText(url);
       setShareToast(t('guest.linkCopied'));
@@ -85,6 +90,17 @@ export default function App() {
             >
               {isHost ? t('mode.host') : t('mode.guest')}
             </span>
+            {isHost && (
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.href = '/';
+                }}
+                className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+              >
+                {t('mode.goGuest')}
+              </button>
+            )}
             <LanguageSelector />
           </div>
         </div>

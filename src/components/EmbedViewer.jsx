@@ -95,7 +95,7 @@ export default function EmbedViewer({ url }) {
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 text-center px-6">
             <Link2Off size={36} className="text-orange-400" aria-hidden="true" />
             <p className="text-sm font-bold text-slate-500">
-              관리자 모드에서 임베드 URL을 등록하세요.
+              {t('viewer.invalidEmbedUrl')}
             </p>
           </div>
         )}
