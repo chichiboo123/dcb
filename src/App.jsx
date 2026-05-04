@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Plus, Share2, Check, PackageOpen } from 'lucide-react';
+import { Package, Plus, Share2, Check, PackageOpen, HelpCircle } from 'lucide-react';
 import LanguageSelector from './components/LanguageSelector.jsx';
 import BoxCard from './components/BoxCard.jsx';
 import BoxModal from './components/BoxModal.jsx';
 import AdminModal from './components/AdminModal.jsx';
 import GuestCreateModal from './components/GuestCreateModal.jsx';
+import HelpModal from './components/HelpModal.jsx';
 import HiddenAdminTrigger from './components/HiddenAdminTrigger.jsx';
 import Footer from './components/Footer.jsx';
 import { useBoxData } from './store/BoxDataContext.jsx';
@@ -19,6 +20,7 @@ export default function App() {
   const [adminOpen, setAdminOpen] = useState(false);
   const [createOpen, setCreateOpen] = useState(false);
   const [shareToast, setShareToast] = useState('');
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const isHost = mode === 'host';
   const hasBoxes = data.exchanges.length > 0;
@@ -80,6 +82,14 @@ export default function App() {
               </button>
             )}
             <LanguageSelector />
+            <button
+              type="button"
+              onClick={() => setHelpOpen(true)}
+              aria-label={t('help.title')}
+              className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/90 backdrop-blur border border-slate-200 text-slate-500 hover:text-sky-600 hover:bg-white shadow-sm hover:shadow transition-all"
+            >
+              <HelpCircle size={17} />
+            </button>
           </div>
         </div>
       </header>
@@ -134,6 +144,7 @@ export default function App() {
           if (!isHost) window.location.href = '/host';
         }}
       />
+      <HelpModal open={helpOpen} onClose={() => setHelpOpen(false)} />
       <HiddenAdminTrigger isHost={isHost} onClick={() => { setAdminOpen(true); }} />
       {!isHost && <GuestCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />}
     </div>

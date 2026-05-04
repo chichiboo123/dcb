@@ -78,6 +78,19 @@
     "theme": "Theme color",
     "passwordNotConfigured": "Admin password is not configured. Set VITE_ADMIN_PASSWORD in .env."
   },
+  "help": {
+    "title": "How to Use",
+    "guestTitle": "Guest Mode",
+    "guestStep1": "Click 'Create Culture Box' → Fill in details → Save",
+    "guestStep2": "Tap 'Share Link' to send the box to friends",
+    "guestStep3": "Click a box → View embedded content & invoice",
+    "hostTitle": "Host Mode (/host)",
+    "hostStep1": "Log in with the admin password",
+    "hostStep2": "Add, edit, or delete boxes, then save",
+    "hostStep3": "Changes appear instantly for guests",
+    "developerLabel": "Developer",
+    "developerName": "Edu-Musical Dreaming Teacher Chisoo"
+  },
   "footer": {
     "credit": "Created by. Edu-Musical Dreaming Teacher Chisoo"
   }

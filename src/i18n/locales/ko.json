@@ -78,6 +78,19 @@
     "theme": "테마 색상",
     "passwordNotConfigured": "관리자 비밀번호가 설정되지 않았습니다. .env의 VITE_ADMIN_PASSWORD를 설정하세요."
   },
+  "help": {
+    "title": "사용법",
+    "guestTitle": "게스트 모드",
+    "guestStep1": "컬쳐박스 생성하기 클릭 → 정보 입력 후 저장",
+    "guestStep2": "링크 공유 버튼으로 친구에게 전송",
+    "guestStep3": "박스 클릭 → 임베드 콘텐츠 & 인보이스 확인",
+    "hostTitle": "호스트 모드 (/host)",
+    "hostStep1": "관리자 비밀번호로 로그인",
+    "hostStep2": "박스 추가·편집·삭제 후 저장",
+    "hostStep3": "게스트 화면에 즉시 반영",
+    "developerLabel": "개발자",
+    "developerName": "교육뮤지컬 꿈꾸는 치수쌤"
+  },
   "footer": {
     "credit": "Created by. 교육뮤지컬 꿈꾸는 치수쌤"
   }

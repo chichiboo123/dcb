@@ -78,6 +78,19 @@
     "theme": "テーマカラー",
     "passwordNotConfigured": "管理者パスワードが設定されていません。.env の VITE_ADMIN_PASSWORD を設定してください。"
   },
+  "help": {
+    "title": "使い方",
+    "guestTitle": "ゲストモード",
+    "guestStep1": "「カルチャーボックスを作る」をクリック → 情報入力 → 保存",
+    "guestStep2": "「リンクを共有」で友だちに送る",
+    "guestStep3": "箱をクリック → コンテンツ & 送り状を確認",
+    "hostTitle": "ホストモード（/host）",
+    "hostStep1": "管理者パスワードでログイン",
+    "hostStep2": "ボックスの追加・編集・削除後に保存",
+    "hostStep3": "ゲスト画面に即時反映",
+    "developerLabel": "開発者",
+    "developerName": "教育ミュージカル 夢見るチスー先生"
+  },
   "footer": {
     "credit": "Created by. 教育ミュージカル 夢見るチスー先生"
   }
