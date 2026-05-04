@@ -285,7 +285,7 @@ export default function AdminModal({ open, onClose }) {
             </div>
 
             {auth && (
-              <div className="flex items-center justify-between gap-3 px-5 py-3 border-t border-slate-200 bg-slate-50">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-5 py-3 border-t border-slate-200 bg-slate-50">
                 <button
                   type="button"
                   onClick={() => {
@@ -299,7 +299,7 @@ export default function AdminModal({ open, onClose }) {
                   <RotateCcw size={14} />
                   Reset
                 </button>
-                <div className="flex items-center gap-2">
+                <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-2">
                   <AnimatePresence>
                     {toast && (
                       <motion.span
