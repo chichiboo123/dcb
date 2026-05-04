@@ -2,9 +2,28 @@
   "app": {
     "title": "デジタル・カルチャーボックス・ボード",
     "subtitle": "心を込めた文化の箱を、世界の友だちへ",
+    "hostSubtitle": "ホストが用意したカルチャーボックス",
     "tapToOpen": "箱をタップして開けてみよう",
     "loading": "コンテンツを読み込み中...",
-    "exchangeArrow": "→"
+    "exchangeArrow": "→",
+    "guestEmpty": "自分だけのカルチャーボックスを作って、友だちに共有しよう",
+    "guestEmptyHint": "「カルチャーボックスを作る」を押して内容を入力してください",
+    "hostEmpty": "ホストはまだカルチャーボックスを公開していません",
+    "hostEmptyHint": "管理者モードからカルチャーボックスを公開してください"
+  },
+  "mode": {
+    "guest": "ゲスト",
+    "host": "ホスト"
+  },
+  "guest": {
+    "createCultureBox": "カルチャーボックスを作る",
+    "editCultureBox": "カルチャーボックスを編集",
+    "shareLink": "リンクを共有",
+    "linkCopied": "リンクをコピーしました",
+    "copyManually": "このリンクをコピーして共有してください",
+    "createTitle": "カルチャーボックスを作成",
+    "createHint": "保存後、「リンクを共有」で友だちに送れます。",
+    "saveAndPreview": "保存してプレビュー"
   },
   "box": {
     "open": "箱を開ける",

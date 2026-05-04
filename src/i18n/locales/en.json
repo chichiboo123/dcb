@@ -2,9 +2,28 @@
   "app": {
     "title": "Digital Culture Box Board",
     "subtitle": "Culture boxes packed with heart, sent across the world",
+    "hostSubtitle": "Curated culture boxes set by the host",
     "tapToOpen": "Tap a box to open it",
     "loading": "Loading content...",
-    "exchangeArrow": "→"
+    "exchangeArrow": "→",
+    "guestEmpty": "Create your own culture box and share it with friends",
+    "guestEmptyHint": "Tap “Create Culture Box” to fill in the contents",
+    "hostEmpty": "The host hasn't published any culture boxes yet",
+    "hostEmptyHint": "Open admin mode to publish a culture box"
+  },
+  "mode": {
+    "guest": "Guest",
+    "host": "Host"
+  },
+  "guest": {
+    "createCultureBox": "Create Culture Box",
+    "editCultureBox": "Edit Culture Box",
+    "shareLink": "Share link",
+    "linkCopied": "Link copied to clipboard",
+    "copyManually": "Copy this link to share",
+    "createTitle": "Create your Culture Box",
+    "createHint": "Save your contents, then use “Share link” to send it.",
+    "saveAndPreview": "Save & preview"
   },
   "box": {
     "open": "Open Box",
