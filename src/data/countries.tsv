@@ -1,6 +1,240 @@
 code	ko	en
 KR	대한민국	Republic of Korea
 KP	북한	Democratic People's Republic of Korea
-US	미국	United States of America
-JP	일본	Japan
+AF	아프가니스탄	Islamic State of Afghanistan
+BD	방글라데시	People's Republic of Bangladesh
+BT	부탄	Kingdom of Bhutan
+MM	미얀마	Union of Myanmar
+BN	브루나이	Brunei Darussalam
+TW	대만	Taiwan, Province of China
+CN	중국	People's Republic of China
+GU	괌	Territory of Guam
+HK	홍콩	Hong Kong
+IN	인도	Republic of India
 ID	인도네시아	Republic of Indonesia
+IO	영국령 인도양지역	British Indian Ocean Territory
+JP	일본	Japan
+LA	라오스	Lao People's Democratic Republic
+MO	마카오	Macau
+MY	말레이지아	Malaysia
+MV	몰디브	Republic of Maldives
+MP	북마리아나 군도	Commonwealth of the Northern Mariana Islands (Saipan)
+MN	몽골	Mongolian People's Republic
+NP	네팔	Kingdom of Nepal
+PK	파키스탄	Islamic Republic of Pakistan
+PH	필리핀	Republic of the Philippines
+SG	싱가포르	Republic of Singapore
+LK	스리랑카	Democratic Socialist Republic of Sri Lanka
+VN	베트남	Socialist Republic of Viet Nam
+TH	타일랜드	Kingdom of Thailand
+KH	캄보디아	Kingdom of Cambodia
+BH	바레인	State of Bahrain
+CY	사이프러스	Republic of Cyprus
+IR	이란	Islamic Republic of Iran
+IQ	이라크	Republic of Iraq
+IL	이스라엘	State of Israel
+JO	요르단	Hashemite Kingdom of Jordan
+KW	쿠웨이트	State of Kuwait
+LB	레바논	Lebanese Republic
+OM	오만	Sultanate of Oman
+PS	팔레스타인	Palestine
+QA	카타르	State of Qatar
+SA	사우디 아라비아	Kingdom of Saudi Arabia
+SY	시리아	Syrian Arab Republic
+TR	터키	Republic of Turkey
+AE	아랍 에미레이트	United Arab Emirates
+YE	예멘	Republic of Yemen
+AL	알바니아	Republic of Albania
+AM	아르메니아	Republic of Armenia
+AZ	아제르바이잔	Azerbaijani Republic
+AD	안도라	Principality of Andorra
+AT	오스트리아	Republic of Austria
+HR	크로아티아	Republic of Croatia
+BA	보스니아-헤르체코비나	Republic of Bosnia and Hercegovina
+BG	불가리아	Republic of Bulgaria
+BE	벨기에	Kingdom of Belgium
+BY	벨라루스	Republic of Belarus
+DK	덴마크	Kingdom of Denmark
+CZ	체코	Czech Republic
+SK	슬로바키아	Slovak Republic
+FI	핀란드	Republic of Finland
+FR	프랑스	French Republic (France)
+EE	에스토니아	Republic of Estonia
+GE	그루지아	Republic of Georgia
+DE	독일	Federal Republic of Germany
+GI	지브롤터	Gibraltar
+GR	그리스	Hellenic Republic (Greece)
+HU	헝가리	Republic of Hungary
+GL	그린랜드	Greenland
+IS	아이슬랜드	Republic of Iceland
+IE	아일랜드	Ireland
+IT	이탈리아	Italian Republic
+KZ	카자흐스탄	Republic of Kazakhstan
+KG	키르키스스탄	Kyrgyz Republic
+IM	맨아일	Isle of Man
+LI	리히텐쉬타인	Principality of Liechtenstein
+LV	라트비아	Republic of Latvia
+LU	룩셈부르크	Grand Duchy of Luxembourg
+LT	리투아니아	Republic of Lithuania
+MK	마케도니아	Republic of Macedonia
+MT	몰타	Republic of Malta
+MD	몰도바	Republic of Moldova
+MC	모나코	Principality of Monaco
+NL	네덜란드	Kingdom of the Netherlands
+NO	노르웨이	Kingdom of Norway
+PL	폴란드	Republic of Poland
+PT	포르투갈	Portuguese Republic
+RO	루마니아	Romania
+SM	산마리노	Republic of San Marino
+ES	스페인	Kingdom of Spain
+YU	세르비아-몬테네그로	Republic of Serbia-Montenegro
+SE	스웨덴	Kingdom of Sweden
+CH	스위스	Swiss Confederation
+GB	영국	United Kingdom of Great Britain and Northern Ireland
+RU	러시아	Russian Federation
+VA	바티칸	Vatican City State (Holy See)
+JE	챠넬아일랜드	Channel Islands
+TJ	타지키스탄	Republic of Tajikistan
+TM	투르크메니스탄	Turkmenistan
+UA	우크라이나	Ukraine
+UZ	우즈베키스탄	Republic of Uzbekistan
+SI	슬로베니아	Republic of Slovenia
+AX	알랜드아일랜드	Aland Islands
+SJ	스발바드	Svalbard
+CA	캐나다	Canada
+US	미국	United States of America
+PM	세인트 피에르도 미퀘론도	Territorial Collectivity of St. Pierre and Miquelon
+AI	안길라	Anguilla
+AN	네덜란드령 안틸레스	Netherlands Antilles
+AR	아르헨티나	Argentine Republic
+AG	앤티가바부다	Antigua and Barbuda
+AW	아루바	Aruba
+VG	영국령 버진군도	British Virgin Islands
+BS	바하마	Commonwealth of the Bahamas
+BB	바베이도스	Barbados
+BM	버뮤다	Bermuda
+BO	볼리비아	Republic of Bolivia
+BR	브라질	Federative Republic of Brazil
+BZ	벨리즈	Belize
+KY	케이만군도	Cayman Islands
+CL	칠레	Republic of Chile
+CO	콜롬비아	Republic of Colombia
+CR	코스타리카	Republic of Costa Rica
+CU	쿠바	Republic of Cuba
+DO	도미니카공화국	Dominican Republic
+DM	도미니카 연방	Commonwealth of Dominica
+EC	에콰도르	Republic of Ecuador
+SV	엘살바도르	Republic of El Salvador
+FK	포클랜드(말비나스)군도	Falkland Islands (Malvinas)
+GF	프랑스령 가이아나	French Guiana
+GT	과테말라	Republic of Guatemala
+GD	그레나다	Grenada
+GP	과달루프	Department of Guadeloupe
+GY	가이아나	Republic of Guyana
+HT	아이티	Republic of Haiti
+HN	온두라스	Republic of Honduras
+JM	자마이카	Jamaica
+MQ	말티니크	Department of Martinique
+MS	몬트세라트	Montserrat
+MX	멕시코	United Mexican States
+NI	니카라과	Republic of Nicaragua
+PA	파나마	Republic of Panama
+PY	파라과이	Republic of Paraguay
+PE	페루	Republic of Peru
+PR	푸에르토 리코	Puerto Rico
+KN	세인트 킷츠 네비스	Saint Kitts and Nevis
+LC	세인트 루시아	Saint Lucia
+SR	수리남	Republic of Suriname
+VC	세인트 빈센트 그레나딘	Saint Vincent and the Grenadines
+TT	트리니다드토바고	Republic of Trinidad and Tobago
+TC	터크스 카이코스군도	Turks and Caicos Islands
+UY	우루과이	Eastern Republic of Uruguay
+VE	베네수엘라	Republic of Venezuela
+VI	미국령 버진군도	Virgin Islands of the United States
+DZ	알제리	People's Democratic Republic of Algeria
+AO	앙골라	Republic of Angola
+BJ	베냉	Republic of Benin
+BW	보츠와나	Republic of Botswana
+BI	부룬디	Republic of Burundi
+KM	코모로	Islamic Federal Republic of the Comoros
+SS	남수단	Republic of South Sudan
+CM	카메룬	Republic of Cameroon
+CV	카포베르데	Republic of Cape Verde
+CF	중앙아프리카공화국	Central African Republic
+TD	차드	Republic of Chad
+CG	콩고,브라자빌	Republic of Congo, Brazzaville
+CI	코트디부아르	Republic of Cote d'Ivoire
+DJ	지부티	Republic of Djibouti
+EG	이집트	Arab Republic of Egypt
+GQ	적도 기니	Republic of Equatorial Guinea
+ET	에티오피아	Ethiopia
+ER	에리트리아	Eritrea
+BF	부르키나파소	Burkina Faso
+GA	가봉	Republic of Gabon
+GM	감비아	Republic of The Gambia
+GH	가나	Republic of Ghana
+GN	기니	Republic of Guinea
+GW	기니비사우	Republic of Guinea-Bissau
+KE	케냐	Republic of Kenya
+LS	레소토	Kingdom of Lesotho
+LR	라이베리아	Republic of Liberia
+LY	리비아	Socialist People's Libyan Arab Jamahiriya
+MG	마다가스카르	Republic of Madagascar
+MW	말라위	Republic of Malawi
+ML	말리	Republic of Mali
+MR	모리타니아	Islamic Republic of Mauritania
+MU	모리셔스	Republic of Mauritius
+MA	모로코	Kingdom of Morocco
+MZ	모잠비크	Republic of Mozambique
+YT	마요티	Territorial Collectivity of Mayotte
+NE	니제르	Republic of Niger
+NG	나이지리아	Federal Republic of Nigeria
+NA	나미비아	Republic of Namibia
+RE	리유니온	Reunion
+ZA	남아프리카공화국	Republic of South Africa
+RW	르완다	Rwandese Republic
+EH	웨스턴사하라	Western Sahara
+ST	상투메프린시페	Democratic Republic of Sao Tome and Principe
+SN	세네갈	Republic of Senegal
+SC	세이셸	Republic of Seychelles
+SL	시에라리온	Republic of Sierra Leone
+SO	소말리아	Somali Democratic Republic
+SD	수단	Republic of the Sudan
+SZ	스와질랜드	Kingdom of Swaziland
+SH	세인트 헬레나	Saint Helena and Dependencies
+TG	토고	Republic of Togo
+TN	튀니지	Republic of Tunisia
+UG	우간다	Republic of Uganda
+TZ	탄자니아	United Republic of Tanzania
+CD	콩고(구 자이레)	Democratic Republic of Congo (Zaire)
+ZM	잠비아	Republic of Zambia
+ZW	짐바브웨	Republic of Zimbabwe
+AU	오스트레일리아	Australia
+FJ	피지	Fiji
+NZ	뉴질랜드	New Zealand
+NC	뉴 칼레도니아	New Caledonia
+TF	프랑스령 극남군도	French Southern and Antarctic Territory
+PF	프랑스령 폴리네시아	French Polynesia
+HM	허드섬	Heard Island and Mcdonald Islands
+FM	미크로네시아	Federated States of Micronesia
+NR	나우루	Republic of Nauru
+PW	팔라우	Republic of Palau
+PG	파푸아뉴기니	Papua New Guinea
+SB	솔로몬군도	Solomon Islands
+GS	남조지아.남샌드위치군도	South Georgia and South Sandwich Islands
+CX	크리스마스 아일랜드	Christmas Islands
+CC	코코스 아일랜드	Cocos (Keeling) Islands
+NF	노르포크 아일랜드	Norfolk Island
+TO	통가왕국	Kingdom of Tonga
+WS	서사모아	Independent State of Western Samoa
+AS	미국령 사모아	American Samoa
+TV	투발루	Tuvalu
+CK	쿡아일랜드	Cook Islands
+KI	키리바시	Kiribati
+MH	마샬군도	Republic of the Marshall Islands
+NU	니우에	Niue
+PN	피트케안군도	Pitcairn Islands
+TK	토켈라우군도	Tokelau
+VU	바누아투	Republic of Vanuatu
+WF	월리스푸트나군도	Wallis and Futuna Islands
+FO	패로아일랜드	Faroe (Faeroe) Islands
