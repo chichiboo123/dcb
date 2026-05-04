@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 html, body, #root {
-  height: 100%;
+  min-height: 100%;
+}
+
+html, body {
+  background: #F8FAFC;
 }
 
 body {
+  position: relative;
   font-family: 'Pretendard GOV', Pretendard, system-ui, sans-serif;
-  background:
-    radial-gradient(circle at 12% 8%, #FEF3C7 0%, transparent 38%),
-    radial-gradient(circle at 88% 12%, #BFDBFE 0%, transparent 42%),
-    radial-gradient(circle at 78% 92%, #FBCFE8 0%, transparent 38%),
-    radial-gradient(circle at 8% 88%, #BBF7D0 0%, transparent 42%),
-    #F8FAFC;
+  background: transparent;
   color: #0F172A;
   -webkit-font-smoothing: antialiased;
 }
@@ -25,4 +25,19 @@ body {
 /* Smooth iframe fullscreen */
 :fullscreen {
   background: white;
+}
+
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 12% 8%, #FEF3C7 0%, transparent 38%),
+    radial-gradient(circle at 88% 12%, #BFDBFE 0%, transparent 42%),
+    radial-gradient(circle at 78% 92%, #FBCFE8 0%, transparent 38%),
+    radial-gradient(circle at 8% 88%, #BBF7D0 0%, transparent 42%),
+    #F8FAFC;
+  background-attachment: fixed;
 }
