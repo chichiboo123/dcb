@@ -11,22 +11,9 @@ import { useBoxData } from './store/BoxDataContext.jsx';
 
 export default function App() {
   const { t } = useTranslation();
-  const { data, mode, getGuestShareLink } = useBoxData();
+  const { data } = useBoxData();
   const [activeExchange, setActiveExchange] = useState(null);
   const [adminOpen, setAdminOpen] = useState(false);
-  const [guestEditorOpen, setGuestEditorOpen] = useState(false);
-
-
-
-  const shareGuestLink = async () => {
-    const link = getGuestShareLink();
-    try {
-      await navigator.clipboard.writeText(link);
-      alert('링크가 복사되었습니다.');
-    } catch {
-      window.prompt('아래 링크를 복사하세요', link);
-    }
-  };
 
   const goHome = () => {
     setActiveExchange(null);
@@ -76,12 +63,6 @@ export default function App() {
             <p className="mt-2 text-sm sm:text-base text-slate-500">
               {t('app.tapToOpen')}
             </p>
-            {mode === 'guest' ? (
-              <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-                <button type="button" onClick={() => setGuestEditorOpen(true)} className="rounded-xl bg-slate-900 text-white px-4 py-2 text-sm font-bold">컬쳐박스 생성하기</button>
-                <button type="button" onClick={shareGuestLink} className="rounded-xl bg-white border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700">링크 공유</button>
-              </div>
-            ) : null}
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-2 gap-10 sm:gap-12 justify-items-center">
@@ -97,12 +78,11 @@ export default function App() {
         </section>
       </main>
 
-      <Footer mode={mode} />
+      <Footer />
 
       <BoxModal exchange={activeExchange} onClose={() => setActiveExchange(null)} />
-      <AdminModal open={adminOpen} onClose={() => setAdminOpen(false)} title="호스트 관리자" />
-      <AdminModal open={guestEditorOpen} onClose={() => setGuestEditorOpen(false)} requireAuth={false} title="컬쳐박스 생성하기" />
-      {mode === 'host' ? <HiddenAdminTrigger onClick={() => setAdminOpen(true)} /> : null}
+      <AdminModal open={adminOpen} onClose={() => setAdminOpen(false)} />
+      <HiddenAdminTrigger onClick={() => setAdminOpen(true)} />
     </div>
   );
 }
