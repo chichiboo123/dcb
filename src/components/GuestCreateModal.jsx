@@ -38,6 +38,7 @@ export default function GuestCreateModal({ open, onClose }) {
     if (!found) return;
     updateDraftNested(id, role, {
       country: found.name,
+      countryCode: found.code,
       flag: codeToFlag(found.code),
     });
   };
@@ -185,7 +186,7 @@ export default function GuestCreateModal({ open, onClose }) {
                             <input
                               value={ex[role].country}
                               onChange={(e) =>
-                                updateDraftNested(ex.id, role, { country: e.target.value })
+                                updateDraftNested(ex.id, role, { country: e.target.value, countryCode: '' })
                               }
                               placeholder={t('admin.country')}
                               className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"

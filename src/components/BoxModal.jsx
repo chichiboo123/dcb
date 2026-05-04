@@ -49,12 +49,12 @@ export default function BoxModal({ exchange, onClose }) {
             <div className="flex items-start sm:items-center justify-between gap-2 px-3 sm:px-5 py-3.5 bg-gradient-to-r from-sky-50 via-pink-50 to-amber-50 border-b border-slate-200">
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-base font-extrabold text-slate-800 min-w-0">
                 <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 sm:px-3 py-1 border border-slate-200 shadow-sm max-w-full">
-                  <span aria-hidden="true">{exchange.from.flag}</span>
+                  <span aria-hidden="true">{exchange.from.countryCode ? <img src={`https://flagcdn.com/w40/${exchange.from.countryCode.toLowerCase()}.png`} alt="" className="w-4 h-4 rounded-sm inline-block" /> : exchange.from.flag}</span>
                   <span className="truncate">{exchange.from.country}</span>
                 </span>
                 <ArrowRight size={14} className="text-slate-400" aria-hidden="true" />
                 <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 sm:px-3 py-1 border border-slate-200 shadow-sm max-w-full">
-                  <span aria-hidden="true">{exchange.to.flag}</span>
+                  <span aria-hidden="true">{exchange.to.countryCode ? <img src={`https://flagcdn.com/w40/${exchange.to.countryCode.toLowerCase()}.png`} alt="" className="w-4 h-4 rounded-sm inline-block" /> : exchange.to.flag}</span>
                   <span className="truncate">{exchange.to.country}</span>
                 </span>
               </div>

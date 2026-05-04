@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Package, ArrowRight, Sparkles } from 'lucide-react';
+import { codeToFlag, getFlagImageUrl } from '../lib/countries.js';
 
 const THEMES = {
   blue: {
@@ -81,12 +82,12 @@ export default function BoxCard({ exchange, index = 0, onOpen }) {
       {/* Country chips */}
       <div className="flex items-center justify-center gap-2 mb-3">
         <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${theme.chip}`}>
-          <span aria-hidden="true">{exchange.from.flag}</span>
+          <span aria-hidden="true">{exchange.from.countryCode ? <img src={getFlagImageUrl(exchange.from.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" onError={(e)=>{e.currentTarget.style.display='none';}} /> : (exchange.from.flag || codeToFlag(exchange.from.countryCode || ''))}</span>
           {exchange.from.country}
         </span>
         <ArrowRight size={14} className="text-slate-400" aria-hidden="true" />
         <span className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold ${theme.chip}`}>
-          <span aria-hidden="true">{exchange.to.flag}</span>
+          <span aria-hidden="true">{exchange.to.countryCode ? <img src={getFlagImageUrl(exchange.to.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" onError={(e)=>{e.currentTarget.style.display='none';}} /> : (exchange.to.flag || codeToFlag(exchange.to.countryCode || ''))}</span>
           {exchange.to.country}
         </span>
       </div>
