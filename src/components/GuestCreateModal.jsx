@@ -195,9 +195,7 @@ export default function GuestCreateModal({ open, onClose }) {
                               {[...new Set(COUNTRIES)].map((code) => {
                                 const localized = getLocalizedCountryName(code, i18n.language);
                                 return (
-                                  <option key={code} value={`${code} - ${localized}`}>
-                                    {code} · {localized}
-                                  </option>
+                                  <option key={code} value={`${code} - ${localized}`} />
                                 );
                               })}
                             </datalist>
