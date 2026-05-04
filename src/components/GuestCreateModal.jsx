@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Save, Plus, Trash2, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
-import { COUNTRIES, codeToFlag, findCountry } from '../lib/countries.js';
+import { COUNTRIES, codeToFlag, findCountry, getFlagImageUrl, getLocalizedCountryName } from '../lib/countries.js';
 
 const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
@@ -104,9 +104,9 @@ export default function GuestCreateModal({ open, onClose }) {
                 >
                   <div className="flex items-center justify-between mb-3 gap-2">
                     <div className="text-sm font-bold text-slate-700 truncate">
-                      <span aria-hidden="true">{ex.from.flag}</span> {ex.from.country || '—'}{' '}
+                      <span aria-hidden="true">{ex.from.countryCode ? <img src={getFlagImageUrl(ex.from.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" /> : ex.from.flag}</span> {ex.from.country || '—'}{' '}
                       <span className="text-slate-400">→</span>{' '}
-                      <span aria-hidden="true">{ex.to.flag}</span> {ex.to.country || '—'}
+                      <span aria-hidden="true">{ex.to.countryCode ? <img src={getFlagImageUrl(ex.to.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" /> : ex.to.flag}</span> {ex.to.country || '—'}
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <div className="flex items-center gap-1">
@@ -192,8 +192,8 @@ export default function GuestCreateModal({ open, onClose }) {
                               className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
                             />
                             <datalist id={`country-list-${role}`}>
-                              {COUNTRIES.map((code) => {
-                                const localized = new Intl.DisplayNames([i18n.language.split('-')[0] || 'en'], { type: 'region' }).of(code) || code;
+                              {[...new Set(COUNTRIES)].map((code) => {
+                                const localized = getLocalizedCountryName(code, i18n.language);
                                 return (
                                   <option key={code} value={`${code} - ${localized}`}>
                                     {code} · {localized}
