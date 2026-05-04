@@ -13,7 +13,8 @@
   },
   "mode": {
     "guest": "게스트",
-    "host": "호스트"
+    "host": "호스트",
+    "goGuest": "게스트로 돌아가기"
   },
   "guest": {
     "createCultureBox": "컬쳐박스 생성하기",
@@ -24,7 +25,8 @@
     "createTitle": "컬쳐박스 만들기",
     "createHint": "내용을 저장하면 ‘링크 공유’로 친구에게 보낼 수 있어요",
     "saveAndPreview": "저장하고 미리보기",
-    "linkTooLong": "데이터가 많아 공유 링크가 너무 깁니다. 내용을 줄여 다시 시도하세요."
+    "linkTooLong": "데이터가 많아 공유 링크가 너무 깁니다. 내용을 줄여 다시 시도하세요.",
+    "countrySearch": "국가 검색 (예: KR, Korea)"
   },
   "box": {
     "open": "박스 열기",

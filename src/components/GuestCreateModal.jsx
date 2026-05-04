@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Save, Plus, Trash2, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
+import { COUNTRIES, codeToFlag, findCountry } from '../lib/countries.js';
 
 const THEMES = ['blue', 'pink', 'green', 'yellow'];
 
@@ -30,6 +31,16 @@ export default function GuestCreateModal({ open, onClose }) {
     setDraft((prev) =>
       prev.map((ex) => (ex.id === id ? { ...ex, [key]: { ...ex[key], ...patch } } : ex))
     );
+
+
+  const updateCountryBySearch = (id, role, query) => {
+    const found = findCountry(query);
+    if (!found) return;
+    updateDraftNested(id, role, {
+      country: found.name,
+      flag: codeToFlag(found.code),
+    });
+  };
 
   const addDraft = () => {
     const theme = THEMES[draft.length % THEMES.length];
@@ -164,14 +175,29 @@ export default function GuestCreateModal({ open, onClose }) {
                             aria-label={t('admin.flag')}
                             className="w-14 rounded-lg border border-slate-200 px-2 py-1.5 text-center text-lg"
                           />
-                          <input
-                            value={ex[role].country}
-                            onChange={(e) =>
-                              updateDraftNested(ex.id, role, { country: e.target.value })
-                            }
-                            placeholder={t('admin.country')}
-                            className="flex-1 rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                          />
+                          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <input
+                              list={`country-list-${role}`}
+                              onBlur={(e) => updateCountryBySearch(ex.id, role, e.target.value)}
+                              placeholder={t('guest.countrySearch')}
+                              className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                            />
+                            <input
+                              value={ex[role].country}
+                              onChange={(e) =>
+                                updateDraftNested(ex.id, role, { country: e.target.value })
+                              }
+                              placeholder={t('admin.country')}
+                              className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                            />
+                            <datalist id={`country-list-${role}`}>
+                              {COUNTRIES.map((c) => (
+                                <option key={c.code} value={`${c.code} - ${c.name}`}>
+                                  {c.name}
+                                </option>
+                              ))}
+                            </datalist>
+                          </div>
                         </div>
                         <input
                           value={ex[role].school}

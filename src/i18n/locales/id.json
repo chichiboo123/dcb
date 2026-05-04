@@ -13,7 +13,8 @@
   },
   "mode": {
     "guest": "Tamu",
-    "host": "Tuan Rumah"
+    "host": "Tuan Rumah",
+    "goGuest": "Kembali ke Tamu"
   },
   "guest": {
     "createCultureBox": "Buat Kotak Budaya",
@@ -24,7 +25,8 @@
     "createTitle": "Buat Kotak Budayamu",
     "createHint": "Setelah disimpan, gunakan “Bagikan tautan” untuk mengirimnya.",
     "saveAndPreview": "Simpan & pratinjau",
-    "linkTooLong": "Tautan terlalu panjang karena data terlalu besar. Kurangi konten lalu coba lagi."
+    "linkTooLong": "Tautan terlalu panjang karena data terlalu besar. Kurangi konten lalu coba lagi.",
+    "countrySearch": "Cari negara (contoh: KR, Korea)"
   },
   "box": {
     "open": "Buka Kotak",

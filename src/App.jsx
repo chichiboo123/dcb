@@ -90,6 +90,17 @@ export default function App() {
             >
               {isHost ? t('mode.host') : t('mode.guest')}
             </span>
+            {isHost && (
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.href = '/';
+                }}
+                className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+              >
+                {t('mode.goGuest')}
+              </button>
+            )}
             <LanguageSelector />
           </div>
         </div>
