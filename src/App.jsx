@@ -32,6 +32,11 @@ export default function App() {
 
   const onShare = async () => {
     const url = buildShareUrl(data);
+    if (url.length > 1800) {
+      setShareToast(t('guest.linkTooLong'));
+      setTimeout(() => setShareToast(''), 2200);
+      return;
+    }
     try {
       await navigator.clipboard.writeText(url);
       setShareToast(t('guest.linkCopied'));
@@ -48,7 +53,6 @@ export default function App() {
 
   return (
     <div className="app-shell flex flex-col">
-      {/* Header */}
       <header className="sticky top-0 z-20 backdrop-blur bg-white/70 border-b border-slate-200/70">
         <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-3">
           <button
@@ -57,109 +61,66 @@ export default function App() {
             className="flex items-center gap-2.5 rounded-xl px-2 py-1 -mx-2 hover:bg-white/80 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-sky-300"
             aria-label="home"
           >
-            <span
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-md"
-              style={{ background: 'linear-gradient(135deg, #38bdf8, #f472b6)' }}
-              aria-hidden="true"
-            >
+            <span className="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-md" style={{ background: 'linear-gradient(135deg, #38bdf8, #f472b6)' }} aria-hidden="true">
               <Package size={18} />
             </span>
             <span className="leading-tight text-left">
-              <span className="block text-sm sm:text-base font-extrabold text-slate-800">
-                {t('app.title')}
-              </span>
-              <span className="hidden sm:block text-[11px] text-slate-500">
-                {isHost ? t('app.hostSubtitle') : t('app.subtitle')}
-              </span>
+              <span className="block text-sm sm:text-base font-extrabold text-slate-800">{t('app.title')}</span>
+              <span className="hidden sm:block text-[11px] text-slate-500">{isHost ? t('app.hostSubtitle') : t('app.subtitle')}</span>
             </span>
           </button>
 
           <div className="flex items-center gap-2">
-            {/* Mode badge */}
-            <span
-              className={`hidden sm:inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold border ${
-                isHost
-                  ? 'bg-amber-50 text-amber-700 border-amber-200'
-                  : 'bg-sky-50 text-sky-700 border-sky-200'
-              }`}
-            >
+            <span className={`hidden sm:inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold border ${isHost ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-sky-50 text-sky-700 border-sky-200'}`}>
               {isHost ? t('mode.host') : t('mode.guest')}
             </span>
+            {isHost && (
+              <button type="button" onClick={() => { window.location.href = '/'; }} className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50">
+                {t('mode.goGuest')}
+              </button>
+            )}
             <LanguageSelector />
           </div>
         </div>
       </header>
 
-      {/* Main */}
       <main className="flex-1">
         <section className="mx-auto max-w-6xl px-4 pt-10 sm:pt-14 pb-20">
           <div className="text-center mb-8 sm:mb-12">
-            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-800">
-              {t('app.title')}
-            </h1>
-            <p className="mt-2 text-sm sm:text-base text-slate-500">
-              {hasBoxes
-                ? t('app.tapToOpen')
-                : isHost
-                ? t('app.hostEmpty')
-                : t('app.guestEmpty')}
-            </p>
+            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-800">{t('app.title')}</h1>
+            <p className="mt-2 text-sm sm:text-base text-slate-500">{hasBoxes ? t('app.tapToOpen') : isHost ? t('app.hostEmpty') : t('app.guestEmpty')}</p>
           </div>
 
-          {/* Guest action buttons */}
-          {!isHost && (
-            <div className="mb-10 flex flex-wrap items-center justify-center gap-3 relative">
-              <button
-                type="button"
-                onClick={() => setCreateOpen(true)}
-                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 text-sm shadow-md transition-colors"
-              >
+          <div className="mb-10 flex flex-wrap items-center justify-center gap-3 relative">
+            {!isHost && (
+              <button type="button" onClick={() => setCreateOpen(true)} className="inline-flex items-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 text-sm shadow-md transition-colors">
                 <Plus size={16} />
                 {hasBoxes ? t('guest.editCultureBox') : t('guest.createCultureBox')}
               </button>
-              <button
-                type="button"
-                onClick={onShare}
-                disabled={!hasBoxes}
-                className="inline-flex items-center gap-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold px-4 py-2.5 text-sm shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <Share2 size={16} />
-                {t('guest.shareLink')}
-              </button>
-              <AnimatePresence>
-                {shareToast && (
-                  <motion.span
-                    initial={{ opacity: 0, y: -6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="absolute -bottom-7 inline-flex items-center gap-1 text-xs font-bold text-emerald-600"
-                  >
-                    <Check size={14} /> {shareToast}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </div>
-          )}
+            )}
+            <button type="button" onClick={onShare} disabled={!hasBoxes} className="inline-flex items-center gap-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-50 text-slate-800 font-bold px-4 py-2.5 text-sm shadow-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              <Share2 size={16} />
+              {t('guest.shareLink')}
+            </button>
+            <AnimatePresence>
+              {shareToast && (
+                <motion.span initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="absolute -bottom-7 inline-flex items-center gap-1 text-xs font-bold text-emerald-600">
+                  <Check size={14} /> {shareToast}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
 
-          {/* Boxes or empty state */}
           {hasBoxes ? (
             <div className="grid sm:grid-cols-2 gap-10 sm:gap-12 justify-items-center">
-              {data.exchanges.map((ex, i) => (
-                <BoxCard key={ex.id} exchange={ex} index={i} onOpen={setActiveExchange} />
-              ))}
+              {data.exchanges.map((ex, i) => (<BoxCard key={ex.id} exchange={ex} index={i} onOpen={setActiveExchange} />))}
             </div>
           ) : (
             <div className="mx-auto max-w-md text-center rounded-3xl border-2 border-dashed border-slate-300 bg-white/60 backdrop-blur px-6 py-10">
               <PackageOpen size={48} className="mx-auto text-slate-400" aria-hidden="true" />
-              <p className="mt-3 text-sm font-semibold text-slate-600">
-                {isHost ? t('app.hostEmptyHint') : t('app.guestEmptyHint')}
-              </p>
+              <p className="mt-3 text-sm font-semibold text-slate-600">{isHost ? t('app.hostEmptyHint') : t('app.guestEmptyHint')}</p>
               {!isHost && (
-                <button
-                  type="button"
-                  onClick={() => setCreateOpen(true)}
-                  className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 text-sm shadow-md transition-colors"
-                >
+                <button type="button" onClick={() => setCreateOpen(true)} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 text-sm shadow-md transition-colors">
                   <Plus size={16} />
                   {t('guest.createCultureBox')}
                 </button>
@@ -170,31 +131,10 @@ export default function App() {
       </main>
 
       <Footer />
-
-      {/* Modals */}
       <BoxModal exchange={activeExchange} onClose={() => setActiveExchange(null)} />
-
-      {/* AdminModal is accessible from BOTH modes via the hidden trigger.
-          On guest mode the trigger navigates to /host so the admin stays in host context. */}
       <AdminModal open={adminOpen} onClose={() => setAdminOpen(false)} />
-
-      {/* Hidden gear icon — always visible, very subtle */}
-      <HiddenAdminTrigger
-        isHost={isHost}
-        onClick={() => {
-          if (isHost) {
-            setAdminOpen(true);
-          } else {
-            // Navigate to host page for admin access
-            window.location.href = '/host';
-          }
-        }}
-      />
-
-      {/* Guest create/edit modal */}
-      {!isHost && (
-        <GuestCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />
-      )}
+      <HiddenAdminTrigger isHost={isHost} onClick={() => { if (isHost) setAdminOpen(true); else window.location.href = '/host'; }} />
+      {!isHost && <GuestCreateModal open={createOpen} onClose={() => setCreateOpen(false)} />}
     </div>
   );
 }

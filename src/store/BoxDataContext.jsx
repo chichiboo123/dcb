@@ -23,12 +23,14 @@ const hostDefaultData = {
       from: {
         school: '꿈꾸는 초등학교',
         country: 'Republic of Korea',
+        countryCode: 'KR',
         flag: '🇰🇷',
         address: '서울특별시 종로구 세종대로 1길',
       },
       to: {
         school: 'SD Harapan Bangsa',
         country: 'Indonesia',
+        countryCode: 'ID',
         flag: '🇮🇩',
         address: 'Jl. Merdeka No. 17, Jakarta Pusat',
       },
@@ -46,12 +48,14 @@ const hostDefaultData = {
       from: {
         school: 'SD Harapan Bangsa',
         country: 'Indonesia',
+        countryCode: 'ID',
         flag: '🇮🇩',
         address: 'Jl. Merdeka No. 17, Jakarta Pusat',
       },
       to: {
         school: '꿈꾸는 초등학교',
         country: 'Republic of Korea',
+        countryCode: 'KR',
         flag: '🇰🇷',
         address: '서울특별시 종로구 세종대로 1길',
       },

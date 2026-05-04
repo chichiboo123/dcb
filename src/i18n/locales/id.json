@@ -13,7 +13,8 @@
   },
   "mode": {
     "guest": "Tamu",
-    "host": "Tuan Rumah"
+    "host": "Tuan Rumah",
+    "goGuest": "Kembali ke Tamu"
   },
   "guest": {
     "createCultureBox": "Buat Kotak Budaya",
@@ -23,7 +24,9 @@
     "copyManually": "Salin tautan ini untuk dibagikan",
     "createTitle": "Buat Kotak Budayamu",
     "createHint": "Setelah disimpan, gunakan “Bagikan tautan” untuk mengirimnya.",
-    "saveAndPreview": "Simpan & pratinjau"
+    "saveAndPreview": "Simpan & pratinjau",
+    "linkTooLong": "Tautan terlalu panjang karena data terlalu besar. Kurangi konten lalu coba lagi.",
+    "countrySearch": "Cari negara (contoh: KR, Korea)"
   },
   "box": {
     "open": "Buka Kotak",
@@ -47,7 +50,8 @@
     "fullscreen": "Layar penuh",
     "exitFullscreen": "Keluar layar penuh",
     "newWindow": "Buka di jendela baru",
-    "close": "Tutup"
+    "close": "Tutup",
+    "invalidEmbedUrl": "Daftarkan URL embed di mode admin."
   },
   "admin": {
     "title": "Admin",
@@ -70,7 +74,8 @@
     "weight": "Berat",
     "contents": "Isi",
     "message": "Pesan",
-    "theme": "Warna tema"
+    "theme": "Warna tema",
+    "passwordNotConfigured": "Kata sandi admin belum dikonfigurasi. Atur VITE_ADMIN_PASSWORD di .env."
   },
   "footer": {
     "credit": "Created by. Guru Chisoo, Sang Pemimpi Musikal Edukasi"
