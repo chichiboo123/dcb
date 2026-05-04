@@ -119,12 +119,6 @@ export default function App() {
             <div className="mx-auto max-w-md text-center rounded-3xl border-2 border-dashed border-slate-300 bg-white/60 backdrop-blur px-6 py-10">
               <PackageOpen size={48} className="mx-auto text-slate-400" aria-hidden="true" />
               <p className="mt-3 text-sm font-semibold text-slate-600">{isHost ? t('app.hostEmptyHint') : t('app.guestEmptyHint')}</p>
-              {!isHost && (
-                <button type="button" onClick={() => setCreateOpen(true)} className="mt-5 inline-flex items-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 text-sm shadow-md transition-colors">
-                  <Plus size={16} />
-                  {t('guest.createCultureBox')}
-                </button>
-              )}
             </div>
           )}
         </section>
