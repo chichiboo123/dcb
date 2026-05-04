@@ -1,0 +1,50 @@
+{
+  "app": {
+    "title": "デジタル・カルチャーボックス",
+    "subtitle": "世界の友だちへ、心を込めて届ける文化の箱",
+    "openBox": "箱を開ける",
+    "closeBox": "箱を閉じる",
+    "tapToOpen": "箱をタップして開けてみよう!",
+    "loading": "コンテンツを読み込み中..."
+  },
+  "invoice": {
+    "title": "国際特急郵便 · INTERNATIONAL EXPRESS",
+    "trackingNo": "追跡番号",
+    "from": "差出人",
+    "to": "受取人",
+    "school": "学校",
+    "country": "国",
+    "address": "住所",
+    "date": "交流日",
+    "weight": "重さ",
+    "contents": "内容物",
+    "message": "メッセージ",
+    "fragile": "取扱注意",
+    "express": "速達",
+    "withCare": "丁寧に",
+    "signature": "受領印"
+  },
+  "admin": {
+    "title": "管理者モード",
+    "passwordPrompt": "管理者パスワードを入力してください",
+    "passwordPlaceholder": "4桁のパスワード",
+    "wrongPassword": "パスワードが正しくありません。",
+    "login": "ログイン",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "logout": "ログアウト",
+    "edit": "送り状の編集",
+    "embedUrl": "埋め込みURL (Padlet / Canva)",
+    "embedHint": "共有可能な埋め込みリンクを入力してください。",
+    "saved": "保存されました!",
+    "addCountry": "国を追加",
+    "removeCountry": "削除",
+    "countryList": "交流国リスト"
+  },
+  "footer": {
+    "credit": "Created by. 教育ミュージカル 夢見るチスー先生"
+  },
+  "language": {
+    "select": "言語を選択"
+  }
+}

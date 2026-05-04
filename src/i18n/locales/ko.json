@@ -1,0 +1,50 @@
+{
+  "app": {
+    "title": "디지털 컬쳐박스",
+    "subtitle": "세계 친구들에게 마음을 담아 보내는 문화 박스",
+    "openBox": "박스 열기",
+    "closeBox": "박스 닫기",
+    "tapToOpen": "박스를 클릭해서 열어보세요!",
+    "loading": "콘텐츠를 불러오는 중..."
+  },
+  "invoice": {
+    "title": "국제특급우편 · INTERNATIONAL EXPRESS",
+    "trackingNo": "운송장 번호",
+    "from": "보내는 곳",
+    "to": "받는 곳",
+    "school": "학교",
+    "country": "국가",
+    "address": "주소",
+    "date": "교류 날짜",
+    "weight": "무게",
+    "contents": "내용물",
+    "message": "마음을 담은 메시지",
+    "fragile": "취급주의",
+    "express": "특급",
+    "withCare": "정성을 담아",
+    "signature": "수령확인"
+  },
+  "admin": {
+    "title": "관리자 모드",
+    "passwordPrompt": "관리자 비밀번호를 입력해 주세요",
+    "passwordPlaceholder": "비밀번호 4자리",
+    "wrongPassword": "비밀번호가 일치하지 않습니다.",
+    "login": "로그인",
+    "save": "저장",
+    "cancel": "취소",
+    "logout": "로그아웃",
+    "edit": "송장 정보 편집",
+    "embedUrl": "임베드 URL (Padlet / Canva)",
+    "embedHint": "공유 가능한 임베드 링크를 입력하세요.",
+    "saved": "저장되었습니다!",
+    "addCountry": "국가 추가",
+    "removeCountry": "삭제",
+    "countryList": "교류 국가 목록"
+  },
+  "footer": {
+    "credit": "Created by. 교육뮤지컬 꿈꾸는 치수쌤"
+  },
+  "language": {
+    "select": "언어 선택"
+  }
+}

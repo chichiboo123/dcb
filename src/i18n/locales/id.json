@@ -1,0 +1,50 @@
+{
+  "app": {
+    "title": "Kotak Budaya Digital",
+    "subtitle": "Kotak budaya yang dikirim dengan tulus kepada teman-teman di seluruh dunia",
+    "openBox": "Buka Kotak",
+    "closeBox": "Tutup Kotak",
+    "tapToOpen": "Sentuh kotak untuk membukanya!",
+    "loading": "Memuat konten..."
+  },
+  "invoice": {
+    "title": "POS KILAT INTERNASIONAL · INTERNATIONAL EXPRESS",
+    "trackingNo": "Nomor Resi",
+    "from": "Pengirim",
+    "to": "Penerima",
+    "school": "Sekolah",
+    "country": "Negara",
+    "address": "Alamat",
+    "date": "Tanggal Pertukaran",
+    "weight": "Berat",
+    "contents": "Isi",
+    "message": "Pesan",
+    "fragile": "MUDAH PECAH",
+    "express": "KILAT",
+    "withCare": "TANGANI DENGAN HATI-HATI",
+    "signature": "Tanda Terima"
+  },
+  "admin": {
+    "title": "Mode Admin",
+    "passwordPrompt": "Silakan masukkan kata sandi admin",
+    "passwordPlaceholder": "Kata sandi 4 digit",
+    "wrongPassword": "Kata sandi salah.",
+    "login": "Masuk",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "logout": "Keluar",
+    "edit": "Edit Resi",
+    "embedUrl": "URL Embed (Padlet / Canva)",
+    "embedHint": "Tempel tautan embed yang dapat dibagikan.",
+    "saved": "Tersimpan!",
+    "addCountry": "Tambah Negara",
+    "removeCountry": "Hapus",
+    "countryList": "Daftar Negara Pertukaran"
+  },
+  "footer": {
+    "credit": "Created by. Guru Chisoo, Sang Pemimpi Musikal Edukasi"
+  },
+  "language": {
+    "select": "Pilih Bahasa"
+  }
+}

@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --pattern-stripe: repeating-linear-gradient(
+    45deg,
+    rgba(255, 107, 53, 0.0),
+    rgba(255, 107, 53, 0.0) 14px,
+    rgba(255, 107, 53, 0.85) 14px,
+    rgba(255, 107, 53, 0.85) 22px,
+    rgba(15, 76, 154, 0.85) 22px,
+    rgba(15, 76, 154, 0.85) 30px,
+    rgba(255, 107, 53, 0.0) 30px,
+    rgba(255, 107, 53, 0.0) 44px
+  );
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Pretendard GOV', Pretendard, system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 15% 10%, #FEF3C7 0%, transparent 35%),
+    radial-gradient(circle at 85% 15%, #BFDBFE 0%, transparent 40%),
+    radial-gradient(circle at 75% 90%, #FBCFE8 0%, transparent 35%),
+    radial-gradient(circle at 10% 90%, #BBF7D0 0%, transparent 40%),
+    #F5F7FB;
+  color: #1F2937;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* KRDS focus ring */
+*:focus-visible {
+  outline: 3px solid #296DF0;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-5 py-2.5
+           font-semibold transition-all duration-200 select-none
+           shadow-sm active:scale-95 focus:outline-none;
+  }
+  .btn-primary {
+    @apply btn bg-krds-primary text-white hover:bg-krds-secondary;
+  }
+  .btn-ghost {
+    @apply btn bg-white/80 backdrop-blur text-krds-primary border border-krds-line hover:bg-white;
+  }
+  .btn-point {
+    @apply btn bg-krds-point text-white hover:brightness-110;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-krds-line bg-white px-4 py-2.5
+           text-krds-text placeholder:text-gray-400
+           focus:border-krds-secondary focus:ring-2 focus:ring-krds-secondary/30;
+  }
+  .label {
+    @apply block text-sm font-bold text-krds-primary mb-1.5;
+  }
+
+  .stamp {
+    @apply inline-flex items-center justify-center
+           font-extrabold tracking-widest uppercase
+           border-[3px] rounded-md px-3 py-1 select-none;
+    transform: rotate(-8deg);
+    text-shadow: 0 0 1px rgba(0,0,0,0.05);
+  }
+}
+
+.barcode {
+  background-image: repeating-linear-gradient(
+    to right,
+    #111 0 2px,
+    transparent 2px 4px,
+    #111 4px 5px,
+    transparent 5px 9px,
+    #111 9px 11px,
+    transparent 11px 13px
+  );
+  height: 38px;
+}
+
+.tape-stripes {
+  background-image: var(--pattern-stripe);
+}
+
+.dotted-perforation {
+  background-image: radial-gradient(circle, #fff 1.5px, transparent 1.6px);
+  background-size: 10px 10px;
+  background-position: 0 50%;
+  background-repeat: repeat-x;
+}

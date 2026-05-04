@@ -1,0 +1,50 @@
+{
+  "app": {
+    "title": "Digital Culture Box",
+    "subtitle": "A culture box delivered with heart to friends around the world",
+    "openBox": "Open the Box",
+    "closeBox": "Close the Box",
+    "tapToOpen": "Tap the box to open it!",
+    "loading": "Loading content..."
+  },
+  "invoice": {
+    "title": "INTERNATIONAL EXPRESS MAIL",
+    "trackingNo": "Tracking No.",
+    "from": "FROM",
+    "to": "TO",
+    "school": "School",
+    "country": "Country",
+    "address": "Address",
+    "date": "Exchange Date",
+    "weight": "Weight",
+    "contents": "Contents",
+    "message": "Message",
+    "fragile": "FRAGILE",
+    "express": "EXPRESS",
+    "withCare": "HANDLE WITH CARE",
+    "signature": "Signature"
+  },
+  "admin": {
+    "title": "Admin Mode",
+    "passwordPrompt": "Please enter the admin password",
+    "passwordPlaceholder": "4-digit password",
+    "wrongPassword": "Incorrect password.",
+    "login": "Login",
+    "save": "Save",
+    "cancel": "Cancel",
+    "logout": "Logout",
+    "edit": "Edit Invoice",
+    "embedUrl": "Embed URL (Padlet / Canva)",
+    "embedHint": "Paste a shareable embed link.",
+    "saved": "Saved!",
+    "addCountry": "Add Country",
+    "removeCountry": "Remove",
+    "countryList": "Exchange Countries"
+  },
+  "footer": {
+    "credit": "Created by. Edu-Musical Dreaming Teacher Chisoo"
+  },
+  "language": {
+    "select": "Select Language"
+  }
+}
