@@ -107,3 +107,17 @@ body::before {
 .pac-logo::after {
   display: none !important;
 }
+
+/* ── Google Places Autocomplete (new web component) ──────────────────── */
+gmp-place-autocomplete {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  box-sizing: border-box !important;
+}
+
+gmp-place-autocomplete input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}

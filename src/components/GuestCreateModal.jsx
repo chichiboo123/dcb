@@ -65,6 +65,10 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
         placeEl.addEventListener('gmp-select', handlePlaceSelect);
         mountRef.current.appendChild(placeEl);
         placeElRef.current = placeEl;
+        // Constrain the web component to its container width on mobile
+        placeEl.style.width = '100%';
+        placeEl.style.maxWidth = '100%';
+        placeEl.style.display = 'block';
       })
       .catch((err) => {
         if (import.meta.env.DEV) {
@@ -94,7 +98,7 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
   return (
     <div
       ref={mountRef}
-      className="w-full py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
+      className="w-full min-w-0 overflow-hidden py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
         focus-within:border-sky-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-sky-100 transition-all"
       style={{ borderRadius: '10px' }}
     />
@@ -213,7 +217,7 @@ export default function GuestCreateModal({ open, onClose }) {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5 space-y-4">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-5 space-y-4">
               {draft.map((ex) => (
                 <div
                   key={ex.id}
@@ -314,9 +318,12 @@ export default function GuestCreateModal({ open, onClose }) {
                           ))}
                         </div>
 
-                        {/* Country search + flag + country name */}
-                        <div className="grid grid-cols-1 sm:grid-cols-[1.4fr_64px_1fr] gap-2">
-                          <div>
+                        {/* Country search + flag + country name
+                            Mobile:  [국가검색 — full width]
+                                     [깃발 56px] [국가명 1fr]
+                            Desktop: [국가검색 1.4fr] [깃발 56px] [국가명 1fr] */}
+                        <div className="grid grid-cols-[56px_1fr] sm:grid-cols-[1.4fr_56px_1fr] gap-2">
+                          <div className="col-span-2 sm:col-span-1">
                             <input
                               list={`country-list-${role}`}
                               onBlur={(e) => updateCountryBySearch(ex.id, role, e.target.value)}
@@ -474,7 +481,7 @@ export default function GuestCreateModal({ open, onClose }) {
                 </AnimatePresence>
                 <button
                   onClick={save}
-                  className="inline-flex items-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2 transition-colors"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2 transition-colors"
                 >
                   <Save size={16} />
                   {t('guest.saveAndPreview')}
