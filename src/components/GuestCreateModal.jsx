@@ -48,11 +48,14 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
           const isSchoolLike = placeTypes.some((type) => SCHOOL_TYPES.includes(type));
           if (!isSchoolLike) return;
 
+          const lat = typeof place.location?.lat === 'function' ? place.location.lat() : place.location?.lat;
+          const lng = typeof place.location?.lng === 'function' ? place.location.lng() : place.location?.lng;
+
           onPlaceRef.current({
             name: place.displayName || placeEl.value || '',
             address: place.formattedAddress || '',
-            lat: place.location?.lat || null,
-            lng: place.location?.lng || null,
+            lat: typeof lat === 'number' ? lat : null,
+            lng: typeof lng === 'number' ? lng : null,
             placeId: place.id || '',
             components: place.addressComponents || [],
           });
@@ -125,14 +128,14 @@ export default function GuestCreateModal({ open, onClose }) {
   const [toast, setToast] = useState('');
 
   useEffect(() => {
-    if (open) {
+    if (open && draft.length === 0) {
       setDraft(
         data.exchanges.length > 0
           ? data.exchanges
           : [makeEmptyExchange('blue')]
       );
     }
-  }, [open, data.exchanges]);
+  }, [open, data.exchanges, draft.length]);
 
   const updateDraft = (id, patch) =>
     setDraft((prev) => prev.map((ex) => (ex.id === id ? { ...ex, ...patch } : ex)));
@@ -372,34 +375,15 @@ export default function GuestCreateModal({ open, onClose }) {
                           />
                         )}
 
-                        {/* Address */}
-                        {HAS_MAPS_KEY ? (
-                          <SchoolPlaceSearch
-                            key={`${ex.id}-${role}-address`}
-                            value={ex[role].address}
-                            onChange={(v) => updateDraftNested(ex.id, role, { address: v })}
-                            placeholderKey="admin.address"
-                            onPlace={(p) => {
-                              const countryPatch = extractCountryPatch(p.components, i18n.language);
-                              updateDraftNested(ex.id, role, {
-                                address: p.address,
-                                lat: p.lat,
-                                lng: p.lng,
-                                placeId: p.placeId || ex[role].placeId,
-                                ...countryPatch,
-                              });
-                            }}
-                          />
-                        ) : (
-                          <input
-                            value={ex[role].address || ''}
-                            onChange={(e) =>
-                              updateDraftNested(ex.id, role, { address: e.target.value })
-                            }
-                            placeholder={t('admin.address')}
-                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                          />
-                        )}
+                        {/* Address (auto-filled from selected school) */}
+                        <input
+                          value={ex[role].address || ''}
+                          onChange={(e) =>
+                            updateDraftNested(ex.id, role, { address: e.target.value })
+                          }
+                          placeholder={t('admin.address')}
+                          className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                        />
 
                         {/* Coordinate badge — shown after autocomplete fills lat/lng */}
                         {typeof ex[role].lat === 'number' && (

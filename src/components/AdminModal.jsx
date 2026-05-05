@@ -29,11 +29,13 @@ function AdminSchoolPlaceSearch({ onPlace, value, onChange }) {
           fields: ['displayName', 'formattedAddress', 'location', 'id', 'types', 'addressComponents'],
         });
         if (!place.location) return;
+        const lat = typeof place.location?.lat === 'function' ? place.location.lat() : place.location?.lat;
+        const lng = typeof place.location?.lng === 'function' ? place.location.lng() : place.location?.lng;
         onPlace?.({
           name: place.displayName || placeEl.value || '',
           address: place.formattedAddress || '',
-          lat: place.location.lat ?? null,
-          lng: place.location.lng ?? null,
+          lat: typeof lat === 'number' ? lat : null,
+          lng: typeof lng === 'number' ? lng : null,
           placeId: place.id || '',
           components: place.addressComponents || [],
         });
