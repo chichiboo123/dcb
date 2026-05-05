@@ -5,7 +5,7 @@ import { X, Save, Plus, Trash2, Check, Search } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
 import { COUNTRIES, codeToFlag, findCountry, getFlagImageUrl, getLocalizedCountryName } from '../lib/countries.js';
-import { loadGoogleMapsAPI, HAS_MAPS_KEY, SCHOOL_TYPES } from '../lib/googleMaps.js';
+import { loadGoogleMapsAPI, HAS_MAPS_KEY } from '../lib/googleMaps.js';
 
 const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
