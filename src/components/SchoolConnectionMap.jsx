@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Globe, MapPin } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
-import { loadGoogleMapsAPI, HAS_MAPS_KEY, PASTEL_MAP_STYLES } from '../lib/googleMaps.js';
+import { loadGoogleMapsAPI, HAS_MAPS_KEY, PASTEL_MAP_STYLES, getGoogleMapsKeyDebugInfo } from '../lib/googleMaps.js';
 
 const DASH_SYMBOL = {
   path: 'M 0,-1 0,1',
@@ -52,6 +52,10 @@ export default function SchoolConnectionMap() {
   // Load Google Maps once
   useEffect(() => {
     if (!HAS_MAPS_KEY) {
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.warn('[GoogleMaps] Missing key debug info:', getGoogleMapsKeyDebugInfo());
+      }
       setError(t('map.noApiKey'));
       return;
     }

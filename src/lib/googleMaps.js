@@ -3,7 +3,7 @@ let loadPromise = null;
 const GOOGLE_MAPS_KEY =
   import.meta.env.VITE_GOOGLE_MAPS_API_KEY
   || import.meta.env.VITE_GOOGLE_MAP_API_KEY
-  || import.meta.env.GOOGLE_MAPS_API_KEY
+  || window.__APP_ENV__?.VITE_GOOGLE_MAPS_API_KEY
   || '';
 
 export function loadGoogleMapsAPI() {
@@ -34,6 +34,15 @@ export function loadGoogleMapsAPI() {
 }
 
 export const HAS_MAPS_KEY = Boolean(GOOGLE_MAPS_KEY?.trim());
+
+export function getGoogleMapsKeyDebugInfo() {
+  return {
+    hasViteGoogleMaps: Boolean(import.meta.env.VITE_GOOGLE_MAPS_API_KEY),
+    hasViteGoogleMap: Boolean(import.meta.env.VITE_GOOGLE_MAP_API_KEY),
+    hasRuntimeAppEnv: Boolean(window.__APP_ENV__?.VITE_GOOGLE_MAPS_API_KEY),
+    hasKey: HAS_MAPS_KEY,
+  };
+}
 
 export const SCHOOL_TYPES = ['school', 'university', 'primary_school', 'secondary_school'];
 
