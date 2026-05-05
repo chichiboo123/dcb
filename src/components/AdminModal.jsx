@@ -4,68 +4,95 @@ import { useTranslation } from 'react-i18next';
 import { X, Lock, Save, Plus, Trash2, RotateCcw, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { HAS_MAPS_KEY, loadGoogleMapsAPI, SCHOOL_TYPES } from '../lib/googleMaps.js';
-import { COUNTRIES, findCountry, codeToFlag, getLocalizedCountryName } from '../lib/countries.js';
+import { COUNTRIES, findCountry, codeToFlag, getLocalizedCountryName, getFlagImageUrl } from '../lib/countries.js';
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
-function AdminSchoolPlaceSearch({ onPlace, value, onChange }) {
+function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.searchPlaceholder' }) {
+  const { t } = useTranslation();
   const mountRef = useRef(null);
   const placeElRef = useRef(null);
   const onPlaceRef = useRef(onPlace);
-  const onChangeRef = useRef(onChange);
-
-  useEffect(() => {
-    onPlaceRef.current = onPlace;
-    onChangeRef.current = onChange;
-  });
+  useEffect(() => { onPlaceRef.current = onPlace; });
 
   useEffect(() => {
     if (!HAS_MAPS_KEY) return;
     let cancelled = false;
-    loadGoogleMapsAPI().then(() => {
-      if (cancelled || !mountRef.current || placeElRef.current) return;
-      const PlaceAutocompleteElement = window.google?.maps?.places?.PlaceAutocompleteElement;
-      if (!PlaceAutocompleteElement) return;
-      const placeEl = new PlaceAutocompleteElement();
-      placeEl.includedPrimaryTypes = SCHOOL_TYPES;
-      placeEl.includedRegionCodes = ['kr', 'us', 'jp', 'id'];
-      placeEl.addEventListener('input', () => onChangeRef.current?.(placeEl.value || ''));
-      const handlePlaceSelect = async (evt) => {
-        const place = evt.place || (await evt.placePrediction?.toPlace?.());
-        if (!place) return;
-        await place.fetchFields({
-          fields: ['displayName', 'formattedAddress', 'location', 'id', 'types', 'addressComponents'],
+
+    loadGoogleMapsAPI()
+      .then(() => {
+        if (cancelled || !mountRef.current || placeElRef.current) return;
+        const PlaceAutocompleteElement = window.google?.maps?.places?.PlaceAutocompleteElement;
+        if (!PlaceAutocompleteElement) throw new Error('PlaceAutocompleteElement is not available.');
+
+        const placeEl = new PlaceAutocompleteElement({
+          includedPrimaryTypes: SCHOOL_TYPES,
         });
-        if (!place.location) return;
-        const lat = typeof place.location?.lat === 'function' ? place.location.lat() : place.location?.lat;
-        const lng = typeof place.location?.lng === 'function' ? place.location.lng() : place.location?.lng;
-        onPlaceRef.current?.({
-          name: place.displayName || placeEl.value || '',
-          address: place.formattedAddress || '',
-          lat: typeof lat === 'number' ? lat : null,
-          lng: typeof lng === 'number' ? lng : null,
-          placeId: place.id || '',
-          components: place.addressComponents || [],
+        placeEl.setAttribute('aria-label', t(placeholderKey));
+        placeEl.addEventListener('input', () => {
+          onChange?.(placeEl.value || '');
         });
-      };
-      placeEl.addEventListener('gmp-placeselect', handlePlaceSelect);
-      placeEl.addEventListener('gmp-select', handlePlaceSelect);
-      mountRef.current.appendChild(placeEl);
-      placeElRef.current = placeEl;
-    });
+        const handlePlaceSelect = async (evt) => {
+          const place = evt.place || (await evt.placePrediction?.toPlace?.());
+          if (!place) return;
+          await place.fetchFields({
+            fields: ['displayName', 'formattedAddress', 'location', 'id', 'types', 'addressComponents'],
+          });
+
+          if (!place.location) return;
+
+          const lat = typeof place.location?.lat === 'function' ? place.location.lat() : place.location?.lat;
+          const lng = typeof place.location?.lng === 'function' ? place.location.lng() : place.location?.lng;
+
+          onPlaceRef.current({
+            name: place.displayName || placeEl.value || '',
+            address: place.formattedAddress || '',
+            lat: typeof lat === 'number' ? lat : null,
+            lng: typeof lng === 'number' ? lng : null,
+            placeId: place.id || '',
+            components: place.addressComponents || [],
+          });
+        };
+
+        placeEl.addEventListener('gmp-placeselect', handlePlaceSelect);
+        placeEl.addEventListener('gmp-select', handlePlaceSelect);
+        mountRef.current.appendChild(placeEl);
+        placeElRef.current = placeEl;
+      })
+      .catch((err) => {
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error('[GoogleMaps] autocomplete init failed:', err);
+        }
+      });
+
     return () => {
       cancelled = true;
-      if (placeElRef.current && mountRef.current?.contains(placeElRef.current)) mountRef.current.removeChild(placeElRef.current);
+      if (placeElRef.current && mountRef.current?.contains(placeElRef.current)) {
+        mountRef.current.removeChild(placeElRef.current);
+      }
       placeElRef.current = null;
     };
   }, []);
 
   useEffect(() => {
-    if (placeElRef.current && (placeElRef.current.value || '') !== (value || '')) placeElRef.current.value = value || '';
+    if (!placeElRef.current) return;
+    if ((placeElRef.current.value || '') !== (value || '')) {
+      placeElRef.current.value = value || '';
+    }
   }, [value]);
 
-  return <div ref={mountRef} className="w-full rounded-lg border border-slate-200 py-1.5 text-sm" />;
+  if (!HAS_MAPS_KEY) return null;
+
+  return (
+    <div
+      ref={mountRef}
+      className="w-full py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
+        focus-within:border-sky-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-sky-100 transition-all"
+      style={{ borderRadius: '10px' }}
+    />
+  );
 }
 
 export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = false }) {
@@ -212,14 +239,23 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                       key={ex.id}
                       className="rounded-2xl border border-slate-200 p-4 bg-slate-50/60"
                     >
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="text-sm font-bold text-slate-700">
-                          <span aria-hidden="true">{ex.from.flag}</span> {ex.from.country}{' '}
-                          <span className="text-slate-400">→</span>{' '}
-                          <span aria-hidden="true">{ex.to.flag}</span> {ex.to.country}
+                      <div className="flex items-center justify-between mb-3 gap-2">
+                        <div className="text-sm font-bold text-slate-700 truncate">
+                          <span aria-hidden="true">
+                            {ex.from.countryCode
+                              ? <img src={getFlagImageUrl(ex.from.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" />
+                              : ex.from.flag}
+                          </span>{' '}
+                          {ex.from.country || '—'}
+                          {' '}<span className="text-slate-400">→</span>{' '}
+                          <span aria-hidden="true">
+                            {ex.to.countryCode
+                              ? <img src={getFlagImageUrl(ex.to.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" />
+                              : ex.to.flag}
+                          </span>{' '}
+                          {ex.to.country || '—'}
                         </div>
-                        <div className="flex items-center gap-2">
-                          {/* Theme dots */}
+                        <div className="flex items-center gap-2 shrink-0">
                           <div className="flex items-center gap-1">
                             {THEMES.map((th) => {
                               const dotColor = {
@@ -245,17 +281,19 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                               );
                             })}
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              removeExchange(ex.id);
-                              setDraft((prev) => prev.filter((d) => d.id !== ex.id));
-                            }}
-                            className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-50"
-                          >
-                            <Trash2 size={14} />
-                            {t('admin.removeExchange')}
-                          </button>
+                          {draft.length > 1 && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                removeExchange(ex.id);
+                                setDraft((prev) => prev.filter((d) => d.id !== ex.id));
+                              }}
+                              className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-red-600 hover:bg-red-50"
+                            >
+                              <Trash2 size={14} />
+                              {t('admin.removeExchange')}
+                            </button>
+                          )}
                         </div>
                       </div>
 
@@ -339,9 +377,11 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                               />
                             </div>
                             {HAS_MAPS_KEY ? (
-                              <AdminSchoolPlaceSearch
+                              <SchoolPlaceSearch
+                                key={`${ex.id}-${role}-school`}
                                 value={ex[role].school}
                                 onChange={(v) => clearRoleLocation(ex.id, role, { school: v })}
+                                placeholderKey="admin.school"
                                 onPlace={(p) => updateDraftNested(ex.id, role, {
                                   school: p.name,
                                   address: p.address,
