@@ -1,5 +1,10 @@
 // Singleton promise — the <script> tag is injected at most once per page load.
 let loadPromise = null;
+const GOOGLE_MAPS_KEY =
+  import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+  || import.meta.env.VITE_GOOGLE_MAP_API_KEY
+  || import.meta.env.GOOGLE_MAPS_API_KEY
+  || '';
 
 export function loadGoogleMapsAPI() {
   if (loadPromise) return loadPromise;
@@ -8,10 +13,10 @@ export function loadGoogleMapsAPI() {
     return loadPromise;
   }
   loadPromise = new Promise((resolve, reject) => {
-    const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    const key = GOOGLE_MAPS_KEY?.trim();
     if (!key) {
       loadPromise = null;
-      reject(new Error('VITE_GOOGLE_MAPS_API_KEY is not set in .env'));
+      reject(new Error('Google Maps API key is missing. Set VITE_GOOGLE_MAPS_API_KEY (or VITE_GOOGLE_MAP_API_KEY).'));
       return;
     }
     const script = document.createElement('script');
@@ -28,7 +33,7 @@ export function loadGoogleMapsAPI() {
   return loadPromise;
 }
 
-export const HAS_MAPS_KEY = Boolean(import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+export const HAS_MAPS_KEY = Boolean(GOOGLE_MAPS_KEY?.trim());
 
 export const SCHOOL_TYPES = ['school', 'university', 'primary_school', 'secondary_school'];
 
