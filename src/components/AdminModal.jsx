@@ -1,11 +1,61 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { X, Lock, Save, Plus, Trash2, RotateCcw, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
+import { HAS_MAPS_KEY, loadGoogleMapsAPI, SCHOOL_TYPES } from '../lib/googleMaps.js';
+import { findCountry, codeToFlag } from '../lib/countries.js';
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
+
+function AdminSchoolPlaceSearch({ onPlace, value, onChange }) {
+  const mountRef = useRef(null);
+  const placeElRef = useRef(null);
+
+  useEffect(() => {
+    if (!HAS_MAPS_KEY) return;
+    let cancelled = false;
+    loadGoogleMapsAPI().then(() => {
+      if (cancelled || !mountRef.current || placeElRef.current) return;
+      const PlaceAutocompleteElement = window.google?.maps?.places?.PlaceAutocompleteElement;
+      if (!PlaceAutocompleteElement) return;
+      const placeEl = new PlaceAutocompleteElement({ includedPrimaryTypes: SCHOOL_TYPES });
+      placeEl.addEventListener('input', () => onChange?.(placeEl.value || ''));
+      placeEl.addEventListener('gmp-placeselect', async (evt) => {
+        const place = evt.place || (await evt.placePrediction?.toPlace?.());
+        if (!place) return;
+        await place.fetchFields({
+          fields: ['displayName', 'formattedAddress', 'location', 'id', 'types', 'addressComponents'],
+        });
+        if (!place.location) return;
+        const lat = typeof place.location?.lat === 'function' ? place.location.lat() : place.location?.lat;
+        const lng = typeof place.location?.lng === 'function' ? place.location.lng() : place.location?.lng;
+        onPlace?.({
+          name: place.displayName || placeEl.value || '',
+          address: place.formattedAddress || '',
+          lat: typeof lat === 'number' ? lat : null,
+          lng: typeof lng === 'number' ? lng : null,
+          placeId: place.id || '',
+          components: place.addressComponents || [],
+        });
+      });
+      mountRef.current.appendChild(placeEl);
+      placeElRef.current = placeEl;
+    });
+    return () => {
+      cancelled = true;
+      if (placeElRef.current && mountRef.current?.contains(placeElRef.current)) mountRef.current.removeChild(placeElRef.current);
+      placeElRef.current = null;
+    };
+  }, [onChange, onPlace]);
+
+  useEffect(() => {
+    if (placeElRef.current && (placeElRef.current.value || '') !== (value || '')) placeElRef.current.value = value || '';
+  }, [value]);
+
+  return <div ref={mountRef} className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm" />;
+}
 
 export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = false }) {
   const { t } = useTranslation();
@@ -55,6 +105,14 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
     draft.forEach((ex) => updateExchange(ex.id, ex));
     setToast(t('admin.saved'));
     setTimeout(() => setToast(''), 1600);
+  };
+
+  const extractCountryPatch = (components) => {
+    if (!Array.isArray(components)) return {};
+    const comp = components.find((c) => c.types?.includes('country'));
+    if (!comp?.short_name) return {};
+    const found = findCountry(comp.short_name, 'en');
+    return found ? { country: found.name, countryCode: found.code, flag: codeToFlag(found.code) } : { country: comp.long_name || '' };
   };
 
   return (
@@ -228,14 +286,29 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                                 className="flex-1 rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
                               />
                             </div>
-                            <input
-                              value={ex[role].school}
-                              onChange={(e) =>
-                                updateDraftNested(ex.id, role, { school: e.target.value })
-                              }
-                              placeholder={t('admin.school')}
-                              className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                            />
+                            {HAS_MAPS_KEY ? (
+                              <AdminSchoolPlaceSearch
+                                value={ex[role].school}
+                                onChange={(v) => updateDraftNested(ex.id, role, { school: v })}
+                                onPlace={(p) => updateDraftNested(ex.id, role, {
+                                  school: p.name,
+                                  address: p.address,
+                                  lat: p.lat,
+                                  lng: p.lng,
+                                  placeId: p.placeId,
+                                  ...extractCountryPatch(p.components),
+                                })}
+                              />
+                            ) : (
+                              <input
+                                value={ex[role].school}
+                                onChange={(e) =>
+                                  updateDraftNested(ex.id, role, { school: e.target.value })
+                                }
+                                placeholder={t('admin.school')}
+                                className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                              />
+                            )}
                             <input
                               value={ex[role].address || ''}
                               onChange={(e) =>
