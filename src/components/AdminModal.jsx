@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { X, Lock, Save, Plus, Trash2, RotateCcw, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { HAS_MAPS_KEY, loadGoogleMapsAPI, SCHOOL_TYPES } from '../lib/googleMaps.js';
-import { findCountry, codeToFlag } from '../lib/countries.js';
+import { COUNTRIES, findCountry, codeToFlag, getLocalizedCountryName } from '../lib/countries.js';
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD;
 const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
@@ -27,9 +27,11 @@ function AdminSchoolPlaceSearch({ onPlace, value, onChange }) {
       if (cancelled || !mountRef.current || placeElRef.current) return;
       const PlaceAutocompleteElement = window.google?.maps?.places?.PlaceAutocompleteElement;
       if (!PlaceAutocompleteElement) return;
-      const placeEl = new PlaceAutocompleteElement({ includedPrimaryTypes: SCHOOL_TYPES });
+      const placeEl = new PlaceAutocompleteElement();
+      placeEl.includedPrimaryTypes = SCHOOL_TYPES;
+      placeEl.includedRegionCodes = ['kr', 'us', 'jp', 'id'];
       placeEl.addEventListener('input', () => onChangeRef.current?.(placeEl.value || ''));
-      placeEl.addEventListener('gmp-placeselect', async (evt) => {
+      const handlePlaceSelect = async (evt) => {
         const place = evt.place || (await evt.placePrediction?.toPlace?.());
         if (!place) return;
         await place.fetchFields({
@@ -46,7 +48,9 @@ function AdminSchoolPlaceSearch({ onPlace, value, onChange }) {
           placeId: place.id || '',
           components: place.addressComponents || [],
         });
-      });
+      };
+      placeEl.addEventListener('gmp-placeselect', handlePlaceSelect);
+      placeEl.addEventListener('gmp-select', handlePlaceSelect);
       mountRef.current.appendChild(placeEl);
       placeElRef.current = placeEl;
     });
@@ -65,7 +69,7 @@ function AdminSchoolPlaceSearch({ onPlace, value, onChange }) {
 }
 
 export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = false }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data, updateExchange, addExchange, removeExchange, reset } = useBoxData();
 
   const [auth, setAuth] = useState(false);
@@ -114,11 +118,15 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
     setTimeout(() => setToast(''), 1600);
   };
 
+  const clearRoleLocation = (id, role, patch = {}) => {
+    updateDraftNested(id, role, { lat: null, lng: null, placeId: '', ...patch });
+  };
+
   const extractCountryPatch = (components) => {
     if (!Array.isArray(components)) return {};
     const comp = components.find((c) => c.types?.includes('country'));
     if (!comp?.short_name) return {};
-    const found = findCountry(comp.short_name, 'en');
+    const found = findCountry(comp.short_name, i18n.language);
     return found ? { country: found.name, countryCode: found.code, flag: codeToFlag(found.code) } : { country: comp.long_name || '' };
   };
 
@@ -275,28 +283,65 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                             <div className="text-[11px] font-extrabold uppercase tracking-widest text-slate-500">
                               {role === 'from' ? t('invoice.from') : t('invoice.to')}
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-1">
+                              {['KR', 'JP', 'ID', 'US'].map((cc) => (
+                                <button
+                                  key={cc}
+                                  type="button"
+                                  onClick={() => {
+                                    const found = findCountry(cc, i18n.language);
+                                    if (!found) return;
+                                    updateDraftNested(ex.id, role, {
+                                      country: found.name,
+                                      countryCode: found.code,
+                                      flag: codeToFlag(found.code),
+                                    });
+                                  }}
+                                  className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-sky-50 hover:border-sky-200"
+                                >
+                                  {cc}
+                                </button>
+                              ))}
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-[1.4fr_64px_1fr] gap-2">
+                              <div>
+                                <input
+                                  list={`admin-country-list-${ex.id}-${role}`}
+                                  onBlur={(e) => {
+                                    const found = findCountry(e.target.value, i18n.language);
+                                    if (!found) return;
+                                    updateDraftNested(ex.id, role, {
+                                      country: found.name,
+                                      countryCode: found.code,
+                                      flag: codeToFlag(found.code),
+                                    });
+                                  }}
+                                  placeholder={t('guest.countrySearchShort')}
+                                  className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                                />
+                                <datalist id={`admin-country-list-${ex.id}-${role}`}>
+                                  {[...new Set(COUNTRIES)].map((code) => (
+                                    <option key={code} value={`${code} - ${getLocalizedCountryName(code, i18n.language)}`} />
+                                  ))}
+                                </datalist>
+                              </div>
                               <input
                                 value={ex[role].flag}
-                                onChange={(e) =>
-                                  updateDraftNested(ex.id, role, { flag: e.target.value })
-                                }
+                                onChange={(e) => updateDraftNested(ex.id, role, { flag: e.target.value })}
                                 aria-label={t('admin.flag')}
-                                className="w-14 rounded-lg border border-slate-200 px-2 py-1.5 text-center text-lg"
+                                className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-center text-lg"
                               />
                               <input
                                 value={ex[role].country}
-                                onChange={(e) =>
-                                  updateDraftNested(ex.id, role, { country: e.target.value })
-                                }
+                                onChange={(e) => updateDraftNested(ex.id, role, { country: e.target.value, countryCode: '' })}
                                 placeholder={t('admin.country')}
-                                className="flex-1 rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                                className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
                               />
                             </div>
                             {HAS_MAPS_KEY ? (
                               <AdminSchoolPlaceSearch
                                 value={ex[role].school}
-                                onChange={(v) => updateDraftNested(ex.id, role, { school: v })}
+                                onChange={(v) => clearRoleLocation(ex.id, role, { school: v })}
                                 onPlace={(p) => updateDraftNested(ex.id, role, {
                                   school: p.name,
                                   address: p.address,
@@ -310,7 +355,7 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                               <input
                                 value={ex[role].school}
                                 onChange={(e) =>
-                                  updateDraftNested(ex.id, role, { school: e.target.value })
+                                  clearRoleLocation(ex.id, role, { school: e.target.value })
                                 }
                                 placeholder={t('admin.school')}
                                 className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
@@ -319,7 +364,7 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                             <input
                               value={ex[role].address || ''}
                               onChange={(e) =>
-                                updateDraftNested(ex.id, role, { address: e.target.value })
+                                clearRoleLocation(ex.id, role, { address: e.target.value })
                               }
                               placeholder={t('admin.address')}
                               className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
