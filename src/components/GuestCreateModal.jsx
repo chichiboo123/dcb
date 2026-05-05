@@ -32,6 +32,8 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
         const placeEl = new PlaceAutocompleteElement({
           includedPrimaryTypes: SCHOOL_TYPES,
         });
+        // Also set as property for API versions that ignore constructor options
+        try { placeEl.includedPrimaryTypes = SCHOOL_TYPES; } catch (_) { /* noop */ }
         placeEl.setAttribute('aria-label', t(placeholderKey));
         placeEl.addEventListener('input', () => {
           onChange?.(placeEl.value || '');
