@@ -33,6 +33,9 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
         ac.addListener('place_changed', () => {
           const p = ac.getPlace();
           if (!p?.geometry?.location) return;
+          const placeTypes = p.types || [];
+          const isSchoolLike = placeTypes.some((type) => SCHOOL_TYPES.includes(type));
+          if (!isSchoolLike) return;
           onPlaceRef.current({
             name: p.name || '',
             address: p.formatted_address || '',

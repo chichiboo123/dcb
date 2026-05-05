@@ -21,6 +21,14 @@ npm run dev
 ```
 Open http://localhost:5173
 
+### Google Maps API 로컬 설정
+1. 프로젝트 루트(`package.json`과 같은 위치)에 `.env` 또는 `.env.local` 파일을 생성합니다.
+2. 아래 키를 정확히 추가합니다.
+   ```bash
+   VITE_GOOGLE_MAPS_API_KEY=your_real_google_maps_api_key
+   ```
+3. `npm run dev`가 이미 실행 중이었다면 **반드시 재시작**합니다. (Vite는 실행 중 env 변경을 반영하지 않습니다.)
+
 ## 🔐 Admin Password
 `.env` 파일의 `VITE_ADMIN_PASSWORD` 값을 사용합니다.
 GitHub에 노출되지 않도록 `.gitignore`에 `.env`가 포함되어 있습니다.
