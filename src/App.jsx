@@ -136,7 +136,7 @@ export default function App() {
       </main>
 
       {/* ── World School Connection Map ─────────────────────────────────── */}
-      <div className="w-full border-t border-slate-200/60 mt-4 pt-14">
+      <div className="w-full mt-4 pt-14">
         <SchoolConnectionMap />
       </div>
 

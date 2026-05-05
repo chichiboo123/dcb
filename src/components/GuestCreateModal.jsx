@@ -5,13 +5,13 @@ import { X, Save, Plus, Trash2, Check, Search } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
 import { COUNTRIES, codeToFlag, findCountry, getFlagImageUrl, getLocalizedCountryName } from '../lib/countries.js';
-import { loadGoogleMapsAPI, HAS_MAPS_KEY, SCHOOL_TYPES } from '../lib/googleMaps.js';
+import { loadGoogleMapsAPI, HAS_MAPS_KEY } from '../lib/googleMaps.js';
 
 const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
 // ── School Places Autocomplete ────────────────────────────────────────────────
 // Self-contained: loads Google Maps API, initialises Autocomplete, calls onPlace.
-function SchoolPlaceSearch({ onPlace }) {
+function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.searchPlaceholder' }) {
   const { t } = useTranslation();
   const inputRef = useRef(null);
   const acRef = useRef(null);
@@ -29,8 +29,6 @@ function SchoolPlaceSearch({ onPlace }) {
         const ac = new window.google.maps.places.Autocomplete(inputRef.current, {
           fields: ['name', 'formatted_address', 'geometry', 'place_id', 'address_components'],
           types: ['school'],
-          // New Places API: restrict to educational institution types
-          includedPrimaryTypes: SCHOOL_TYPES,
         });
         ac.addListener('place_changed', () => {
           const p = ac.getPlace();
@@ -43,12 +41,15 @@ function SchoolPlaceSearch({ onPlace }) {
             placeId: p.place_id || '',
             components: p.address_components || [],
           });
-          // Clear the search box after selection
-          if (inputRef.current) inputRef.current.value = '';
         });
         acRef.current = ac;
       })
-      .catch(() => {});
+      .catch((err) => {
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error('[GoogleMaps] autocomplete init failed:', err);
+        }
+      });
 
     return () => {
       cancelled = true;
@@ -68,7 +69,9 @@ function SchoolPlaceSearch({ onPlace }) {
       <input
         ref={inputRef}
         type="text"
-        placeholder={t('map.searchPlaceholder')}
+        value={value || ''}
+        onChange={(e) => onChange?.(e.target.value)}
+        placeholder={t(placeholderKey)}
         className="w-full pl-8 pr-2 py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
           focus:border-sky-400 focus:bg-white focus:ring-2 focus:ring-sky-100 transition-all"
         style={{ borderRadius: '10px' }}
@@ -267,30 +270,6 @@ export default function GuestCreateModal({ open, onClose }) {
                           {role === 'from' ? t('invoice.from') : t('invoice.to')}
                         </div>
 
-                        {/* ── Google Maps school autocomplete ── */}
-                        {HAS_MAPS_KEY && (
-                          <div>
-                            <div className="text-[10px] font-bold text-sky-600 mb-1 flex items-center gap-1">
-                              <Search size={10} aria-hidden="true" />
-                              {t('map.modalSearchLabel')}
-                            </div>
-                            <SchoolPlaceSearch
-                              key={`${ex.id}-${role}`}
-                              onPlace={(p) => {
-                                const countryPatch = extractCountryPatch(p.components, i18n.language);
-                                updateDraftNested(ex.id, role, {
-                                  school: p.name,
-                                  address: p.address,
-                                  lat: p.lat,
-                                  lng: p.lng,
-                                  placeId: p.placeId,
-                                  ...countryPatch,
-                                });
-                              }}
-                            />
-                          </div>
-                        )}
-
                         {/* Quick-select country buttons */}
                         <div className="flex flex-wrap gap-1">
                           {['KR', 'JP', 'ID', 'US'].map((cc) => (
@@ -342,24 +321,63 @@ export default function GuestCreateModal({ open, onClose }) {
                         </div>
 
                         {/* School name */}
-                        <input
-                          value={ex[role].school}
-                          onChange={(e) =>
-                            updateDraftNested(ex.id, role, { school: e.target.value })
-                          }
-                          placeholder={t('admin.school')}
-                          className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                        />
+                        {HAS_MAPS_KEY ? (
+                          <SchoolPlaceSearch
+                            key={`${ex.id}-${role}-school`}
+                            value={ex[role].school}
+                            onChange={(v) => updateDraftNested(ex.id, role, { school: v })}
+                            placeholderKey="admin.school"
+                            onPlace={(p) => {
+                              const countryPatch = extractCountryPatch(p.components, i18n.language);
+                              updateDraftNested(ex.id, role, {
+                                school: p.name,
+                                address: p.address,
+                                lat: p.lat,
+                                lng: p.lng,
+                                placeId: p.placeId,
+                                ...countryPatch,
+                              });
+                            }}
+                          />
+                        ) : (
+                          <input
+                            value={ex[role].school}
+                            onChange={(e) =>
+                              updateDraftNested(ex.id, role, { school: e.target.value })
+                            }
+                            placeholder={t('admin.school')}
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                          />
+                        )}
 
                         {/* Address */}
-                        <input
-                          value={ex[role].address || ''}
-                          onChange={(e) =>
-                            updateDraftNested(ex.id, role, { address: e.target.value })
-                          }
-                          placeholder={t('admin.address')}
-                          className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                        />
+                        {HAS_MAPS_KEY ? (
+                          <SchoolPlaceSearch
+                            key={`${ex.id}-${role}-address`}
+                            value={ex[role].address}
+                            onChange={(v) => updateDraftNested(ex.id, role, { address: v })}
+                            placeholderKey="admin.address"
+                            onPlace={(p) => {
+                              const countryPatch = extractCountryPatch(p.components, i18n.language);
+                              updateDraftNested(ex.id, role, {
+                                address: p.address,
+                                lat: p.lat,
+                                lng: p.lng,
+                                placeId: p.placeId || ex[role].placeId,
+                                ...countryPatch,
+                              });
+                            }}
+                          />
+                        ) : (
+                          <input
+                            value={ex[role].address || ''}
+                            onChange={(e) =>
+                              updateDraftNested(ex.id, role, { address: e.target.value })
+                            }
+                            placeholder={t('admin.address')}
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                          />
+                        )}
 
                         {/* Coordinate badge — shown after autocomplete fills lat/lng */}
                         {typeof ex[role].lat === 'number' && (

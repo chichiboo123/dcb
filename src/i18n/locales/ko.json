@@ -96,7 +96,7 @@
     "subtitle": "컬쳐박스의 보내는 학교와 받는 학교가 지구 위에 연결되어 표시돼요",
     "searchPlaceholder": "학교명으로 검색...",
     "modalSearchLabel": "Google 맵으로 학교 검색",
-    "noApiKey": "Google Maps API 키가 설정되지 않았습니다. .env 파일에 VITE_GOOGLE_MAPS_API_KEY를 추가하세요.",
+    "noApiKey": "Google Maps API 키를 찾지 못했습니다. .env(.local)에 VITE_GOOGLE_MAPS_API_KEY를 설정하고 개발 서버를 재시작하세요.",
     "loadError": "Google Maps를 불러오지 못했습니다. API 키를 확인해 주세요.",
     "noExchanges": "컬쳐박스를 만들고 학교를 Google 맵으로 검색하면 여기에 연결이 표시돼요",
     "noCoords": "학교 검색(Google 맵)을 통해 위치를 등록하면 지도에 연결이 표시돼요"

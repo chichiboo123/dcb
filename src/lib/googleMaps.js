@@ -1,5 +1,11 @@
 // Singleton promise — the <script> tag is injected at most once per page load.
 let loadPromise = null;
+const SCRIPT_ID = 'google-maps-js';
+const GOOGLE_MAPS_KEY =
+  import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+  || import.meta.env.VITE_GOOGLE_MAP_API_KEY
+  || window.__APP_ENV__?.VITE_GOOGLE_MAPS_API_KEY
+  || '';
 
 export function loadGoogleMapsAPI() {
   if (loadPromise) return loadPromise;
@@ -8,17 +14,40 @@ export function loadGoogleMapsAPI() {
     return loadPromise;
   }
   loadPromise = new Promise((resolve, reject) => {
-    const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+    const key = GOOGLE_MAPS_KEY?.trim();
     if (!key) {
       loadPromise = null;
-      reject(new Error('VITE_GOOGLE_MAPS_API_KEY is not set in .env'));
+      reject(new Error('Google Maps API key is missing. Set VITE_GOOGLE_MAPS_API_KEY (or VITE_GOOGLE_MAP_API_KEY).'));
       return;
     }
+    const waitForMapsReady = (resolveReady, rejectReady) => {
+      const startedAt = Date.now();
+      const tick = () => {
+        if (window.google?.maps?.places) {
+          resolveReady();
+          return;
+        }
+        if (Date.now() - startedAt > 7000) {
+          rejectReady(new Error('Google Maps loaded timeout: places library not ready'));
+          return;
+        }
+        setTimeout(tick, 40);
+      };
+      tick();
+    };
+
+    const existing = document.getElementById(SCRIPT_ID);
+    if (existing) {
+      waitForMapsReady(resolve, reject);
+      return;
+    }
+
     const script = document.createElement('script');
+    script.id = SCRIPT_ID;
     script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&loading=async`;
     script.async = true;
     script.defer = true;
-    script.onload = resolve;
+    script.onload = () => waitForMapsReady(resolve, reject);
     script.onerror = () => {
       loadPromise = null;
       reject(new Error('Google Maps script failed to load'));
@@ -28,7 +57,16 @@ export function loadGoogleMapsAPI() {
   return loadPromise;
 }
 
-export const HAS_MAPS_KEY = Boolean(import.meta.env.VITE_GOOGLE_MAPS_API_KEY);
+export const HAS_MAPS_KEY = Boolean(GOOGLE_MAPS_KEY?.trim());
+
+export function getGoogleMapsKeyDebugInfo() {
+  return {
+    hasViteGoogleMaps: Boolean(import.meta.env.VITE_GOOGLE_MAPS_API_KEY),
+    hasViteGoogleMap: Boolean(import.meta.env.VITE_GOOGLE_MAP_API_KEY),
+    hasRuntimeAppEnv: Boolean(window.__APP_ENV__?.VITE_GOOGLE_MAPS_API_KEY),
+    hasKey: HAS_MAPS_KEY,
+  };
+}
 
 export const SCHOOL_TYPES = ['school', 'university', 'primary_school', 'secondary_school'];
 
@@ -46,3 +84,9 @@ export const PASTEL_MAP_STYLES = [
   { featureType: 'administrative.land_parcel', stylers: [{ visibility: 'off' }] },
   { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
 ];
+    const previousAuthFailure = window.gm_authFailure;
+    window.gm_authFailure = () => {
+      loadPromise = null;
+      reject(new Error('Google Maps authentication failed (API key/referrer/billing).'));
+      if (typeof previousAuthFailure === 'function') previousAuthFailure();
+    };

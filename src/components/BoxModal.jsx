@@ -9,6 +9,7 @@ export default function BoxModal({ exchange, onClose }) {
   const { t } = useTranslation();
 
   useEffect(() => {
+    if (!exchange) return undefined;
     const onKey = (e) => e.key === 'Escape' && onClose();
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';
@@ -16,7 +17,7 @@ export default function BoxModal({ exchange, onClose }) {
       document.removeEventListener('keydown', onKey);
       document.body.style.overflow = '';
     };
-  }, [onClose]);
+  }, [exchange, onClose]);
 
   return (
     <AnimatePresence>
