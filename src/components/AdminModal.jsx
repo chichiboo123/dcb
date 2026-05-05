@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { X, Lock, Save, Plus, Trash2, RotateCcw, Check } from 'lucide-react';
+import { X, Lock, Save, Plus, Trash2, RotateCcw, Check, MapPin } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { HAS_MAPS_KEY, loadGoogleMapsAPI, SCHOOL_TYPES } from '../lib/googleMaps.js';
 import { COUNTRIES, findCountry, codeToFlag, getLocalizedCountryName, getFlagImageUrl } from '../lib/countries.js';
@@ -98,6 +98,15 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
   );
 }
 
+function FieldLabel({ label, children }) {
+  return (
+    <div>
+      <label className="block text-[10px] font-bold text-slate-500 mb-0.5">{label}</label>
+      {children}
+    </div>
+  );
+}
+
 export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = false }) {
   const { t, i18n } = useTranslation();
   const { data, updateExchange, addExchange, removeExchange, reset } = useBoxData();
@@ -158,6 +167,27 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
     if (!comp?.short_name) return {};
     const found = findCountry(comp.short_name, i18n.language);
     return found ? { country: found.name, countryCode: found.code, flag: codeToFlag(found.code) } : { country: comp.long_name || '' };
+  };
+
+  const handleCountryInputChange = (e, id, role) => {
+    const val = e.target.value;
+    const codeMatch = val.match(/^([A-Za-z]{2})\s*[-–]/);
+    if (codeMatch) {
+      const found = findCountry(codeMatch[1], i18n.language);
+      if (found) updateDraftNested(id, role, { country: found.name, countryCode: found.code, flag: codeToFlag(found.code) });
+      e.target.value = '';
+    }
+  };
+
+  const handleCountryInputKeyDown = (e, id, role) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const val = e.currentTarget.value.trim();
+    if (val) {
+      const found = findCountry(val, i18n.language);
+      if (found) updateDraftNested(id, role, { country: found.name, countryCode: found.code, flag: codeToFlag(found.code) });
+      e.currentTarget.value = '';
+    }
   };
 
   return (
@@ -237,26 +267,32 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                 </form>
               ) : authOnly ? null : (
                 <div className="space-y-4">
-                  {draft.map((ex) => (
+                  {draft.map((ex, index) => (
                     <div
                       key={ex.id}
                       className="rounded-2xl border border-slate-200 p-4 bg-slate-50/60"
                     >
+                      {/* Exchange header */}
                       <div className="flex items-center justify-between mb-3 gap-2">
-                        <div className="text-sm font-bold text-slate-700 truncate">
-                          <span aria-hidden="true">
-                            {ex.from.countryCode
-                              ? <img src={getFlagImageUrl(ex.from.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" />
-                              : ex.from.flag}
-                          </span>{' '}
-                          {ex.from.country || '—'}
-                          {' '}<span className="text-slate-400">→</span>{' '}
-                          <span aria-hidden="true">
-                            {ex.to.countryCode
-                              ? <img src={getFlagImageUrl(ex.to.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" />
-                              : ex.to.flag}
-                          </span>{' '}
-                          {ex.to.country || '—'}
+                        <div className="flex items-center gap-2 min-w-0">
+                          <span className="shrink-0 inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-[10px] font-extrabold text-slate-600">
+                            {index + 1}
+                          </span>
+                          <div className="text-sm font-bold text-slate-700 truncate">
+                            <span aria-hidden="true">
+                              {ex.from.countryCode
+                                ? <img src={getFlagImageUrl(ex.from.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block align-middle" />
+                                : ex.from.flag}
+                            </span>{' '}
+                            {ex.from.country || '—'}
+                            {' '}<span className="text-slate-400">→</span>{' '}
+                            <span aria-hidden="true">
+                              {ex.to.countryCode
+                                ? <img src={getFlagImageUrl(ex.to.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block align-middle" />
+                                : ex.to.flag}
+                            </span>{' '}
+                            {ex.to.country || '—'}
+                          </div>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
                           <div className="flex items-center gap-1">
@@ -312,6 +348,9 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                           placeholder="https://padlet.com/embed/..."
                           className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-sky-400 focus:ring-2 focus:ring-sky-100 outline-none"
                         />
+                        <p className="mt-0.5 text-[10px] text-slate-400">
+                          패들릿: 공유 → 임베드 코드 → URL 복사 · 캔바: 공유 → 웹사이트에 임베드
+                        </p>
                       </div>
 
                       {/* From / To grid */}
@@ -338,7 +377,11 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                                       flag: codeToFlag(found.code),
                                     });
                                   }}
-                                  className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-sky-50 hover:border-sky-200"
+                                  className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold transition-colors ${
+                                    ex[role].countryCode === cc
+                                      ? 'border-sky-400 bg-sky-50 text-sky-700'
+                                      : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-sky-50 hover:border-sky-200'
+                                  }`}
                                 >
                                   {cc}
                                 </button>
@@ -348,14 +391,15 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                               <div className="col-span-2 sm:col-span-1">
                                 <input
                                   list={`admin-country-list-${ex.id}-${role}`}
+                                  onChange={(e) => handleCountryInputChange(e, ex.id, role)}
+                                  onKeyDown={(e) => handleCountryInputKeyDown(e, ex.id, role)}
                                   onBlur={(e) => {
-                                    const found = findCountry(e.target.value, i18n.language);
-                                    if (!found) return;
-                                    updateDraftNested(ex.id, role, {
-                                      country: found.name,
-                                      countryCode: found.code,
-                                      flag: codeToFlag(found.code),
-                                    });
+                                    const val = e.target.value.trim();
+                                    if (val) {
+                                      const found = findCountry(val, i18n.language);
+                                      if (found) updateDraftNested(ex.id, role, { country: found.name, countryCode: found.code, flag: codeToFlag(found.code) });
+                                      e.target.value = '';
+                                    }
                                   }}
                                   placeholder={t('guest.countrySearchShort')}
                                   className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
@@ -410,21 +454,29 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                                 clearRoleLocation(ex.id, role, { address: e.target.value })
                               }
                               placeholder={t('admin.address')}
-                              className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                              className={`w-full rounded-lg border px-2 py-1.5 text-sm ${
+                                ex[role].placeId
+                                  ? 'border-sky-200 bg-sky-50/50 text-slate-600'
+                                  : 'border-slate-200'
+                              }`}
                             />
-                            {typeof ex[role].lat === 'number' && (
+                            {typeof ex[role].lat === 'number' ? (
                               <div className="flex items-center gap-1 text-[10px] text-sky-600 font-semibold">
-                                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 inline-block" aria-hidden="true" />
+                                <MapPin size={10} className="shrink-0" />
                                 {ex[role].lat.toFixed(4)}, {ex[role].lng.toFixed(4)}
                               </div>
+                            ) : HAS_MAPS_KEY && (
+                              <p className="text-[10px] text-slate-400">
+                                학교를 검색하면 주소·위치가 자동으로 입력돼요
+                              </p>
                             )}
                           </div>
                         ))}
                       </div>
 
-                      {/* Meta */}
-                      <div className="grid sm:grid-cols-3 gap-2 mt-3">
-                        <div>
+                      {/* Tracking / date / weight */}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3">
+                        <div className="col-span-2 sm:col-span-1">
                           <label className="flex items-center gap-1 text-[10px] font-bold text-slate-500 mb-0.5">
                             {t('admin.trackingNoLabel')}
                             <span className="rounded-full bg-slate-100 px-1.5 py-0 text-[9px] font-semibold text-slate-400">
@@ -439,32 +491,44 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                             className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm font-mono"
                           />
                         </div>
-                        <input
-                          type="date"
-                          value={ex.date}
-                          onChange={(e) => updateDraft(ex.id, { date: e.target.value })}
-                          className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                        />
-                        <input
-                          value={ex.weight}
-                          onChange={(e) => updateDraft(ex.id, { weight: e.target.value })}
-                          placeholder={t('admin.weight')}
-                          className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                        />
+                        <FieldLabel label={t('admin.date')}>
+                          <input
+                            type="date"
+                            value={ex.date}
+                            onChange={(e) => updateDraft(ex.id, { date: e.target.value })}
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                          />
+                        </FieldLabel>
+                        <FieldLabel label={t('admin.weight')}>
+                          <input
+                            value={ex.weight}
+                            onChange={(e) => updateDraft(ex.id, { weight: e.target.value })}
+                            placeholder="2.0 kg"
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                          />
+                        </FieldLabel>
                       </div>
-                      <input
-                        value={ex.contents}
-                        onChange={(e) => updateDraft(ex.id, { contents: e.target.value })}
-                        placeholder={t('admin.contents')}
-                        className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm mt-2"
-                      />
-                      <textarea
-                        value={ex.message}
-                        onChange={(e) => updateDraft(ex.id, { message: e.target.value })}
-                        placeholder={t('admin.message')}
-                        rows={2}
-                        className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm mt-2"
-                      />
+
+                      {/* Contents & message */}
+                      <div className="space-y-2 mt-2">
+                        <FieldLabel label={t('admin.contents')}>
+                          <input
+                            value={ex.contents}
+                            onChange={(e) => updateDraft(ex.id, { contents: e.target.value })}
+                            placeholder={t('admin.contents')}
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                          />
+                        </FieldLabel>
+                        <FieldLabel label={t('admin.message')}>
+                          <textarea
+                            value={ex.message}
+                            onChange={(e) => updateDraft(ex.id, { message: e.target.value })}
+                            placeholder={t('admin.message')}
+                            rows={2}
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                          />
+                        </FieldLabel>
+                      </div>
                     </div>
                   ))}
 
