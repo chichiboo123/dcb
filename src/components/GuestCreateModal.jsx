@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { X, Save, Plus, Trash2, Check } from 'lucide-react';
+import { X, Save, Plus, Trash2, Check, AlertCircle, MapPin } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
 import { COUNTRIES, codeToFlag, findCountry, getFlagImageUrl, getLocalizedCountryName } from '../lib/countries.js';
@@ -10,12 +10,10 @@ import { loadGoogleMapsAPI, HAS_MAPS_KEY, SCHOOL_TYPES } from '../lib/googleMaps
 const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
 // ── School Places Autocomplete ────────────────────────────────────────────────
-// Self-contained: loads Google Maps API, initialises Autocomplete, calls onPlace.
 function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.searchPlaceholder' }) {
   const { t } = useTranslation();
   const mountRef = useRef(null);
   const placeElRef = useRef(null);
-  // Keep a stable ref to the latest onPlace callback
   const onPlaceRef = useRef(onPlace);
   useEffect(() => { onPlaceRef.current = onPlace; });
 
@@ -32,7 +30,6 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
         const placeEl = new PlaceAutocompleteElement({
           includedPrimaryTypes: SCHOOL_TYPES,
         });
-        // Also set as property for API versions that ignore constructor options
         try { placeEl.includedPrimaryTypes = SCHOOL_TYPES; } catch (_) { /* noop */ }
         placeEl.setAttribute('aria-label', t(placeholderKey));
         placeEl.addEventListener('input', () => {
@@ -44,12 +41,9 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
           await place.fetchFields({
             fields: ['displayName', 'formattedAddress', 'location', 'id', 'types', 'addressComponents'],
           });
-
           if (!place.location) return;
-
           const lat = typeof place.location?.lat === 'function' ? place.location.lat() : place.location?.lat;
           const lng = typeof place.location?.lng === 'function' ? place.location.lng() : place.location?.lng;
-
           onPlaceRef.current({
             name: place.displayName || placeEl.value || '',
             address: place.formattedAddress || '',
@@ -59,13 +53,10 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
             components: place.addressComponents || [],
           });
         };
-
-        // Support both legacy and current place selection events.
         placeEl.addEventListener('gmp-placeselect', handlePlaceSelect);
         placeEl.addEventListener('gmp-select', handlePlaceSelect);
         mountRef.current.appendChild(placeEl);
         placeElRef.current = placeEl;
-        // Constrain the web component to its container width on mobile
         placeEl.style.width = '100%';
         placeEl.style.maxWidth = '100%';
         placeEl.style.display = 'block';
@@ -120,22 +111,32 @@ function extractCountryPatch(components, lang) {
   };
 }
 
+// ── Labeled input wrapper ─────────────────────────────────────────────────────
+function FieldLabel({ label, children }) {
+  return (
+    <div>
+      <label className="block text-[10px] font-bold text-slate-500 mb-0.5">{label}</label>
+      {children}
+    </div>
+  );
+}
+
 // ── Main modal ────────────────────────────────────────────────────────────────
 export default function GuestCreateModal({ open, onClose }) {
   const { t, i18n } = useTranslation();
   const { data, replaceAll } = useBoxData();
-  const [draft, setDraft] = useState(data.exchanges);
+  const [draft, setDraft] = useState([]);
   const [toast, setToast] = useState('');
+  const [saveError, setSaveError] = useState('');
 
+  // Always reset draft to current saved data when modal opens
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if (open && draft.length === 0) {
-      setDraft(
-        data.exchanges.length > 0
-          ? data.exchanges
-          : [makeEmptyExchange('blue')]
-      );
-    }
-  }, [open, data.exchanges, draft.length]);
+    if (!open) return;
+    setDraft(data.exchanges.length > 0 ? data.exchanges : [makeEmptyExchange('blue')]);
+    setSaveError('');
+    setToast('');
+  }, [open]);
 
   const updateDraft = (id, patch) =>
     setDraft((prev) => prev.map((ex) => (ex.id === id ? { ...ex, ...patch } : ex)));
@@ -153,6 +154,26 @@ export default function GuestCreateModal({ open, onClose }) {
       countryCode: found.code,
       flag: codeToFlag(found.code),
     });
+  };
+
+  // Detect datalist selection (value like "KR - 대한민국") or Enter key
+  const handleCountryInputChange = (e, id, role) => {
+    const val = e.target.value;
+    const codeMatch = val.match(/^([A-Za-z]{2})\s*[-–]/);
+    if (codeMatch) {
+      updateCountryBySearch(id, role, codeMatch[1]);
+      e.target.value = '';
+    }
+  };
+
+  const handleCountryInputKeyDown = (e, id, role) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const val = e.currentTarget.value.trim();
+    if (val) {
+      updateCountryBySearch(id, role, val);
+      e.currentTarget.value = '';
+    }
   };
 
   const clearRoleLocation = (id, role, patch = {}) => {
@@ -173,6 +194,15 @@ export default function GuestCreateModal({ open, onClose }) {
     setDraft((prev) => prev.filter((ex) => ex.id !== id));
 
   const save = () => {
+    // Basic validation: at least one exchange needs school or country filled
+    const hasContent = draft.some(
+      (ex) => ex.from.school || ex.from.country || ex.to.school || ex.to.country
+    );
+    if (!hasContent) {
+      setSaveError(t('guest.saveErrorEmpty') || '보내는 곳 또는 받는 곳 정보를 입력해 주세요.');
+      return;
+    }
+    setSaveError('');
     replaceAll({ exchanges: draft });
     setToast(t('admin.saved'));
     setTimeout(() => {
@@ -204,6 +234,7 @@ export default function GuestCreateModal({ open, onClose }) {
             transition={{ type: 'spring', stiffness: 200, damping: 22 }}
             className="relative w-full max-w-3xl max-h-[88vh] overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200 flex flex-col"
           >
+            {/* Header */}
             <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50 border-b border-slate-200">
               <h2 className="text-base font-extrabold text-slate-800">
                 {t('guest.createTitle')}
@@ -217,30 +248,38 @@ export default function GuestCreateModal({ open, onClose }) {
               </button>
             </div>
 
+            {/* Scrollable body */}
             <div className="flex-1 overflow-y-auto overflow-x-hidden p-5 space-y-4">
-              {draft.map((ex) => (
+              {draft.map((ex, index) => (
                 <div
                   key={ex.id}
                   className="rounded-2xl border border-slate-200 p-4 bg-slate-50/60"
                 >
-                  {/* Exchange header: country arrows + theme picker + remove */}
+                  {/* Exchange header: number + country arrows + theme picker + remove */}
                   <div className="flex items-center justify-between mb-3 gap-2">
-                    <div className="text-sm font-bold text-slate-700 truncate">
-                      <span aria-hidden="true">
-                        {ex.from.countryCode
-                          ? <img src={getFlagImageUrl(ex.from.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" />
-                          : ex.from.flag}
-                      </span>{' '}
-                      {ex.from.country || '—'}
-                      {' '}<span className="text-slate-400">→</span>{' '}
-                      <span aria-hidden="true">
-                        {ex.to.countryCode
-                          ? <img src={getFlagImageUrl(ex.to.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block" />
-                          : ex.to.flag}
-                      </span>{' '}
-                      {ex.to.country || '—'}
+                    <div className="flex items-center gap-2 min-w-0">
+                      {/* Exchange number badge */}
+                      <span className="shrink-0 inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-200 text-[10px] font-extrabold text-slate-600">
+                        {index + 1}
+                      </span>
+                      <div className="text-sm font-bold text-slate-700 truncate">
+                        <span aria-hidden="true">
+                          {ex.from.countryCode
+                            ? <img src={getFlagImageUrl(ex.from.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block align-middle" />
+                            : ex.from.flag}
+                        </span>{' '}
+                        {ex.from.country || '—'}
+                        {' '}<span className="text-slate-400">→</span>{' '}
+                        <span aria-hidden="true">
+                          {ex.to.countryCode
+                            ? <img src={getFlagImageUrl(ex.to.countryCode)} alt="" className="w-4 h-4 rounded-sm inline-block align-middle" />
+                            : ex.to.flag}
+                        </span>{' '}
+                        {ex.to.country || '—'}
+                      </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
+                      {/* Theme color picker */}
                       <div className="flex items-center gap-1">
                         {THEMES.map((th) => {
                           const dotColor = {
@@ -291,6 +330,9 @@ export default function GuestCreateModal({ open, onClose }) {
                       placeholder="https://padlet.com/embed/..."
                       className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm focus:border-sky-400 focus:ring-2 focus:ring-sky-100 outline-none"
                     />
+                    <p className="mt-0.5 text-[10px] text-slate-400">
+                      패들릿: 공유 → 임베드 코드 → URL 복사 · 캔바: 공유 → 웹사이트에 임베드
+                    </p>
                   </div>
 
                   {/* From / To columns */}
@@ -311,7 +353,11 @@ export default function GuestCreateModal({ open, onClose }) {
                               key={cc}
                               type="button"
                               onClick={() => updateCountryBySearch(ex.id, role, cc)}
-                              className="rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[11px] font-semibold text-slate-600 hover:bg-sky-50 hover:border-sky-200"
+                              className={`rounded-full border px-2 py-0.5 text-[11px] font-semibold transition-colors ${
+                                ex[role].countryCode === cc
+                                  ? 'border-sky-400 bg-sky-50 text-sky-700'
+                                  : 'border-slate-200 bg-slate-50 text-slate-600 hover:bg-sky-50 hover:border-sky-200'
+                              }`}
                             >
                               {cc}
                             </button>
@@ -325,12 +371,20 @@ export default function GuestCreateModal({ open, onClose }) {
                         <div className="grid grid-cols-[56px_1fr] sm:grid-cols-[1.4fr_56px_1fr] gap-2">
                           <div className="col-span-2 sm:col-span-1">
                             <input
-                              list={`country-list-${role}`}
-                              onBlur={(e) => updateCountryBySearch(ex.id, role, e.target.value)}
+                              list={`country-list-${ex.id}-${role}`}
+                              onChange={(e) => handleCountryInputChange(e, ex.id, role)}
+                              onKeyDown={(e) => handleCountryInputKeyDown(e, ex.id, role)}
+                              onBlur={(e) => {
+                                const val = e.target.value.trim();
+                                if (val) {
+                                  updateCountryBySearch(ex.id, role, val);
+                                  e.target.value = '';
+                                }
+                              }}
                               placeholder={t('guest.countrySearchShort')}
                               className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
                             />
-                            <datalist id={`country-list-${role}`}>
+                            <datalist id={`country-list-${ex.id}-${role}`}>
                               {[...new Set(COUNTRIES)].map((code) => {
                                 const localized = getLocalizedCountryName(code, i18n.language);
                                 return (
@@ -357,7 +411,7 @@ export default function GuestCreateModal({ open, onClose }) {
                           />
                         </div>
 
-                        {/* School name */}
+                        {/* School name — Google Maps autocomplete or plain input */}
                         {HAS_MAPS_KEY ? (
                           <SchoolPlaceSearch
                             key={`${ex.id}-${role}-school`}
@@ -387,30 +441,38 @@ export default function GuestCreateModal({ open, onClose }) {
                           />
                         )}
 
-                        {/* Address (auto-filled from selected school) */}
+                        {/* Address — auto-filled from school search */}
                         <input
                           value={ex[role].address || ''}
                           onChange={(e) =>
                             clearRoleLocation(ex.id, role, { address: e.target.value })
                           }
                           placeholder={t('admin.address')}
-                          className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                          className={`w-full rounded-lg border px-2 py-1.5 text-sm ${
+                            ex[role].placeId
+                              ? 'border-sky-200 bg-sky-50/50 text-slate-600'
+                              : 'border-slate-200'
+                          }`}
                         />
 
-                        {/* Coordinate badge — shown after autocomplete fills lat/lng */}
-                        {typeof ex[role].lat === 'number' && (
+                        {/* Coordinate badge + auto-fill hint */}
+                        {typeof ex[role].lat === 'number' ? (
                           <div className="flex items-center gap-1 text-[10px] text-sky-600 font-semibold">
-                            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 inline-block" aria-hidden="true" />
+                            <MapPin size={10} className="shrink-0" />
                             {ex[role].lat.toFixed(4)}, {ex[role].lng.toFixed(4)}
                           </div>
+                        ) : HAS_MAPS_KEY && (
+                          <p className="text-[10px] text-slate-400">
+                            학교를 검색하면 주소·위치가 자동으로 입력돼요
+                          </p>
                         )}
                       </div>
                     ))}
                   </div>
 
                   {/* Tracking / date / weight */}
-                  <div className="grid sm:grid-cols-3 gap-2 mt-3">
-                    <div>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3">
+                    <div className="col-span-2 sm:col-span-1">
                       <label className="flex items-center gap-1 text-[10px] font-bold text-slate-500 mb-0.5">
                         {t('admin.trackingNoLabel')}
                         <span className="rounded-full bg-slate-100 px-1.5 py-0 text-[9px] font-semibold text-slate-400">
@@ -425,35 +487,48 @@ export default function GuestCreateModal({ open, onClose }) {
                         className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm font-mono"
                       />
                     </div>
-                    <input
-                      type="date"
-                      value={ex.date}
-                      onChange={(e) => updateDraft(ex.id, { date: e.target.value })}
-                      className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                    />
-                    <input
-                      value={ex.weight}
-                      onChange={(e) => updateDraft(ex.id, { weight: e.target.value })}
-                      placeholder={t('admin.weight')}
-                      className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
-                    />
+                    <FieldLabel label={t('admin.date')}>
+                      <input
+                        type="date"
+                        value={ex.date}
+                        onChange={(e) => updateDraft(ex.id, { date: e.target.value })}
+                        className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                      />
+                    </FieldLabel>
+                    <FieldLabel label={t('admin.weight')}>
+                      <input
+                        value={ex.weight}
+                        onChange={(e) => updateDraft(ex.id, { weight: e.target.value })}
+                        placeholder="2.0 kg"
+                        className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                      />
+                    </FieldLabel>
                   </div>
-                  <input
-                    value={ex.contents}
-                    onChange={(e) => updateDraft(ex.id, { contents: e.target.value })}
-                    placeholder={t('admin.contents')}
-                    className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm mt-2"
-                  />
-                  <textarea
-                    value={ex.message}
-                    onChange={(e) => updateDraft(ex.id, { message: e.target.value })}
-                    placeholder={t('admin.message')}
-                    rows={2}
-                    className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm mt-2"
-                  />
+
+                  {/* Contents & message */}
+                  <div className="space-y-2 mt-2">
+                    <FieldLabel label={t('admin.contents')}>
+                      <input
+                        value={ex.contents}
+                        onChange={(e) => updateDraft(ex.id, { contents: e.target.value })}
+                        placeholder={t('admin.contents')}
+                        className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                      />
+                    </FieldLabel>
+                    <FieldLabel label={t('admin.message')}>
+                      <textarea
+                        value={ex.message}
+                        onChange={(e) => updateDraft(ex.id, { message: e.target.value })}
+                        placeholder={t('admin.message')}
+                        rows={2}
+                        className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
+                      />
+                    </FieldLabel>
+                  </div>
                 </div>
               ))}
 
+              {/* Add exchange button */}
               <button
                 type="button"
                 onClick={addDraft}
@@ -464,28 +539,37 @@ export default function GuestCreateModal({ open, onClose }) {
               </button>
             </div>
 
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-4 sm:px-5 py-3 border-t border-slate-200 bg-slate-50">
-              <p className="text-xs text-slate-500">{t('guest.createHint')}</p>
-              <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-2">
-                <AnimatePresence>
-                  {toast && (
-                    <motion.span
-                      initial={{ opacity: 0, x: 8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0 }}
-                      className="inline-flex items-center gap-1 text-sm font-bold text-emerald-600"
-                    >
-                      <Check size={14} /> {toast}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
-                <button
-                  onClick={save}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2 transition-colors"
-                >
-                  <Save size={16} />
-                  {t('guest.saveAndPreview')}
-                </button>
+            {/* Footer */}
+            <div className="flex flex-col gap-2 px-4 sm:px-5 py-3 border-t border-slate-200 bg-slate-50">
+              {saveError && (
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-red-600 bg-red-50 rounded-lg px-3 py-2">
+                  <AlertCircle size={14} className="shrink-0" />
+                  {saveError}
+                </div>
+              )}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <p className="text-xs text-slate-500">{t('guest.createHint')}</p>
+                <div className="flex w-full sm:w-auto items-center justify-between sm:justify-end gap-2">
+                  <AnimatePresence>
+                    {toast && (
+                      <motion.span
+                        initial={{ opacity: 0, x: 8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="inline-flex items-center gap-1 text-sm font-bold text-emerald-600"
+                      >
+                        <Check size={14} /> {toast}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                  <button
+                    onClick={save}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2 transition-colors"
+                  >
+                    <Save size={16} />
+                    {t('guest.saveAndPreview')}
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>
