@@ -83,10 +83,10 @@
   },
   "help": {
     "title": "How to Use",
-    "step1": "Click [Create Culture Box] → Enter sender & recipient school info",
-    "step2": "Paste an embed URL (Padlet, Canva, etc.) → Click [Save & Preview]",
-    "step3": "Click a box → View embedded content and the shipping invoice",
-    "step4": "Click [Share Link] → URL is copied → Send it to friends or teachers",
+    "step1": "Click [Create Culture Box] → Select country via KR·JP·ID·US buttons or search → Type school name in the Google Maps field (address & location auto-filled)",
+    "step2": "Paste embed URL (Padlet: Share→Embed code / Canva: Share→Embed on website) → Add date, contents & message → Use [Add Exchange Box] for multiple boxes",
+    "step3": "Click [Save & Preview] → Click a box to view embedded content and the shipping invoice",
+    "step4": "Click [Share Link] → URL is copied automatically → Send to friends or teachers",
     "developerLabel": "Developer",
     "developerName": "Edu-Musical Dreaming Teacher Chisoo"
   },

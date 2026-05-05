@@ -83,9 +83,9 @@
   },
   "help": {
     "title": "Cara Penggunaan",
-    "step1": "Klik [Buat Kotak Budaya] → Masukkan info sekolah pengirim & penerima",
-    "step2": "Tempel URL embed (Padlet, Canva, dll.) → Klik [Simpan & Pratinjau]",
-    "step3": "Klik kotak → Lihat konten embed dan invoice pengiriman",
+    "step1": "Klik [Buat Kotak Budaya] → Pilih negara via tombol KR·JP·ID·US atau pencarian → Ketik nama sekolah di kolom Google Maps (alamat & lokasi otomatis terisi)",
+    "step2": "Tempel URL embed (Padlet: Bagikan→Embed / Canva: Bagikan→Sematkan di website) → Isi tanggal, konten & pesan → Gunakan [Tambah Kotak] untuk beberapa kotak",
+    "step3": "Klik [Simpan & Pratinjau] → Klik kotak untuk melihat konten embed dan invoice pengiriman",
     "step4": "Klik [Bagikan Tautan] → URL otomatis tersalin → Kirim ke teman atau guru",
     "developerLabel": "Pengembang",
     "developerName": "Guru Chisoo, Sang Pemimpi Musikal Edukasi"

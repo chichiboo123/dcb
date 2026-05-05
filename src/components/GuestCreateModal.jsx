@@ -89,7 +89,7 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
   return (
     <div
       ref={mountRef}
-      className="w-full min-w-0 overflow-hidden py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
+      className="w-full py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
         focus-within:border-sky-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-sky-100 transition-all"
       style={{ borderRadius: '10px' }}
     />
