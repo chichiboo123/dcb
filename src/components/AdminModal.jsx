@@ -59,6 +59,9 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
         placeEl.addEventListener('gmp-select', handlePlaceSelect);
         mountRef.current.appendChild(placeEl);
         placeElRef.current = placeEl;
+        placeEl.style.width = '100%';
+        placeEl.style.maxWidth = '100%';
+        placeEl.style.display = 'block';
       })
       .catch((err) => {
         if (import.meta.env.DEV) {
@@ -88,7 +91,7 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
   return (
     <div
       ref={mountRef}
-      className="w-full py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
+      className="w-full min-w-0 overflow-hidden py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
         focus-within:border-sky-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-sky-100 transition-all"
       style={{ borderRadius: '10px' }}
     />
@@ -195,7 +198,7 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
             </div>
 
             {/* Body */}
-            <div className="flex-1 overflow-y-auto p-5">
+            <div className="flex-1 overflow-y-auto overflow-x-hidden p-5">
               {!auth ? (
                 <form onSubmit={tryLogin} className="max-w-sm mx-auto py-6 space-y-4">
                   <div className="text-center">
@@ -341,8 +344,8 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                                 </button>
                               ))}
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-[1.4fr_64px_1fr] gap-2">
-                              <div>
+                            <div className="grid grid-cols-[56px_1fr] sm:grid-cols-[1.4fr_56px_1fr] gap-2">
+                              <div className="col-span-2 sm:col-span-1">
                                 <input
                                   list={`admin-country-list-${ex.id}-${role}`}
                                   onBlur={(e) => {
@@ -507,7 +510,7 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                   </AnimatePresence>
                   <button
                     onClick={save}
-                    className="inline-flex items-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2 transition-colors"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2 transition-colors"
                   >
                     <Save size={16} />
                     {t('admin.save')}
