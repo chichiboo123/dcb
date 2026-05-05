@@ -36,7 +36,7 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
         placeEl.addEventListener('input', () => {
           onChange?.(placeEl.value || '');
         });
-        placeEl.addEventListener('gmp-placeselect', async (evt) => {
+        const handlePlaceSelect = async (evt) => {
           const place = evt.place || (await evt.placePrediction?.toPlace?.());
           if (!place) return;
           await place.fetchFields({
@@ -56,7 +56,11 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
             placeId: place.id || '',
             components: place.addressComponents || [],
           });
-        });
+        };
+
+        // Support both legacy and current place selection events.
+        placeEl.addEventListener('gmp-placeselect', handlePlaceSelect);
+        placeEl.addEventListener('gmp-select', handlePlaceSelect);
         mountRef.current.appendChild(placeEl);
         placeElRef.current = placeEl;
       })
@@ -142,6 +146,15 @@ export default function GuestCreateModal({ open, onClose }) {
       country: found.name,
       countryCode: found.code,
       flag: codeToFlag(found.code),
+    });
+  };
+
+  const clearRoleLocation = (id, role, patch = {}) => {
+    updateDraftNested(id, role, {
+      lat: null,
+      lng: null,
+      placeId: '',
+      ...patch,
     });
   };
 
@@ -340,7 +353,7 @@ export default function GuestCreateModal({ open, onClose }) {
                           <SchoolPlaceSearch
                             key={`${ex.id}-${role}-school`}
                             value={ex[role].school}
-                            onChange={(v) => updateDraftNested(ex.id, role, { school: v })}
+                            onChange={(v) => clearRoleLocation(ex.id, role, { school: v })}
                             placeholderKey="admin.school"
                             onPlace={(p) => {
                               const countryPatch = extractCountryPatch(p.components, i18n.language);
@@ -358,7 +371,7 @@ export default function GuestCreateModal({ open, onClose }) {
                           <input
                             value={ex[role].school}
                             onChange={(e) =>
-                              updateDraftNested(ex.id, role, { school: e.target.value })
+                              clearRoleLocation(ex.id, role, { school: e.target.value })
                             }
                             placeholder={t('admin.school')}
                             className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
@@ -369,7 +382,7 @@ export default function GuestCreateModal({ open, onClose }) {
                         <input
                           value={ex[role].address || ''}
                           onChange={(e) =>
-                            updateDraftNested(ex.id, role, { address: e.target.value })
+                            clearRoleLocation(ex.id, role, { address: e.target.value })
                           }
                           placeholder={t('admin.address')}
                           className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
