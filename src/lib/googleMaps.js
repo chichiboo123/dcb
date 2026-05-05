@@ -7,6 +7,16 @@ const GOOGLE_MAPS_KEY =
   || window.__APP_ENV__?.VITE_GOOGLE_MAPS_API_KEY
   || '';
 
+
+function resolveMapsLanguage() {
+  const saved = (window.localStorage?.getItem('i18nextLng') || '').toLowerCase();
+  if (saved) return saved.split('-')[0];
+  const htmlLang = (document.documentElement.lang || '').toLowerCase();
+  if (htmlLang) return htmlLang.split('-')[0];
+  const nav = (navigator.language || 'ko').toLowerCase();
+  return nav.split('-')[0];
+}
+
 export function loadGoogleMapsAPI() {
   if (loadPromise) return loadPromise;
   if (window.google?.maps?.places) {
@@ -51,7 +61,8 @@ export function loadGoogleMapsAPI() {
 
     const script = document.createElement('script');
     script.id = SCRIPT_ID;
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&v=weekly&loading=async`;
+    const language = encodeURIComponent(resolveMapsLanguage());
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&v=weekly&loading=async&language=${language}`;
     script.async = true;
     script.defer = true;
     script.onload = () => waitForMapsReady(resolve, reject);

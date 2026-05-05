@@ -213,6 +213,7 @@ export default function SchoolConnectionMap() {
         <p className="mt-1.5 text-sm text-slate-500 max-w-md mx-auto">
           {t('map.subtitle')}
         </p>
+        <p className="mt-1 text-xs text-slate-400 max-w-md mx-auto">{t('map.languageTip')}</p>
       </div>
 
       {/* Map container — always fixed height */}

@@ -102,6 +102,7 @@
     "noApiKey": "Kunci API Google Maps belum dikonfigurasi. Tambahkan VITE_GOOGLE_MAPS_API_KEY ke file .env Anda.",
     "loadError": "Gagal memuat Google Maps. Periksa kunci API Anda.",
     "noExchanges": "Buat Kotak Budaya dan cari sekolah via Google Maps untuk melihat koneksi di sini",
-    "noCoords": "Cari sekolah via Google Maps di formulir untuk menampilkan lokasi di peta"
+    "noCoords": "Cari sekolah via Google Maps di formulir untuk menampilkan lokasi di peta",
+    "languageTip": "Bahasa label peta diterapkan setelah ganti bahasa lalu muat ulang halaman."
   }
 }

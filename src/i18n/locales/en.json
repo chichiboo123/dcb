@@ -83,10 +83,10 @@
   },
   "help": {
     "title": "How to Use",
-    "step1": "Click [Create Culture Box] → Select country via KR·JP·ID·US buttons or search → Type school name in the Google Maps field (address & location auto-filled)",
-    "step2": "Paste embed URL (Padlet: Share→Embed code / Canva: Share→Embed on website) → Add date, contents & message → Use [Add Exchange Box] for multiple boxes",
-    "step3": "Click [Save & Preview] → Click a box to view embedded content and the shipping invoice",
-    "step4": "Click [Share Link] → URL is copied automatically → Send to friends or teachers",
+    "step1": "Tap [Create Culture Box], then pick a country and search a school.",
+    "step2": "Add embed URL, date, contents, and message. (Use [Add Exchange Box] for multiple boxes.)",
+    "step3": "Tap [Save & Preview] to check the box and invoice.",
+    "step4": "Tap [Share Link] and send the copied URL.",
     "developerLabel": "Developer",
     "developerName": "Edu-Musical Dreaming Teacher Chisoo"
   },
@@ -102,6 +102,7 @@
     "noApiKey": "Google Maps API key is not configured. Add VITE_GOOGLE_MAPS_API_KEY to your .env file.",
     "loadError": "Failed to load Google Maps. Please check your API key.",
     "noExchanges": "Create a Culture Box and search schools via Google Maps to see connections here",
-    "noCoords": "Search schools via Google Maps in the Culture Box form to pin locations on the map"
+    "noCoords": "Search schools via Google Maps in the Culture Box form to pin locations on the map",
+    "languageTip": "Map label language applies after changing language and refreshing the page."
   }
 }
