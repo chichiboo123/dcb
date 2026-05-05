@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { X, Save, Plus, Trash2, Check, Search } from 'lucide-react';
+import { X, Save, Plus, Trash2, Check } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
 import { COUNTRIES, codeToFlag, findCountry, getFlagImageUrl, getLocalizedCountryName } from '../lib/countries.js';
@@ -44,9 +44,6 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
           });
 
           if (!place.location) return;
-          const placeTypes = place.types || [];
-          const isSchoolLike = placeTypes.some((type) => SCHOOL_TYPES.includes(type));
-          if (!isSchoolLike) return;
 
           const lat = typeof place.location?.lat === 'function' ? place.location.lat() : place.location?.lat;
           const lng = typeof place.location?.lng === 'function' ? place.location.lng() : place.location?.lng;
@@ -89,19 +86,12 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
   if (!HAS_MAPS_KEY) return null;
 
   return (
-    <div className="relative">
-      <Search
-        size={13}
-        className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sky-400 pointer-events-none z-10"
-        aria-hidden="true"
-      />
-      <div
-        ref={mountRef}
-        className="w-full pl-8 pr-2 py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
-          focus-within:border-sky-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-sky-100 transition-all"
-        style={{ borderRadius: '10px' }}
-      />
-    </div>
+    <div
+      ref={mountRef}
+      className="w-full py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
+        focus-within:border-sky-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-sky-100 transition-all"
+      style={{ borderRadius: '10px' }}
+    />
   );
 }
 
@@ -398,12 +388,21 @@ export default function GuestCreateModal({ open, onClose }) {
 
                   {/* Tracking / date / weight */}
                   <div className="grid sm:grid-cols-3 gap-2 mt-3">
-                    <input
-                      value={ex.trackingNo}
-                      onChange={(e) => updateDraft(ex.id, { trackingNo: e.target.value })}
-                      placeholder={t('admin.trackingNo')}
-                      className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm font-mono"
-                    />
+                    <div>
+                      <label className="flex items-center gap-1 text-[10px] font-bold text-slate-500 mb-0.5">
+                        {t('admin.trackingNoLabel')}
+                        <span className="rounded-full bg-slate-100 px-1.5 py-0 text-[9px] font-semibold text-slate-400">
+                          {t('admin.trackingNoAuto')}
+                        </span>
+                      </label>
+                      <input
+                        value={ex.trackingNo}
+                        onChange={(e) => updateDraft(ex.id, { trackingNo: e.target.value })}
+                        title={t('admin.trackingNoHint')}
+                        placeholder="DCB-XXXXXX"
+                        className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm font-mono"
+                      />
+                    </div>
                     <input
                       type="date"
                       value={ex.date}

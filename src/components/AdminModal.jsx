@@ -12,6 +12,13 @@ const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 function AdminSchoolPlaceSearch({ onPlace, value, onChange }) {
   const mountRef = useRef(null);
   const placeElRef = useRef(null);
+  const onPlaceRef = useRef(onPlace);
+  const onChangeRef = useRef(onChange);
+
+  useEffect(() => {
+    onPlaceRef.current = onPlace;
+    onChangeRef.current = onChange;
+  });
 
   useEffect(() => {
     if (!HAS_MAPS_KEY) return;
@@ -21,7 +28,7 @@ function AdminSchoolPlaceSearch({ onPlace, value, onChange }) {
       const PlaceAutocompleteElement = window.google?.maps?.places?.PlaceAutocompleteElement;
       if (!PlaceAutocompleteElement) return;
       const placeEl = new PlaceAutocompleteElement({ includedPrimaryTypes: SCHOOL_TYPES });
-      placeEl.addEventListener('input', () => onChange?.(placeEl.value || ''));
+      placeEl.addEventListener('input', () => onChangeRef.current?.(placeEl.value || ''));
       placeEl.addEventListener('gmp-placeselect', async (evt) => {
         const place = evt.place || (await evt.placePrediction?.toPlace?.());
         if (!place) return;
@@ -31,7 +38,7 @@ function AdminSchoolPlaceSearch({ onPlace, value, onChange }) {
         if (!place.location) return;
         const lat = typeof place.location?.lat === 'function' ? place.location.lat() : place.location?.lat;
         const lng = typeof place.location?.lng === 'function' ? place.location.lng() : place.location?.lng;
-        onPlace?.({
+        onPlaceRef.current?.({
           name: place.displayName || placeEl.value || '',
           address: place.formattedAddress || '',
           lat: typeof lat === 'number' ? lat : null,
@@ -48,13 +55,13 @@ function AdminSchoolPlaceSearch({ onPlace, value, onChange }) {
       if (placeElRef.current && mountRef.current?.contains(placeElRef.current)) mountRef.current.removeChild(placeElRef.current);
       placeElRef.current = null;
     };
-  }, [onChange, onPlace]);
+  }, []);
 
   useEffect(() => {
     if (placeElRef.current && (placeElRef.current.value || '') !== (value || '')) placeElRef.current.value = value || '';
   }, [value]);
 
-  return <div ref={mountRef} className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm" />;
+  return <div ref={mountRef} className="w-full rounded-lg border border-slate-200 py-1.5 text-sm" />;
 }
 
 export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = false }) {
@@ -317,18 +324,33 @@ export default function AdminModal({ open, onClose, onAuthSuccess, authOnly = fa
                               placeholder={t('admin.address')}
                               className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm"
                             />
+                            {typeof ex[role].lat === 'number' && (
+                              <div className="flex items-center gap-1 text-[10px] text-sky-600 font-semibold">
+                                <span className="w-1.5 h-1.5 rounded-full bg-sky-400 inline-block" aria-hidden="true" />
+                                {ex[role].lat.toFixed(4)}, {ex[role].lng.toFixed(4)}
+                              </div>
+                            )}
                           </div>
                         ))}
                       </div>
 
                       {/* Meta */}
                       <div className="grid sm:grid-cols-3 gap-2 mt-3">
-                        <input
-                          value={ex.trackingNo}
-                          onChange={(e) => updateDraft(ex.id, { trackingNo: e.target.value })}
-                          placeholder={t('admin.trackingNo')}
-                          className="rounded-lg border border-slate-200 px-2 py-1.5 text-sm font-mono"
-                        />
+                        <div>
+                          <label className="flex items-center gap-1 text-[10px] font-bold text-slate-500 mb-0.5">
+                            {t('admin.trackingNoLabel')}
+                            <span className="rounded-full bg-slate-100 px-1.5 py-0 text-[9px] font-semibold text-slate-400">
+                              {t('admin.trackingNoAuto')}
+                            </span>
+                          </label>
+                          <input
+                            value={ex.trackingNo}
+                            onChange={(e) => updateDraft(ex.id, { trackingNo: e.target.value })}
+                            title={t('admin.trackingNoHint')}
+                            placeholder="DCB-XXXXXX"
+                            className="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm font-mono"
+                          />
+                        </div>
                         <input
                           type="date"
                           value={ex.date}
