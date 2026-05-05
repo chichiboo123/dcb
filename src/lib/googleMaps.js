@@ -84,3 +84,9 @@ export const PASTEL_MAP_STYLES = [
   { featureType: 'administrative.land_parcel', stylers: [{ visibility: 'off' }] },
   { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
 ];
+    const previousAuthFailure = window.gm_authFailure;
+    window.gm_authFailure = () => {
+      loadPromise = null;
+      reject(new Error('Google Maps authentication failed (API key/referrer/billing).'));
+      if (typeof previousAuthFailure === 'function') previousAuthFailure();
+    };

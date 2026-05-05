@@ -28,7 +28,7 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
         if (cancelled || !inputRef.current || acRef.current) return;
         const ac = new window.google.maps.places.Autocomplete(inputRef.current, {
           fields: ['name', 'formatted_address', 'geometry', 'place_id', 'address_components'],
-          types: ['establishment'],
+          types: ['school'],
         });
         ac.addListener('place_changed', () => {
           const p = ac.getPlace();
