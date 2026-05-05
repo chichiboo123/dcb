@@ -1,5 +1,8 @@
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MapPin, Mail, AlertTriangle, Plane } from 'lucide-react';
+import { getLocalizedCountryName } from '../lib/countries.js';
+import { fetchPlaceLocalized, HAS_MAPS_KEY } from '../lib/googleMaps.js';
 
 function Field({ label, children }) {
   return (
@@ -15,7 +18,33 @@ function Field({ label, children }) {
 }
 
 export default function Invoice({ exchange }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
+  const [localFrom, setLocalFrom] = useState(null);
+  const [localTo, setLocalTo] = useState(null);
+  const fetchKey = `${exchange.from?.placeId}|${exchange.to?.placeId}|${lang}`;
+  const prevFetchKey = useRef('');
+
+  useEffect(() => {
+    if (!HAS_MAPS_KEY || fetchKey === prevFetchKey.current) return;
+    prevFetchKey.current = fetchKey;
+    setLocalFrom(null);
+    setLocalTo(null);
+    if (exchange.from?.placeId)
+      fetchPlaceLocalized(exchange.from.placeId, lang).then(r => { if (r) setLocalFrom(r); });
+    if (exchange.to?.placeId)
+      fetchPlaceLocalized(exchange.to.placeId, lang).then(r => { if (r) setLocalTo(r); });
+  }, [fetchKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const getSchool = (role) =>
+    (role === 'from' ? localFrom?.name : localTo?.name) || exchange[role]?.school || '';
+  const getAddress = (role) =>
+    (role === 'from' ? localFrom?.address : localTo?.address) || exchange[role]?.address || '';
+  const getCountry = (role) => {
+    const code = exchange[role]?.countryCode;
+    if (code) return getLocalizedCountryName(code, lang) || exchange[role]?.country || '';
+    return exchange[role]?.country || '';
+  };
 
   return (
     <div
@@ -69,11 +98,11 @@ export default function Invoice({ exchange }) {
             <span className="text-base" aria-hidden="true">{exchange.from.flag}</span>
           </div>
           <div className="mt-1 text-sm font-extrabold text-slate-800">
-            {exchange.from.school}
+            {getSchool('from')}
           </div>
-          <div className="text-xs text-slate-700">{exchange.from.country}</div>
-          {exchange.from.address && (
-            <div className="text-[11px] text-slate-500 mt-0.5">{exchange.from.address}</div>
+          <div className="text-xs text-slate-700">{getCountry('from')}</div>
+          {getAddress('from') && (
+            <div className="text-[11px] text-slate-500 mt-0.5">{getAddress('from')}</div>
           )}
         </div>
 
@@ -88,11 +117,11 @@ export default function Invoice({ exchange }) {
             <span className="text-base" aria-hidden="true">{exchange.to.flag}</span>
           </div>
           <div className="mt-1 text-sm font-extrabold text-slate-800">
-            {exchange.to.school}
+            {getSchool('to')}
           </div>
-          <div className="text-xs text-slate-700">{exchange.to.country}</div>
-          {exchange.to.address && (
-            <div className="text-[11px] text-slate-500 mt-0.5">{exchange.to.address}</div>
+          <div className="text-xs text-slate-700">{getCountry('to')}</div>
+          {getAddress('to') && (
+            <div className="text-[11px] text-slate-500 mt-0.5">{getAddress('to')}</div>
           )}
         </div>
       </div>
