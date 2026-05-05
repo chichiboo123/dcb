@@ -102,6 +102,7 @@
     "noApiKey": "Google Maps APIキーが設定されていません。.envファイルにVITE_GOOGLE_MAPS_API_KEYを追加してください。",
     "loadError": "Google Mapsの読み込みに失敗しました。APIキーを確認してください。",
     "noExchanges": "カルチャーボックスを作成し、Googleマップで学校を検索すると、ここに接続が表示されます",
-    "noCoords": "フォームでGoogleマップを使って学校を検索すると、地図に位置が表示されます"
+    "noCoords": "フォームでGoogleマップを使って学校を検索すると、地図に位置が表示されます",
+    "languageTip": "地図の言語は右上で言語変更後、ページ再読み込みで反映されます。"
   }
 }
