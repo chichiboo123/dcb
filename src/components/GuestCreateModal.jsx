@@ -5,7 +5,7 @@ import { X, Save, Plus, Trash2, Check, Search } from 'lucide-react';
 import { useBoxData } from '../store/BoxDataContext.jsx';
 import { makeEmptyExchange } from '../lib/mode.js';
 import { COUNTRIES, codeToFlag, findCountry, getFlagImageUrl, getLocalizedCountryName } from '../lib/countries.js';
-import { loadGoogleMapsAPI, HAS_MAPS_KEY } from '../lib/googleMaps.js';
+import { loadGoogleMapsAPI, HAS_MAPS_KEY, SCHOOL_TYPES } from '../lib/googleMaps.js';
 
 const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 
@@ -13,8 +13,8 @@ const THEMES = ['blue', 'pink', 'green', 'yellow', 'purple', 'orange'];
 // Self-contained: loads Google Maps API, initialises Autocomplete, calls onPlace.
 function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.searchPlaceholder' }) {
   const { t } = useTranslation();
-  const inputRef = useRef(null);
-  const acRef = useRef(null);
+  const mountRef = useRef(null);
+  const placeElRef = useRef(null);
   // Keep a stable ref to the latest onPlace callback
   const onPlaceRef = useRef(onPlace);
   useEffect(() => { onPlaceRef.current = onPlace; });
@@ -25,27 +25,40 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
 
     loadGoogleMapsAPI()
       .then(() => {
-        if (cancelled || !inputRef.current || acRef.current) return;
-        const ac = new window.google.maps.places.Autocomplete(inputRef.current, {
-          fields: ['name', 'formatted_address', 'geometry', 'place_id', 'address_components'],
-          types: ['school'],
+        if (cancelled || !mountRef.current || placeElRef.current) return;
+        const PlaceAutocompleteElement = window.google?.maps?.places?.PlaceAutocompleteElement;
+        if (!PlaceAutocompleteElement) throw new Error('PlaceAutocompleteElement is not available.');
+
+        const placeEl = new PlaceAutocompleteElement({
+          includedPrimaryTypes: SCHOOL_TYPES,
         });
-        ac.addListener('place_changed', () => {
-          const p = ac.getPlace();
-          if (!p?.geometry?.location) return;
-          const placeTypes = p.types || [];
+        placeEl.setAttribute('aria-label', t(placeholderKey));
+        placeEl.addEventListener('input', () => {
+          onChange?.(placeEl.value || '');
+        });
+        placeEl.addEventListener('gmp-placeselect', async (evt) => {
+          const place = evt.place || (await evt.placePrediction?.toPlace?.());
+          if (!place) return;
+          await place.fetchFields({
+            fields: ['displayName', 'formattedAddress', 'location', 'id', 'types', 'addressComponents'],
+          });
+
+          if (!place.location) return;
+          const placeTypes = place.types || [];
           const isSchoolLike = placeTypes.some((type) => SCHOOL_TYPES.includes(type));
           if (!isSchoolLike) return;
+
           onPlaceRef.current({
-            name: p.name || '',
-            address: p.formatted_address || '',
-            lat: p.geometry.location.lat(),
-            lng: p.geometry.location.lng(),
-            placeId: p.place_id || '',
-            components: p.address_components || [],
+            name: place.displayName || placeEl.value || '',
+            address: place.formattedAddress || '',
+            lat: place.location?.lat || null,
+            lng: place.location?.lng || null,
+            placeId: place.id || '',
+            components: place.addressComponents || [],
           });
         });
-        acRef.current = ac;
+        mountRef.current.appendChild(placeEl);
+        placeElRef.current = placeEl;
       })
       .catch((err) => {
         if (import.meta.env.DEV) {
@@ -56,9 +69,19 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
 
     return () => {
       cancelled = true;
-      acRef.current = null;
+      if (placeElRef.current && mountRef.current?.contains(placeElRef.current)) {
+        mountRef.current.removeChild(placeElRef.current);
+      }
+      placeElRef.current = null;
     };
   }, []);
+
+  useEffect(() => {
+    if (!placeElRef.current) return;
+    if ((placeElRef.current.value || '') !== (value || '')) {
+      placeElRef.current.value = value || '';
+    }
+  }, [value]);
 
   if (!HAS_MAPS_KEY) return null;
 
@@ -69,14 +92,10 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
         className="absolute left-2.5 top-1/2 -translate-y-1/2 text-sky-400 pointer-events-none z-10"
         aria-hidden="true"
       />
-      <input
-        ref={inputRef}
-        type="text"
-        value={value || ''}
-        onChange={(e) => onChange?.(e.target.value)}
-        placeholder={t(placeholderKey)}
+      <div
+        ref={mountRef}
         className="w-full pl-8 pr-2 py-1.5 text-sm bg-sky-50/60 border border-sky-200 outline-none
-          focus:border-sky-400 focus:bg-white focus:ring-2 focus:ring-sky-100 transition-all"
+          focus-within:border-sky-400 focus-within:bg-white focus-within:ring-2 focus-within:ring-sky-100 transition-all"
         style={{ borderRadius: '10px' }}
       />
     </div>

@@ -36,6 +36,13 @@ export function loadGoogleMapsAPI() {
       tick();
     };
 
+    const previousAuthFailure = window.gm_authFailure;
+    window.gm_authFailure = () => {
+      loadPromise = null;
+      reject(new Error('Google Maps authentication failed (API key/referrer/billing).'));
+      if (typeof previousAuthFailure === 'function') previousAuthFailure();
+    };
+
     const existing = document.getElementById(SCRIPT_ID);
     if (existing) {
       waitForMapsReady(resolve, reject);
@@ -44,7 +51,7 @@ export function loadGoogleMapsAPI() {
 
     const script = document.createElement('script');
     script.id = SCRIPT_ID;
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&loading=async`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&v=weekly&loading=async`;
     script.async = true;
     script.defer = true;
     script.onload = () => waitForMapsReady(resolve, reject);
@@ -84,9 +91,3 @@ export const PASTEL_MAP_STYLES = [
   { featureType: 'administrative.land_parcel', stylers: [{ visibility: 'off' }] },
   { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
 ];
-    const previousAuthFailure = window.gm_authFailure;
-    window.gm_authFailure = () => {
-      loadPromise = null;
-      reject(new Error('Google Maps authentication failed (API key/referrer/billing).'));
-      if (typeof previousAuthFailure === 'function') previousAuthFailure();
-    };
