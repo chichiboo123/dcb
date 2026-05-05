@@ -61,7 +61,13 @@ export default function SchoolConnectionMap() {
     }
     loadGoogleMapsAPI()
       .then(() => setReady(true))
-      .catch(() => setError(t('map.loadError')));
+      .catch((err) => {
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error('[GoogleMaps] load failed:', err);
+        }
+        setError(t('map.loadError'));
+      });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

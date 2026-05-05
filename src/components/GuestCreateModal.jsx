@@ -47,7 +47,12 @@ function SchoolPlaceSearch({ onPlace, value, onChange, placeholderKey = 'map.sea
         });
         acRef.current = ac;
       })
-      .catch(() => {});
+      .catch((err) => {
+        if (import.meta.env.DEV) {
+          // eslint-disable-next-line no-console
+          console.error('[GoogleMaps] autocomplete init failed:', err);
+        }
+      });
 
     return () => {
       cancelled = true;

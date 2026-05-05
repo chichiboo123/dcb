@@ -20,13 +20,25 @@ export function loadGoogleMapsAPI() {
       reject(new Error('Google Maps API key is missing. Set VITE_GOOGLE_MAPS_API_KEY (or VITE_GOOGLE_MAP_API_KEY).'));
       return;
     }
+    const waitForMapsReady = (resolveReady, rejectReady) => {
+      const startedAt = Date.now();
+      const tick = () => {
+        if (window.google?.maps?.places) {
+          resolveReady();
+          return;
+        }
+        if (Date.now() - startedAt > 7000) {
+          rejectReady(new Error('Google Maps loaded timeout: places library not ready'));
+          return;
+        }
+        setTimeout(tick, 40);
+      };
+      tick();
+    };
+
     const existing = document.getElementById(SCRIPT_ID);
     if (existing) {
-      const waitReady = () => {
-        if (window.google?.maps?.places) resolve();
-        else setTimeout(waitReady, 40);
-      };
-      waitReady();
+      waitForMapsReady(resolve, reject);
       return;
     }
 
@@ -35,10 +47,7 @@ export function loadGoogleMapsAPI() {
     script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=places&loading=async`;
     script.async = true;
     script.defer = true;
-    script.onload = () => {
-      if (window.google?.maps?.places) resolve();
-      else reject(new Error('Google Maps loaded but Places library is unavailable'));
-    };
+    script.onload = () => waitForMapsReady(resolve, reject);
     script.onerror = () => {
       loadPromise = null;
       reject(new Error('Google Maps script failed to load'));
