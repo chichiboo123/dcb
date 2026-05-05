@@ -77,6 +77,49 @@ export function getGoogleMapsKeyDebugInfo() {
 
 export const SCHOOL_TYPES = ['school', 'university', 'primary_school', 'secondary_school'];
 
+// Cache for localized place details: "placeId::lang" → { name, address }
+const _placeCache = new Map();
+const _placePending = new Map();
+
+export async function fetchPlaceLocalized(placeId, lang) {
+  if (!placeId || !HAS_MAPS_KEY || !lang) return null;
+  const cacheKey = `${placeId}::${lang}`;
+  if (_placeCache.has(cacheKey)) return _placeCache.get(cacheKey);
+  if (_placePending.has(cacheKey)) return _placePending.get(cacheKey);
+
+  const pending = (async () => {
+    try {
+      await loadGoogleMapsAPI();
+      const PlacesService = window.google?.maps?.places?.PlacesService;
+      if (!PlacesService) return null;
+      const div = document.createElement('div');
+      const service = new PlacesService(div);
+      return await new Promise((resolve) => {
+        service.getDetails(
+          { placeId, language: lang, fields: ['name', 'formatted_address'] },
+          (result, status) => {
+            const OK = window.google?.maps?.places?.PlacesServiceStatus?.OK;
+            if (status === OK && result) {
+              resolve({ name: result.name || '', address: result.formatted_address || '' });
+            } else {
+              resolve(null);
+            }
+          }
+        );
+      });
+    } catch {
+      return null;
+    } finally {
+      _placePending.delete(cacheKey);
+    }
+  })();
+
+  _placePending.set(cacheKey, pending);
+  const result = await pending;
+  if (result) _placeCache.set(cacheKey, result);
+  return result;
+}
+
 export const PASTEL_MAP_STYLES = [
   { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#BFDBFE' }] },
   { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#93C5FD' }] },
