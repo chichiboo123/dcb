@@ -108,12 +108,13 @@ export function decodeShareData(token) {
   return null;
 }
 
-export function buildShareUrl(data) {
+// mode='host' keeps the /host path so the recipient also opens in host view.
+export function buildShareUrl(data, mode = 'guest') {
   const token = encodeShareData(data);
   const url = new URL(window.location.href);
   url.search = '';
   url.hash = '';
-  url.pathname = '/';
+  url.pathname = mode === 'host' ? '/host' : '/';
   url.searchParams.set('d', token);
   return url.toString();
 }
