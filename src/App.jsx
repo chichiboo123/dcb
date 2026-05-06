@@ -33,8 +33,15 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Keep the address bar in sync so copying /host URL always carries the token.
+  useEffect(() => {
+    if (!isHost) return;
+    const url = buildShareUrl(data, 'host');
+    window.history.replaceState(null, '', url);
+  }, [data, isHost]);
+
   const onShare = async () => {
-    const url = buildShareUrl(data);
+    const url = buildShareUrl(data, mode);
     if (url.length > 6000) {
       setShareToast(t('guest.linkTooLong'));
       setTimeout(() => setShareToast(''), 2200);

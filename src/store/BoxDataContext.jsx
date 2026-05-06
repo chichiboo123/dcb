@@ -78,6 +78,12 @@ const hostDefaultData = {
 const BoxDataContext = createContext(null);
 
 function loadHostData() {
+  // A ?d=token in the URL means this is a shared /host link — use that data.
+  const token = readShareTokenFromUrl();
+  if (token) {
+    const decoded = decodeShareData(token);
+    if (decoded?.exchanges?.length) return decoded;
+  }
   try {
     const raw = localStorage.getItem(HOST_STORAGE_KEY);
     if (raw) {
