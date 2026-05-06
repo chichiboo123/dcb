@@ -35,7 +35,7 @@ export default function App() {
 
   const onShare = async () => {
     const url = buildShareUrl(data);
-    if (url.length > 1800) {
+    if (url.length > 6000) {
       setShareToast(t('guest.linkTooLong'));
       setTimeout(() => setShareToast(''), 2200);
       return;
