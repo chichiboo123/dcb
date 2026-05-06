@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Package, Plus, Share2, Check, PackageOpen, HelpCircle, UserCircle2 } from 'lucide-react';
+import { Package, Plus, Share2, Check, PackageOpen, HelpCircle } from 'lucide-react';
 import LanguageSelector from './components/LanguageSelector.jsx';
 import BoxCard from './components/BoxCard.jsx';
 import BoxModal from './components/BoxModal.jsx';
@@ -11,7 +11,6 @@ import HelpModal from './components/HelpModal.jsx';
 import HiddenAdminTrigger from './components/HiddenAdminTrigger.jsx';
 import Footer from './components/Footer.jsx';
 import SchoolConnectionMap from './components/SchoolConnectionMap.jsx';
-import CharacterProfileForm from './components/CharacterProfileForm.jsx';
 import { useBoxData } from './store/BoxDataContext.jsx';
 import { buildShareUrl } from './lib/share.js';
 
@@ -23,7 +22,6 @@ export default function App() {
   const [createOpen, setCreateOpen] = useState(false);
   const [shareToast, setShareToast] = useState('');
   const [helpOpen, setHelpOpen] = useState(false);
-  const [page, setPage] = useState('home'); // 'home' | 'character'
 
   const isHost = mode === 'host';
   const hasBoxes = data.exchanges.length > 0;
@@ -32,7 +30,6 @@ export default function App() {
     setActiveExchange(null);
     setAdminOpen(false);
     setCreateOpen(false);
-    setPage('home');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -92,14 +89,6 @@ export default function App() {
                 {t('mode.goGuest')}
               </button>
             )}
-            <button
-              type="button"
-              onClick={() => setPage(page === 'character' ? 'home' : 'character')}
-              className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition-colors ${page === 'character' ? 'bg-violet-600 border-violet-600 text-white' : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'}`}
-            >
-              <UserCircle2 size={14} />
-              <span className="hidden sm:inline">캐릭터 프로필</span>
-            </button>
             <LanguageSelector />
             <button
               type="button"
@@ -114,8 +103,7 @@ export default function App() {
       </header>
 
       <main className="flex-1">
-        {page === 'character' && <CharacterProfileForm />}
-        {page !== 'character' && <section className="mx-auto max-w-6xl px-4 pt-10 sm:pt-14 pb-20">
+        <section className="mx-auto max-w-6xl px-4 pt-10 sm:pt-14 pb-20">
           <div className="text-center mb-8 sm:mb-12">
             <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-800">{t('app.title')}</h1>
             <p className="mt-2 text-sm sm:text-base text-slate-500">{hasBoxes ? t('app.tapToOpen') : isHost ? t('app.hostEmpty') : t('app.guestEmpty')}</p>
@@ -151,15 +139,13 @@ export default function App() {
               <p className="mt-3 text-sm font-semibold text-slate-600">{isHost ? t('app.hostEmptyHint') : t('app.guestEmptyHint')}</p>
             </div>
           )}
-        </section>}
+        </section>
       </main>
 
       {/* ── World School Connection Map ─────────────────────────────────── */}
-      {page !== 'character' && (
-        <div className="w-full mt-4 pt-14">
-          <SchoolConnectionMap />
-        </div>
-      )}
+      <div className="w-full mt-4 pt-14">
+        <SchoolConnectionMap />
+      </div>
 
       <Footer />
       <BoxModal exchange={activeExchange} onClose={() => setActiveExchange(null)} />
